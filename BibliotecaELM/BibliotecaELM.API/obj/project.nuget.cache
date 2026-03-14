@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "PdaqTK7HA3w=",
+  "dgSpecHash": "3tg1z1esYt4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint-01-dot-net\\BibliotecaELM\\BibliotecaELM.API\\BibliotecaELM.API.csproj",
+  "projectFilePath": "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint-01-dot-net/BibliotecaELM/BibliotecaELM.API/BibliotecaELM.API.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Enzo\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.4\\microsoft.aspnetcore.openapi.10.0.4.nupkg.sha512",
-    "C:\\Users\\Enzo\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+    "/home/lulz_user/.nuget/packages/microsoft.aspnetcore.openapi/10.0.4/microsoft.aspnetcore.openapi.10.0.4.nupkg.sha512",
+    "/home/lulz_user/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
   ],
   "logs": []
 }
