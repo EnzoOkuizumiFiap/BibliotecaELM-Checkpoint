@@ -7,14 +7,14 @@ public class Usuario : BaseEntity
     public string nome_user { get; private set; }
     public DateOnly data_user { get; private set; }
     public string email { get; private set; }
-    public int cpf { get; private set; }
+    public string cpf { get; private set; }
     
     public List<Emprestimo> emprestimos { get; private set; }
     public Endereco endereco { get; private set; }
     public List<Compra> compras { get; private set; }
     public List<Livro> livros { get; private set; }
     
-    public Usuario(string nome_user, DateOnly data_user, string email, int cpf)
+    public Usuario(string nome_user, DateOnly data_user, string email, string cpf)
     {
         UpdateName(nome_user);
         UpdateEmail(email);
@@ -42,7 +42,7 @@ public class Usuario : BaseEntity
     {
         var age = CalculateAge(newDate);
         
-        if (age < 10 && age < 100)
+        if (age > 10 && age < 100)
             throw new Exception("Insira um valor válido.");
 
         data_user = newDate;
@@ -56,9 +56,9 @@ public class Usuario : BaseEntity
         return age;
     }
     
-    private void ValidateCpf(int cpf)
+    private void ValidateCpf(string cpf)
     {
-        if (cpf.ToString().Length == 11)
+        if (cpf.Length == 11)
         {
             this.cpf = cpf;
         }
