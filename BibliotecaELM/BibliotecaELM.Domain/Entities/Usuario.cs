@@ -1,10 +1,11 @@
-﻿namespace BibliotecaELM.Domain.Entities;
+﻿using BibliotecaELM.Domain.Common;
 
-public class Usuario
+namespace BibliotecaELM.Domain.Entities;
+
+public class Usuario : BaseEntity
 {
-    public long id_user { get; private set; }
     public string nome_user { get; private set; }
-    public DateTime data_user { get; private set; }
+    public DateOnly data_user { get; private set; }
     public string email { get; private set; }
     public int cpf { get; private set; }
     
@@ -13,12 +14,12 @@ public class Usuario
     public List<Compra> compras { get; private set; }
     public List<Livro> livros { get; private set; }
     
-    public Usuario(long id_user, string nome_user, DateTime data_user, string email, int cpf)
+    public Usuario(string nome_user, DateOnly data_user, string email, int cpf)
     {
         UpdateName(nome_user);
         UpdateEmail(email);
-        SetBirthDate(dateBorn);
-        ChangePassword(rawPassword);
+        SetBirthDate(data_user);
+        ValidateCpf(cpf);
     }
     
     public void UpdateName(string newName)
@@ -35,5 +36,35 @@ public class Usuario
             throw new Exception("E-mail inválido.");
             
         email = newEmail;
+    }
+    
+    public void SetBirthDate(DateOnly newDate)
+    {
+        var age = CalculateAge(newDate);
+        
+        if (age < 10 && age < 100)
+            throw new Exception("Insira um valor válido.");
+
+        data_user = newDate;
+    }
+    
+    private static int CalculateAge(DateOnly date)
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        var age = today.Year - date.Year;
+        if (date > today.AddYears(-age)) age--;
+        return age;
+    }
+    
+    private void ValidateCpf(int cpf)
+    {
+        if (cpf.ToString().Length == 11)
+        {
+            this.cpf = cpf;
+        }
+        else
+        {
+            throw new Exception("Insira um valor válido.");
+        }
     }
 }
