@@ -8,7 +8,7 @@ public class Autor : BaseEntity
     public DateOnly Nascimento { get; private set; }
 
     // Propriedades de navegação
-    public List<Livro> Livros { get; private set; } = new List<Livro>();
+    public ICollection<Livro> Livros { get; private set; } = new List<Livro>();
     
     public Autor(string nomeAutor, DateOnly nascimento)
     {

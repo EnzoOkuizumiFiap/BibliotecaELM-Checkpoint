@@ -10,11 +10,11 @@ public class Usuario : BaseEntity
     public string Cpf { get; private set; }
     
     // Propriedades de navegação
-    public List<Emprestimo> Emprestimos { get; private set; } = new List<Emprestimo>();
-    public List<Compra> Compras { get; private set; } = new List<Compra>();
-    public List<Endereco> Enderecos { get; private set; }
+    public ICollection<Emprestimo> Emprestimos { get; private set; } = new List<Emprestimo>();
+    public ICollection<Compra> Compras { get; private set; } = new List<Compra>();
+    public ICollection<Endereco> Enderecos { get; private set; }
     
-    public Usuario(string nome, DateOnly nascimento, string email, string cpf, List<Endereco> enderecos)
+    public Usuario(string nome, DateOnly nascimento, string email, string cpf, ICollection<Endereco> enderecos)
     {
         if (string.IsNullOrWhiteSpace(nome)) throw new ArgumentException("O nome não pode ser vazio ou nulo.", nameof(nome));
         this.NomeUsuario = nome;
