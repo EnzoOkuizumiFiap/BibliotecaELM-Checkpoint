@@ -1,62 +1,99 @@
-# BibliotecaELM-Checkpoint-01-dot-net
+# 📚 BibliotecaELM - Checkpoint 01
 
-# 📌 CP1 — Modelo Entidade-Relacionamento (MER) e Criação do Projeto WebAPI
+Projeto WebAPI em .NET 10 seguindo princípios de Clean Architecture.
 
-## 🎯 Objetivo
-1. Elaborar um **MER (Modelo Entidade-Relacionamento)** com **o maximo de entidades possiveis, no minimo 5 entidades** relacionadas, mostrando:
-    - **Cardinalidade** (1:1, 1:N, N:N).
-    - **Opcionalidade** (obrigatório ou opcional).
-    - **Chaves primárias (PK)** e **principais atributos**.
-2. Criar uma **estrutura inicial de projeto WebAPI em .NET 9/10** (sem implementação de CRUD). Deve-se criar as mesmas entidades no MER no código. Crie seguindo o Clean Arch
+Este projeto foi desenvolvido como parte do **Checkpoint 01 (CP1)**, focado exclusivamente na elaboração do **Modelo Entidade-Relacionamento (MER)** e na **modelagem das Entidades de Domínio utilizando C#** (sem implementação de banco de dados, CRUD, controllers ou endpoints).
 
 ---
 
-## 👥 Forma de Trabalho
-- O trabalho deverá ser realizado **em grupo** com até **3 integrantes**.
-- Cada grupo deverá entregar **um único repositório** no GitHub.
+## 🏢 O Domínio Escolhido
+
+O domínio escolhido para este projeto é o de uma **Biblioteca**, que abrange não apenas o serviço clássico de **empréstimos de acervo**, mas também a **gestão de compras e aquisição de livros pelos usuários**.
 
 ---
 
-## 🧭 Escopo (o que fazer)
-1. **Escolher um domínio ** (ex.: Loja, Cursos, Agendamento, Biblioteca).
-2. **Listar entidades principais**.
-3. **Definir atributos ** (nome, tipo, obrigatoriedade).
-4. **Marcar PK** e estratégia de identificação (ex.: `Id` inteiro ou GUID).
-5. **Definir relacionamentos** com cardinalidade e opcionalidade.
-6. Criar um projeto inicial em **.NET 9/10 WebAPI**, apenas com a solução configurada e as **Entidades** modeladas no código.
+## 📦 Entidades Modeladas
+
+As seguintes entidades principais foram identificadas e modeladas no código seguindo a camada de **Domínio (`BibliotecaELM.Domain/Entities`)**:
+
+- **Usuario**: Representa os leitores/clientes da biblioteca.
+- **Endereco**: Representa a localização de residência do usuário.
+- **Livro**: Representa as obras literárias e físicas da biblioteca.
+- **Autor**: Representa os escritores responsáveis pelas obras.
+- **Emprestimo**: Representa o ato transacional (histórico) onde o usuário leva o livro temporariamente com prazos definidos.
+- **Compra**: Representa a transação comercial onde o usuário adquire livros em definitivo.
+
+Todas as entidades herdam de uma **classe abstrata `BaseEntity`**, estabelecendo a padronização de **identificadores únicos (`Id` como tipo `GUID`)**.
 
 ---
 
-## 🧱 Restrições (o que NÃO fazer)
-- ❌ Nada de CRUD, controllers ou endpoints.
-- ❌ Nada de EF Core, migrations ou banco.
-- ✅ Foco exclusivo no **MER** e no **código das Entidades**.
+## 🔗 Resumo dos Relacionamentos
+
+Baseado na modelagem construída no código, estabelecemos as seguintes **cardinalidades e opcionalidades**:
+
+- **Usuario (1) ↔ (1) Endereco**  
+  Relacionamento **1:1 obrigatório**. Todo usuário precisa possuir um endereço associado.
+
+- **Usuario (1) ↔ (N) Emprestimo**  
+  Relacionamento **1:N**. Um único usuário pode ter o histórico de vários empréstimos.  
+  Todo empréstimo requer obrigatoriamente um **Usuário vinculado**.
+
+- **Usuario (1) ↔ (N) Compra**  
+  Relacionamento **1:N**. Um usuário pode efetuar inúmeras compras.  
+  Cada compra pertence restritamente a um **usuário obrigatório**.
+
+- **Livro (1) ↔ (N) Emprestimo**  
+  Relacionamento **1:N**. Um mesmo livro (obra) pode aparecer em inúmeros registros de empréstimos ao longo do tempo.
+
+- **Autor (1) ↔ (N) Livro**  
+  Relacionamento **1:N**. Um autor compôs **um ou múltiplos livros** cadastrados no acervo da biblioteca.
+
+- **Compra (1) ↔ (N) Livro**  
+  Relacionamento modelado como **listas de agregação** (onde uma **Compra engloba uma coleção de Livros**).
 
 ---
 
-## 🗂️ Entregáveis (no GitHub público)
-- **/docs/mer.png** (ou `.pdf`) — o **diagrama MER**.
-- **/src/Projeto.Api**
-- Somente um integrante deverá entregar
-- A entrega deverá ser feita via portal do aluno,
--  **README.md** na raiz explicando:
-    - Nome e RM dos integrantes do grupo
-    - O domínio escolhido.
-    - Quais entidades foram modeladas.
-    - Resumo dos relacionamentos.
+## 🗺️ Modelo Entidade-Relacionamento (MER)
 
-Obs.: SOMENTE O LINK DO GIT, NÃO PRECISA ENVIAR O CODIGO
+O diagrama de **Entidade-Relacionamento** correspondente a essa modelagem de domínio encontra-se no arquivo abaixo:
+
+*(Caso a imagem não seja renderizada, verifique os arquivos em `/docs/mer.png` ou `/docs/mer.pdf`)*
 
 ---
 
-## 🏅 Avaliação (até 10 pontos)
-- **Clareza do Diagrama (até 2.0 pts)** — notação legível, nomes bons, PK destacada.
-- **Modelagem das Entidades (até 3.0 pts)** — escolha coerente de entidades e atributos.
-- **Relacionamentos (até 2.0 pts)** — cardinalidades corretas e opcionalidade indicada.
-- **Estrutura do Projeto (até 3.0 pts)** — WebAPI criada seguindo  Clean Arch, entidades modeladas em C#, repositório organizado.
+## 👥 Integrantes da Equipe (Autores e Créditos)
 
+<table>
+<tr>
+<th>Nome</th>
+<th>RM</th>
+<th>Turma</th>
+<th>GitHub</th>
+<th>LinkedIn</th>
+</tr>
 
-## 🌟 Propósito
-“Faça o teu melhor, na condição que você tem, enquanto você não tem condições melhores, para fazer melhor ainda”
+<tr>
+<td>Enzo Okuizumi</td>
+<td>561432</td>
+<td>2TDSPG</td>
+<td><a href="https://github.com/EnzoOkuizumiFiap">EnzoOkuizumiFiap</a></td>
+<td><a href="https://www.linkedin.com/in/enzo-okuizumi-b60292256/">Enzo Okuizumi</a></td>
+</tr>
 
-Mario Sergio Cortela
+<tr>
+<td>Lucas Barros Gouveia</td>
+<td>566422</td>
+<td>2TDSPG</td>
+<td><a href="https://github.com/LuzBGouveia">LuzBGouveia</a></td>
+<td><a href="https://www.linkedin.com/in/lucas-barros-gouveia-09b147355/">Lucas Barros Gouveia</a></td>
+</tr>
+
+<tr>
+<td>Milton Marcelino</td>
+<td>564836</td>
+<td>2TDSPG</td>
+<td><a href="https://github.com/MiltonMarcelino">MiltonMarcelino</a></td>
+<td><a href="http://linkedin.com/in/milton-marcelino-250298142">Milton Marcelino</a></td>
+</tr>
+
+</table>

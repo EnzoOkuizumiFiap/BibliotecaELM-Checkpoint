@@ -5,7 +5,6 @@ namespace BibliotecaELM.Domain.Entities;
 public class Autor : BaseEntity
 {
     public string NomeAutor { get; private set; }
-    public string Descricao { get; private set; }
     public DateOnly Nascimento { get; private set; }
 
     // Propriedades de navegação
@@ -15,9 +14,6 @@ public class Autor : BaseEntity
     {
         if (string.IsNullOrWhiteSpace(nomeAutor)) throw new ArgumentException("O nome do autor não pode ser vazio ou nulo.", nameof(nomeAutor));
         this.NomeAutor = nomeAutor;
-        
-        if (string.IsNullOrWhiteSpace(descricao)) throw new ArgumentException("A descrição do autor não pode ser vazia.", nameof(descricao));
-        this.Descricao = descricao;
         
         DateOnly dataAtual = DateOnly.FromDateTime(DateTime.Now);
         if (nascimento > dataAtual) throw new ArgumentOutOfRangeException(nameof(nascimento), "A data de nascimento não pode estar no futuro.");

@@ -18,6 +18,8 @@ public class Emprestimo : BaseEntity
         this.DataDevolucao = dataDevolucao;
         
         this.Usuario = usuario ?? throw new ArgumentNullException(nameof(usuario), "O usuário não pode ser nulo.");
-        this.Livros = livros ?? throw new ArgumentNullException(nameof(livros), "O livro não pode ser nulo.");
+        
+        if (livros == null || livros.Count == 0) throw new ArgumentException("A compra deve possuir ao menos um livro.", nameof(livros));
+        this.Livros = livros;
     }
 }

@@ -1,30 +1,27 @@
 ﻿using BibliotecaELM.Domain.Common;
+using Recomenda.Domain.Enums;
 
 namespace BibliotecaELM.Domain.Entities;
 
 public class Compra : BaseEntity
 {
-    public string FormaCompra { get; private set; }
-    public DateOnly DataCompra { get; private set; }
+    public FormaCompraEnum FormaCompra { get; private set; }
+    public DateTime DataCompra { get; private set; }
     
     // Propriedades de navegação
     public Usuario Usuario { get; private set; }
     public List<Livro> Livros { get; private set; }
 
-    public Compra(string formaCompra, DateOnly dataCompra, Usuario usuario, List<Livro> livros)
+    public Compra(FormaCompraEnum formaCompra, DateTime dataCompra, Usuario usuario, List<Livro> livros)
     {
-        if (string.IsNullOrWhiteSpace(formaCompra) || 
-            !(formaCompra.Equals("débito", StringComparison.CurrentCultureIgnoreCase) || 
-              formaCompra.Equals("crédito", StringComparison.CurrentCultureIgnoreCase) || 
-              formaCompra.Equals("dinheiro", StringComparison.CurrentCultureIgnoreCase) || 
-              formaCompra.Equals("pix", StringComparison.CurrentCultureIgnoreCase))) 
-            throw new ArgumentException("Forma de pagamento inválida. Use: débito, crédito, dinheiro ou pix.", nameof(formaCompra)); 
         this.FormaCompra = formaCompra;
         
-        if (dataCompra.Year < 1900 || dataCompra.Year > DateTime.Now.Year) throw new ArgumentOutOfRangeException(nameof(dataCompra), "A data de compra não pode ser anterior a 1900 ou no futuro.");
+        if (dataCompra.Date < new DateTime(1900, 1, 1) || dataCompra.Date > DateTime.Today) throw new ArgumentOutOfRangeException(nameof(dataCompra), "A data de compra deve estar entre 01/01/1900 e hoje.");
         this.DataCompra = dataCompra;
         
         this.Usuario = usuario ?? throw new ArgumentNullException(nameof(usuario), "O usuário não pode ser nulo.");
-        this.Livros = livros ?? throw new ArgumentNullException(nameof(livros), "O livro não pode ser nulo.");
+        
+        if (livros == null || livros.Count == 0) throw new ArgumentException("A compra deve possuir ao menos um livro.", nameof(livros));
+        this.Livros = livros;
     }
 }
