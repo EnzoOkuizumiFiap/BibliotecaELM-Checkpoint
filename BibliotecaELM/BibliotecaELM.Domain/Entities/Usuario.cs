@@ -17,17 +17,17 @@ public class Usuario : BaseEntity
     public Usuario(string nome, DateOnly nascimento, string email, string cpf)
     {
         if (string.IsNullOrWhiteSpace(nome)) throw new ArgumentException("O nome não pode ser vazio ou nulo.", nameof(nome));
-        NomeUsuario = nome;
+        this.NomeUsuario = nome;
         
-        int age = CalculateAge(nascimento);
+        var age = CalculateAge(nascimento);
         if (age is < 10 or > 100) throw new ArgumentOutOfRangeException(nameof(nascimento), "O usuário deve ter entre 10 e 100 anos.");
-        Nascimento = nascimento;
+        this.Nascimento = nascimento;
         
         if (string.IsNullOrWhiteSpace(email) || !email.Contains("@")) throw new ArgumentException("E-mail inválido. Deve conter '@'.", nameof(email));
-        Email = email;
+        this.Email = email;
         
         if (string.IsNullOrWhiteSpace(cpf) || cpf.Length != 11) throw new ArgumentException("CPF inválido. Deve conter exatamente 11 caracteres.", nameof(cpf));
-        Cpf = cpf;
+        this.Cpf = cpf;
     }
     
     private static int CalculateAge(DateOnly date)
