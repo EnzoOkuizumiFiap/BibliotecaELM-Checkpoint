@@ -10,9 +10,9 @@ public class Compra : BaseEntity
     
     // Propriedades de navegação
     public Usuario Usuario { get; private set; }
-    public List<Livro> Livros { get; private set; }
+    public List<LivroCompra> LivroCompras { get; private set; } = new();
 
-    public Compra(FormaCompraEnum formaCompra, DateTime dataCompra, Usuario usuario, List<Livro> livros)
+    public Compra(FormaCompraEnum formaCompra, DateTime dataCompra, Usuario usuario, List<LivroCompra> livros)
     {
         this.FormaCompra = formaCompra;
         
@@ -22,6 +22,6 @@ public class Compra : BaseEntity
         this.Usuario = usuario ?? throw new ArgumentNullException(nameof(usuario), "O usuário não pode ser nulo.");
         
         if (livros == null || livros.Count == 0) throw new ArgumentException("A compra deve possuir ao menos um livro.", nameof(livros));
-        this.Livros = livros;
+        this.LivroCompras = livros;
     }
 }
