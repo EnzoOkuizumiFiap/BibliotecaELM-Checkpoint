@@ -10,7 +10,7 @@ public class Autor : BaseEntity
     // Propriedades de navegação
     public List<Livro> Livros { get; private set; } = new List<Livro>();
     
-    public Autor(string nomeAutor, string descricao, DateOnly nascimento)
+    public Autor(string nomeAutor, DateOnly nascimento)
     {
         if (string.IsNullOrWhiteSpace(nomeAutor)) throw new ArgumentException("O nome do autor não pode ser vazio ou nulo.", nameof(nomeAutor));
         this.NomeAutor = nomeAutor;
