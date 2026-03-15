@@ -10,9 +10,9 @@ public class Compra : BaseEntity
     
     // Propriedades de navegação
     public Usuario Usuario { get; private set; }
-    public List<Livro> Livros { get; private set; }
+    public ICollection<Livro> Livros { get; private set; }
 
-    public Compra(FormaCompraEnum formaCompra, DateTime dataCompra, Usuario usuario, List<Livro> livros)
+    public Compra(FormaCompraEnum formaCompra, DateTime dataCompra, Usuario usuario, ICollection<Livro> livros)
     {
         this.FormaCompra = formaCompra;
         

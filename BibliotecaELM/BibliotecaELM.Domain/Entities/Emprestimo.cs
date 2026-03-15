@@ -9,9 +9,9 @@ public class Emprestimo : BaseEntity
     
     // Propriedades de navegação
     public Usuario Usuario { get; private set; }
-    public List<Livro> Livros { get; private set; }
+    public ICollection<Livro> Livros { get; private set; }
     
-    public Emprestimo(DateTime dataEmprestimo, DateTime dataDevolucao, Usuario usuario, List<Livro> livros)
+    public Emprestimo(DateTime dataEmprestimo, DateTime dataDevolucao, Usuario usuario, ICollection<Livro> livros)
     {
         if (dataDevolucao < dataEmprestimo) throw new ArgumentException("A data de devolução não pode ser anterior à data de empréstimo.");
         this.DataEmprestimo = dataEmprestimo;
