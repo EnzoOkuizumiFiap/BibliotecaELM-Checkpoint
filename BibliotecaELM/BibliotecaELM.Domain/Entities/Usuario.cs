@@ -12,9 +12,9 @@ public class Usuario : BaseEntity
     // Propriedades de navegação
     public List<Emprestimo> Emprestimos { get; private set; } = new List<Emprestimo>();
     public List<Compra> Compras { get; private set; } = new List<Compra>();
-    public Endereco? Endereco { get; private set; }
+    public Endereco Endereco { get; private set; }
     
-    public Usuario(string nome, DateOnly nascimento, string email, string cpf)
+    public Usuario(string nome, DateOnly nascimento, string email, string cpf, Endereco endereco)
     {
         if (string.IsNullOrWhiteSpace(nome)) throw new ArgumentException("O nome não pode ser vazio ou nulo.", nameof(nome));
         this.NomeUsuario = nome;
@@ -28,6 +28,8 @@ public class Usuario : BaseEntity
         
         if (string.IsNullOrWhiteSpace(cpf) || cpf.Length != 11) throw new ArgumentException("CPF inválido. Deve conter exatamente 11 caracteres.", nameof(cpf));
         this.Cpf = cpf;
+        
+        this.Endereco = endereco ?? throw new ArgumentNullException(nameof(endereco), "O endereço não pode ser nulo.");
     }
     
     private static int CalculateAge(DateOnly date)
