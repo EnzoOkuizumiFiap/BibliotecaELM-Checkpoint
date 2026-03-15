@@ -55,7 +55,7 @@ Baseado na modelagem construída no código, estabelecemos as seguintes **cardin
 
 O diagrama de **Entidade-Relacionamento** correspondente a essa modelagem de domínio encontra-se no arquivo abaixo:
 
-![Imagem - MER](docs/mer.jpeg)
+![Imagem - MER](docs/mer.png)
 
 ---
 
