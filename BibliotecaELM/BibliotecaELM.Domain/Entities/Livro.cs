@@ -11,6 +11,7 @@ public class Livro: BaseEntity
     // Propriedades de navegação
     public Autor Autor { get; private set; }
     
+    // Compras e emprestimos relacionados.
     public ICollection<Compra> Compras { get; set; } = new List<Compra>();
     public ICollection<Emprestimo> Emprestimos { get; set; } = new List<Emprestimo>();
 
