@@ -8,12 +8,14 @@ public class Usuario : BaseEntity
     public DateOnly Nascimento { get; private set; }
     public string Email { get; private set; }
     public string Cpf { get; private set; }
+    //1..N
+    public List<Emprestimo> Emprestimos { get; private set; } = [];
+    //1..N
+    public ICollection<Compra> Compras { get; private set; } = [];
+    //1..1
+    public Endereco Endereco { get; private set; }
     
-    public ICollection<Emprestimo> Emprestimos { get; private set; } = new List<Emprestimo>();
-    public ICollection<Compra> Compras { get; private set; } = new List<Compra>();
-    public ICollection<Endereco> Enderecos { get; private set; }
-    
-    public Usuario(string nome, DateOnly nascimento, string email, string cpf, ICollection<Endereco> enderecos)
+    public Usuario(string nome, DateOnly nascimento, string email, string cpf, Endereco endereco)
     {
         if (string.IsNullOrWhiteSpace(nome)) throw new ArgumentException("O nome não pode ser vazio ou nulo.", nameof(nome));
         this.NomeUsuario = nome;
@@ -28,7 +30,7 @@ public class Usuario : BaseEntity
         if (string.IsNullOrWhiteSpace(cpf) || cpf.Length != 11) throw new ArgumentException("CPF inválido. Deve conter exatamente 11 caracteres.", nameof(cpf));
         this.Cpf = cpf;
         
-        this.Enderecos = enderecos ?? throw new ArgumentNullException(nameof(enderecos), "O endereço não pode ser nulo.");
+        this.Endereco = endereco ?? throw new ArgumentNullException(nameof(endereco), "O endereço não pode ser nulo.");
     }
     
     private static int CalculateAge(DateOnly date)
