@@ -23,11 +23,11 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
+      <Compile Remove="Controllers\BibliotecaController.cs" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Controllers\BibliotecaController.cs" />
+      <Folder Include="Controllers\" />
     </ItemGroup>
 
 </Project>

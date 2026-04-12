@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint-01-dot-net\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj": {}
+    "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint-01-dot-net\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj": {
+    "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint-01-dot-net\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj",
         "projectName": "BibliotecaELM.Infrastructure",
-        "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint-01-dot-net\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj",
+        "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\Enzo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint-01-dot-net\\BibliotecaELM\\BibliotecaELM.Infrastructure\\obj\\",
+        "outputPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Enzo\\AppData\\Roaming\\NuGet\\NuGet.Config"
