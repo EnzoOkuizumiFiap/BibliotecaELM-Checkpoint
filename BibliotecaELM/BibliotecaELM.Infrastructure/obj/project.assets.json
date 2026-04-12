@@ -397,6 +397,19 @@
           "buildTransitive/net6.0/_._": {}
         }
       },
+      "BibliotecaELM.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v10.0",
+        "dependencies": {
+          "BibliotecaELM.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/BibliotecaELM.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BibliotecaELM.Application.dll": {}
+        }
+      },
       "BibliotecaELM.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -1054,6 +1067,11 @@
         "useSharedDesignerContext.txt"
       ]
     },
+    "BibliotecaELM.Application/1.0.0": {
+      "type": "project",
+      "path": "../BibliotecaELM.Application/BibliotecaELM.Application.csproj",
+      "msbuildProject": "../BibliotecaELM.Application/BibliotecaELM.Application.csproj"
+    },
     "BibliotecaELM.Domain/1.0.0": {
       "type": "project",
       "path": "../BibliotecaELM.Domain/BibliotecaELM.Domain.csproj",
@@ -1062,6 +1080,7 @@
   },
   "projectFileDependencyGroups": {
     "net10.0": [
+      "BibliotecaELM.Application >= 1.0.0",
       "BibliotecaELM.Domain >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 10.0.5",
       "Oracle.EntityFrameworkCore >= 10.23.26200"
@@ -1092,6 +1111,9 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
+            "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Application\\BibliotecaELM.Application.csproj": {
+              "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Application\\BibliotecaELM.Application.csproj"
+            },
             "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Domain\\BibliotecaELM.Domain.csproj": {
               "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Domain\\BibliotecaELM.Domain.csproj"
             }

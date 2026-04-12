@@ -16,15 +16,9 @@ public class Livro: BaseEntity
 
     public Livro(string nomeLivro, decimal preco, DateOnly dataLancamento, Autor autor)
     {
-        if(string.IsNullOrWhiteSpace(nomeLivro)) throw new ArgumentException("O nome do livro não pode ser vazio.", nameof(nomeLivro));
         this.NomeLivro = nomeLivro;
-        
-        if(preco is <= 0 or >= 10000) throw new ArgumentOutOfRangeException(nameof(preco), "O preço deve ser maior que 0 e menor que 10000.");
         this.Preco = preco;
-        
-        if (dataLancamento > DateOnly.FromDateTime(DateTime.Now)) throw new ArgumentException("O ano de lançamento não pode ser uma data no futuro.", nameof(dataLancamento));
         this.DataLancamento = dataLancamento;
-        
-        this.Autor = autor ?? throw new ArgumentNullException(nameof(autor), "O autor não pode ser nulo.");
+        this.Autor = autor;
     }
 }

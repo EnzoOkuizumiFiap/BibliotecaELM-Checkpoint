@@ -23,7 +23,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BibliotecaELM.Application\BibliotecaELM.Application.csproj" />
       <ProjectReference Include="..\BibliotecaELM.Domain\BibliotecaELM.Domain.csproj" />
+      <ProjectReference Include="..\BibliotecaELM.Infrastructure\BibliotecaELM.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

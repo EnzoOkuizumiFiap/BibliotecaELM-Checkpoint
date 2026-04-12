@@ -1,6 +1,8 @@
-﻿namespace BibliotecaELM.Application.DTOs;
+﻿using BibliotecaELM.Domain.Entities;
 
-public class LivroResponse
+namespace BibliotecaELM.Application.DTOs;
+
+public record LivroResponse (Guid id, string NomeLivro)
 {
-    
+    public static LivroResponse FromDomain(Livro livro) => new(livro.Id, livro.NomeLivro);
 }
