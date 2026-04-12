@@ -30,8 +30,4 @@
       <Compile Remove="Controllers\BibliotecaController.cs" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
 </Project>
