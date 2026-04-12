@@ -1,97 +1,94 @@
-# BibliotecaELM - Checkpoint 01
+# 📌 CP2 — Persistência com EF Core, Mapeamento e Camada de Infraestrutura
 
-Este projeto foi desenvolvido como parte do **Checkpoint 01 (CP1)**, focado exclusivamente na elaboração do **Modelo Entidade-Relacionamento (MER)** e na **modelagem das Entidades de Domínio utilizando C#**
+## 🎯 Objetivo
 
----
+1. **Persistir o modelo COMPLETO do MER** usando **Entity Framework Core** (.NET 9/10), respeitando o **Clean Architecture**:
+  - `DbContext` na camada **Infrastructure**.
+  - **Mapeamento** das entidades (Fluent API).
+  - **Relacionamentos** fiéis ao CP1: cardinalidade, opcionalidade, chaves primárias/estrangeiras e índices quando fizer sentido (ex.: unicidade, FKs).
 
-## Domínio Escolhido
+2. **Migrations** versionadas no repositório:
+  - Pelo menos **uma migration inicial** que materialize o esquema completo (no máximo duas migrations, se houver justificativa explícita no README).
+  - Banco de dados à escolha do grupo, desde que a execução seja **reproduzível** (ex.: **SQLite** para simplicidade; **SQL Server**, **PostgreSQL**, **Oracle** ou **MySQL** com instruções claras no README).
 
-O domínio escolhido para este projeto é o de uma **Biblioteca**, que abrange não apenas o serviço clássico de **empréstimos de acervo**, mas também a **gestão de compras e aquisição de livros pelos usuários**.
+3. **Padrão de acesso a dados**:
+  - Interfaces de repositório na camada **Application**
+  - Implementações na **Infrastructure**.
+  - **Injeção de dependência** registrada no **Program.cs** do projeto **API**.
 
----
-
-## Entidades Modeladas
-
-As seguintes entidades principais foram identificadas e modeladas no código seguindo a camada de **Domínio (`BibliotecaELM.Domain/Entities`)**:
-
-- **Usuario**: Representa os leitores/clientes da biblioteca.
-- **Endereco**: Representa a localização de residência do usuário.
-- **Livro**: Representa as obras literárias e físicas da biblioteca.
-- **Autor**: Representa os escritores responsáveis pelas obras.
-- **Emprestimo**: Representa o ato transacional (histórico) onde o usuário leva o livro temporariamente com prazos definidos.
-- **Compra**: Representa a transação comercial onde o usuário adquire livros em definitivo.
-
-Todas as entidades herdam de uma **classe abstrata `BaseEntity`**, estabelecendo a padronização de **identificadores únicos (`Id` como tipo `GUID`)**.
+4. **Configuração segura**:
+  - Connection string em `appsettings` (e `User Secrets` / variáveis de ambiente para dados sensíveis em desenvolvimento).
+  - **Não** commitar senhas ou segredos reais.
 
 ---
 
-## Resumo dos Relacionamentos
+## 👥 Forma de Trabalho
 
-Baseado na modelagem construída no código, estabelecemos as seguintes **cardinalidades e opcionalidades**:
-
-- **Usuario (1) ↔ (N) Endereco**  
-  Relacionamento **1:N obrigatório**. Todo usuário precisa possuir um endereço associado.
-
-- **Usuario (1) ↔ (N) Emprestimo**  
-  Relacionamento **1:N**. Um único usuário pode ter o histórico de vários empréstimos.  
-  Todo empréstimo requer obrigatoriamente um **Usuário vinculado**.
-
-- **Usuario (1) ↔ (N) Compra**  
-  Relacionamento **1:N**. Um usuário pode efetuar inúmeras compras.  
-  Cada compra pertence restritamente a um **usuário obrigatório**.
-
-- **Livro (N) ↔ (N) Emprestimo**  
-  Relacionamento **N:N**. Um ou mais livros (obras) podem aparecer em inúmeros registros de empréstimos ao longo do tempo.
-
-- **Autor (1) ↔ (N) Livro**  
-  Relacionamento **1:N**. Um autor compôs **um ou múltiplos livros** cadastrados no acervo da biblioteca.
-
-- **Compra (N) ↔ (N) Livro**  
-  Relacionamento modelado como **listas de agregação** (onde uma **Compra engloba uma coleção de Livros**).
+- O trabalho deverá ser realizado **em grupo** com até **3 integrantes**.
+- Cada grupo deverá entregar **um único repositório** no GitHub.
+- Somente **um integrante** deverá entregar o link no portal do aluno.
 
 ---
 
-## Modelo Entidade-Relacionamento (MER)
+## 🧭 Escopo (o que fazer)
 
-O diagrama de **Entidade-Relacionamento** correspondente a essa modelagem de domínio encontra-se no arquivo abaixo:
-
-![Imagem - MER](docs/mer.png)
+1. Adicionar os pacotes NuGet necessários ao **EF Core** e ao **provider** do banco escolhido (e `Microsoft.EntityFrameworkCore.Design` no projeto correto para gerar migrations).
+2. Criar o **`DbContext`** (ex.: `ApplicationDbContext`) incluindo **todas** as entidades modeladas no CP1.
+3. Implementar o mapeamento (**Fluent API** com `IEntityTypeConfiguration<T>` e/ou **Data Annotations**):
+  - **Mínimo obrigatório:** mapear explicitamente todas as entidades que participam de relacionamentos **N:N** ou com **opcionalidade** que não seja óbvia só pelas propriedades.
+4. Gerar **migration(es)** e garantir que o banco seja criado/atualizado com sucesso (ex.: `dotnet ef database update`).
+5. Implementar **repositório genérico** *ou* **repositórios por agregado** — **uma** estratégia, aplicada de forma consistente.
+6. Registrar serviços no container de DI (**AddDbContext**, repositórios/UoW).
+7. **Validação do cenário** — **uma** das opções (definir em conjunto com o professor):
+  - **(A)** Apenas camada de dados + README com comandos e evidência (print da ferramenta do banco ou do esquema gerado); **ou**
+  - **(B)** Incluir **um endpoint mínimo** (ex.: `GET` de health + **um** `GET` que demonstre leitura no banco, com **seed** opcional de dados de exemplo).
 
 ---
 
-## Integrantes da Equipe
+## 🧱 Restrições (o que NÃO fazer)
 
-<table>
-<tr>
-<th>Nome</th>
-<th>RM</th>
-<th>Turma</th>
-<th>GitHub</th>
-<th>LinkedIn</th>
-</tr>
+- ❌ Nada de regras de negócio complexas na **Infrastructure** (foco em persistência, mapeamento e acesso a dados).
+- ❌ Não commitar **credenciais reais** nem connection strings com segredos.
+- ✅ Foco em **EF Core**, **migrations**, **mapeamento** e **organização** em camadas.
 
-<tr>
-<td>Enzo Okuizumi</td>
-<td>561432</td>
-<td>2TDSPG</td>
-<td><a href="https://github.com/EnzoOkuizumiFiap">EnzoOkuizumiFiap</a></td>
-<td><a href="https://www.linkedin.com/in/enzo-okuizumi-b60292256/">Enzo Okuizumi</a></td>
-</tr>
+---
 
-<tr>
-<td>Lucas Barros Gouveia</td>
-<td>566422</td>
-<td>2TDSPG</td>
-<td><a href="https://github.com/LuzBGouveia">LuzBGouveia</a></td>
-<td><a href="https://www.linkedin.com/in/lucas-barros-gouveia-09b147355/">Lucas Barros Gouveia</a></td>
-</tr>
+## 🗂️ Entregáveis (no GitHub público)
 
-<tr>
-<td>Milton Marcelino</td>
-<td>564836</td>
-<td>2TDSPG</td>
-<td><a href="https://github.com/MiltonMarcelino">MiltonMarcelino</a></td>
-<td><a href="http://linkedin.com/in/milton-marcelino-250298142">Milton Marcelino</a></td>
-</tr>
+- Solução atualizada com **Infrastructure** contendo `DbContext`, implementações de repositório e pasta de **Migrations**.
+- **`README.md`** na raiz **atualizado** com:
+  - Nome e RM dos integrantes do grupo.
+  - Domínio escolhido (pode resumir o do CP1).
+  - **Qual SGBD** foi usado
+- **`/docs/`** (recomendado): diagrama ou print do **esquema físico** no banco (ou atualização do MER se o modelo evoluiu, com breve justificativa).
+- A entrega no portal continua sendo **somente o link do Git** (não enviar ZIP do código).
 
-</table>
+---
+
+## 🏅 Avaliação (até 10 pontos)
+
+| Critério | Pontos |
+|----------|--------|
+| **Mapeamento EF** — Fluent API/anotações, tipos, nullability, relacionamentos fiéis ao MER | até **3,0** |
+| **Migrations e banco** — migration aplicável sem erros, esquema coerente | até **2,5** |
+| **Clean Architecture** — DbContext e implementações na Infrastructure; contratos claros; DI correto na API | até **2,5** |
+| **Repositórios* — interfaces bem definidas, uso consistente, sem acoplamento indevido | até **2,0** |
+
+---
+
+## 🌟 Propósito
+
+> “Faça o teu melhor, na condição que você tem, enquanto você não tem condições melhores, para fazer melhor ainda”  
+> — Mario Sergio Cortella
+
+---
+
+## 📎 Relação com o CP1
+
+| CP1 | CP2 |
+|-----|-----|
+| MER + entidades em C# | Esquema físico + EF Core + migrations |
+| Sem banco de dados | Banco configurado e reproduzível |
+| Sem persistência | Repositórios/UoW + DI |
+
+---
