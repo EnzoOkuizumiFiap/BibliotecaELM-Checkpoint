@@ -27,22 +27,21 @@ public class UsuarioConfiguration
             .HasMaxLength(11)
             .IsRequired();
 
-        // Salt (backing field da auto-property)
-        builder.Property("Salt")
-            .HasColumnName("Salt")
-            .HasMaxLength(100)
-            .IsRequired();
-
         //1..N
         builder.HasMany(u => u.Emprestimos)
             .WithOne()
             .HasForeignKey(r => r.Usuario)
             .OnDelete(DeleteBehavior.Cascade);
 
-        //1..1
+        //1..N
         builder.HasMany(u => u.Compras)
             .WithOne()
             .HasForeignKey(c => c.Usuario)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        //1..1
+        builder.HasOne(u => u.Compras)
+            .WithOne()
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
