@@ -22,4 +22,12 @@
       <ProjectReference Include="..\BibliotecaELM.Domain\BibliotecaELM.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Controllers\BibliotecaController.cs" />
+    </ItemGroup>
+
 </Project>
