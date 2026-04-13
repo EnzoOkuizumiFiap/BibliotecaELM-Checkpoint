@@ -20,10 +20,11 @@ public class CompraConfiguration : IEntityTypeConfiguration<Compra>
         builder.Property(c => c.DataCompra)
             .IsRequired();
         
-        builder.HasOne(c => c.Usuario)
-            .WithMany(u => u.Compras)
-            .HasForeignKey("UsuarioId") 
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict);
+        builder.HasIndex(e => new { e.UsuarioId })
+            .IsUnique();
+        
+        //1..N
+        builder.HasMany(c => c.Livros)
+            .WithMany();
     }
 }

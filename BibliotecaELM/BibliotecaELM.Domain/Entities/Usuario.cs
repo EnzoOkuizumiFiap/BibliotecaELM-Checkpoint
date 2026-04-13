@@ -11,11 +11,9 @@ public class Usuario : BaseEntity
     //1..N
     public List<Emprestimo> Emprestimos { get; private set; } = [];
     //1..N
-    public ICollection<Compra> Compras { get; private set; } = [];
+    public List<Compra> Compras { get; private set; } = [];
     //1..1
-    public Endereco? Endereco { get; private set; }
-    
-    protected Usuario() { }
+    public Endereco Endereco { get; private set; }
     
     public Usuario(string nome, DateOnly nascimento, string email, string cpf, Endereco endereco)
     {

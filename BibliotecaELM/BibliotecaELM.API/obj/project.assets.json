@@ -2554,19 +2554,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Enzo\\.nuget\\packages\\": {}
+    "/home/lulz_user/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.API\\BibliotecaELM.API.csproj",
+      "projectUniqueName": "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.API/BibliotecaELM.API.csproj",
       "projectName": "BibliotecaELM.API",
-      "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.API\\BibliotecaELM.API.csproj",
-      "packagesPath": "C:\\Users\\Enzo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.API\\obj\\",
+      "projectPath": "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.API/BibliotecaELM.API.csproj",
+      "packagesPath": "/home/lulz_user/.nuget/packages/",
+      "outputPath": "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Enzo\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/lulz_user/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -2578,14 +2578,14 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Application\\BibliotecaELM.Application.csproj": {
-              "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Application\\BibliotecaELM.Application.csproj"
+            "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Application/BibliotecaELM.Application.csproj": {
+              "projectPath": "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Application/BibliotecaELM.Application.csproj"
             },
-            "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Domain\\BibliotecaELM.Domain.csproj": {
-              "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Domain\\BibliotecaELM.Domain.csproj"
+            "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Domain/BibliotecaELM.Domain.csproj": {
+              "projectPath": "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Domain/BibliotecaELM.Domain.csproj"
             },
-            "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj"
+            "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Infrastructure/BibliotecaELM.Infrastructure.csproj": {
+              "projectPath": "/home/lulz_user/RiderProjects/FIAP/TDSPG2/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Infrastructure/BibliotecaELM.Infrastructure.csproj"
             }
           }
         }
@@ -2600,7 +2600,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net10.0": {
@@ -2636,7 +2636,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.200/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/home/lulz_user/.dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

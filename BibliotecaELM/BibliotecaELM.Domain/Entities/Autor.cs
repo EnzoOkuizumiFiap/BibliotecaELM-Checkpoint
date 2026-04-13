@@ -7,11 +7,9 @@ public class Autor : BaseEntity
     public string NomeAutor { get; private set; }
     public DateOnly Nascimento { get; private set; }
 
-    public ICollection<Livro> Livros { get; private set; }
+    public List<Livro> Livros { get; private set; }
     
-    protected Autor() { }
-    
-    public Autor(string nomeAutor, DateOnly nascimento, ICollection<Livro>? livros)
+    public Autor(string nomeAutor, DateOnly nascimento, List<Livro> livros)
     {
         if (string.IsNullOrWhiteSpace(nomeAutor)) throw new ArgumentException("O nome do autor não pode ser vazio ou nulo.", nameof(nomeAutor));
         this.NomeAutor = nomeAutor;
@@ -21,6 +19,6 @@ public class Autor : BaseEntity
         if (nascimento.Year < 1000) throw new ArgumentOutOfRangeException(nameof(nascimento), "O ano de nascimento é inválido (muito antigo).");
         this.Nascimento = nascimento;
 
-        this.Livros = livros ?? new List<Livro>();
+        this.Livros = livros;
     }
 }

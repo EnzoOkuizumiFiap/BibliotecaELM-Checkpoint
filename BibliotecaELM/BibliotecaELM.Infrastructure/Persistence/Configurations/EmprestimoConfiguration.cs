@@ -1,27 +1,32 @@
-﻿using BibliotecaELM.Domain.Entities;
+using BibliotecaELM.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BibliotecaELM.Infrastructure.Persistence.Configurations;
 
-public class EmprestimoConfiguration : IEntityTypeConfiguration<Emprestimo>
+public class EmprestimoConfiguration
 {
     public void Configure(EntityTypeBuilder<Emprestimo> builder)
     {
-        builder.ToTable("BD_Loans");
+        builder.ToTable("PG_Loan");
 
-        builder.HasKey(e => e.Id);
+        builder.HasKey(l => l.Id);
 
-        builder.Property(e => e.DataEmprestimo)
+        builder.Property(l => l.DataEmprestimo)
+            .HasColumnType("date")
             .IsRequired();
 
-        builder.Property(e => e.DataDevolucao)
+        builder.Property(c => c.DataDevolucao)
+            .HasColumnType("date")
             .IsRequired();
 
-        builder.HasOne(e => e.Usuario)
-            .WithMany(u => u.Emprestimos)
-            .HasForeignKey("UsuarioId") 
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Restrict); 
+        builder.HasIndex(e => new { e.UsuarioId })
+            .IsUnique();
+        
+        //1..N
+        builder.HasMany(c => c.Livros)
+            .WithOne()
+            .HasForeignKey(l => l.Compras)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

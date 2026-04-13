@@ -23,10 +23,8 @@ public class LivroConfiguration : IEntityTypeConfiguration<Livro>
         builder.Property(l => l.DataLancamento)
             .IsRequired();
 
-        // 1 Livro tem 1 Autor, e 1 Autor tem Vários Livros
-        builder.HasOne(l => l.Autor)
-            .WithMany(a => a.Livros)
-            .IsRequired();
+        builder.HasIndex(l => new { l.AutorId })
+            .IsUnique();
 
         // Mapeamento N:N com Compra
         builder.HasMany(l => l.Compras)

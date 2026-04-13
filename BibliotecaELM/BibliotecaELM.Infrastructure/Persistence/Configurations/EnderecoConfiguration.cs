@@ -32,10 +32,7 @@ public class EnderecoConfiguration : IEntityTypeConfiguration<Endereco>
             .HasMaxLength(200)
             .IsRequired();
         
-        builder.HasOne(e => e.Usuario)
-            .WithOne(u => u.Endereco)
-            .HasForeignKey<Endereco>("UsuarioId") 
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasIndex(e => new { e.UsuarioId })
+            .IsUnique();
     }
 }

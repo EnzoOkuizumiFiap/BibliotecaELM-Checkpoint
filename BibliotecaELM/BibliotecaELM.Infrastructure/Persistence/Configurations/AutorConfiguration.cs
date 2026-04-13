@@ -18,5 +18,11 @@ public class AutorConfiguration : IEntityTypeConfiguration<Autor>
 
         builder.Property(a => a.Nascimento)
             .IsRequired();
+        
+        //1..N
+        builder.HasMany(a => a.Livros)
+            .WithOne()
+            .HasForeignKey(l => l.AutorId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
