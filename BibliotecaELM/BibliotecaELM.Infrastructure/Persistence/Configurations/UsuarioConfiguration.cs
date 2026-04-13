@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BibliotecaELM.Infrastructure.Persistence.Configurations;
 
-public class UsuarioConfiguration
+public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
 {
     public void Configure(EntityTypeBuilder<Usuario> builder)
     {
@@ -26,22 +26,5 @@ public class UsuarioConfiguration
         builder.Property(u => u.Cpf)
             .HasMaxLength(11)
             .IsRequired();
-
-        //1..N
-        builder.HasMany(u => u.Emprestimos)
-            .WithOne()
-            .HasForeignKey(r => r.Usuario)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        //1..N
-        builder.HasMany(u => u.Compras)
-            .WithOne()
-            .HasForeignKey(c => c.Usuario)
-            .OnDelete(DeleteBehavior.Cascade);
-        
-        //1..1
-        builder.HasOne(u => u.Compras)
-            .WithOne()
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

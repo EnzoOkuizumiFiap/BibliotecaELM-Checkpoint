@@ -10,6 +10,8 @@ public class Endereco : BaseEntity
     public string Rua { get; private set; }
     public Usuario Usuario { get; private set; }
     
+    protected Endereco() { }
+    
     public Endereco(string cep, string estado, string cidade, string bairro, string rua, Usuario usuario)
     {
         if (string.IsNullOrWhiteSpace(cep)) throw new ArgumentException("O CEP não pode ser nulo ou vazio.", nameof(cep));

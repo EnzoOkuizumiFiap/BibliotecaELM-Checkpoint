@@ -10,6 +10,8 @@ public class Compra : BaseEntity
     
     public Usuario Usuario { get; private set; }
     public ICollection<Livro> Livros { get; private set; }
+    
+    protected Compra() { }
 
     public Compra(FormaCompraEnum formaCompra, DateTime dataCompra, Usuario usuario, ICollection<Livro> livros)
     {

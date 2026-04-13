@@ -9,6 +9,8 @@ public class Autor : BaseEntity
 
     public ICollection<Livro> Livros { get; private set; }
     
+    protected Autor() { }
+    
     public Autor(string nomeAutor, DateOnly nascimento, ICollection<Livro>? livros)
     {
         if (string.IsNullOrWhiteSpace(nomeAutor)) throw new ArgumentException("O nome do autor não pode ser vazio ou nulo.", nameof(nomeAutor));

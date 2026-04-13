@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BibliotecaELM.Infrastructure.Persistence.Configurations;
 
-public class AutorConfiguration
+public class AutorConfiguration : IEntityTypeConfiguration<Autor>
 {
     public void Configure(EntityTypeBuilder<Autor> builder)
     {
@@ -17,13 +17,6 @@ public class AutorConfiguration
             .IsRequired();
 
         builder.Property(a => a.Nascimento)
-            .HasColumnType("date")
             .IsRequired();
-
-        //1..N
-        builder.HasMany(a => a.Livros)
-            .WithOne()
-            .HasForeignKey(l => l.Autor)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }

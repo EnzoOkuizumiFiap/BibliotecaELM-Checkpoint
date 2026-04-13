@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BibliotecaELM.Infrastructure.Persistence.Configurations;
 
-public class LivroConfiguration
+public class LivroConfiguration : IEntityTypeConfiguration<Livro>
 {
     public void Configure(EntityTypeBuilder<Livro> builder)
     {
@@ -17,19 +17,22 @@ public class LivroConfiguration
             .IsRequired();
         
         builder.Property(l => l.Preco)
+            .HasPrecision(10, 2)
             .IsRequired();
         
         builder.Property(l => l.DataLancamento)
-            .HasColumnType("date")
             .IsRequired();
 
+        // 1 Livro tem 1 Autor, e 1 Autor tem Vários Livros
         builder.HasOne(l => l.Autor)
             .WithMany(a => a.Livros)
             .IsRequired();
 
+        // N Livros N Compras
         builder.HasMany(l => l.Compras)
             .WithMany(c => c.Livros);
         
+        // N Livros N Emprestimos
         builder.HasMany(l => l.Emprestimos)
             .WithMany(e => e.Livros);
     }

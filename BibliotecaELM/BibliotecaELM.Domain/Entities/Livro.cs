@@ -10,6 +10,8 @@ public class Livro: BaseEntity
     
     public Autor Autor { get; private set; }
     
+    protected Livro() { }
+    
     // Compras e emprestimos relacionados.
     public ICollection<Compra> Compras { get; private set; } = new List<Compra>();
     public ICollection<Emprestimo> Emprestimos { get; private set; } = new List<Emprestimo>();
