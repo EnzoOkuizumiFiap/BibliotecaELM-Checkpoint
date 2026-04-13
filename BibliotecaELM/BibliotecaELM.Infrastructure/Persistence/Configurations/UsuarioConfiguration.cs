@@ -8,12 +8,15 @@ public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
 {
     public void Configure(EntityTypeBuilder<Usuario> builder)
     {
-        builder.ToTable("PG_Users");
+        builder.ToTable("BD_Users");
 
         builder.HasKey(u => u.Id);
 
         builder.Property(u => u.NomeUsuario)
             .HasMaxLength(100)
+            .IsRequired();
+        
+        builder.Property(u => u.Nascimento)
             .IsRequired();
         
         builder.Property(u => u.Email)

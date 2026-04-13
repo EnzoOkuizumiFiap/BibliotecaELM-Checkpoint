@@ -39,7 +39,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PG_Authors", (string)null);
+                    b.ToTable("BD_Authors", (string)null);
                 });
 
             modelBuilder.Entity("BibliotecaELM.Domain.Entities.Compra", b =>
@@ -51,17 +51,22 @@ namespace BibliotecaELM.Infrastructure.Migrations
                     b.Property<DateTime>("DataCompra")
                         .HasColumnType("TIMESTAMP(7)");
 
-                    b.Property<int>("FormaCompra")
-                        .HasColumnType("NUMBER(10)");
+                    b.Property<string>("FormaCompra")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("NVARCHAR2(30)");
 
                     b.Property<Guid>("UsuarioId")
                         .HasColumnType("RAW(16)");
+
+                    b.Property<double>("ValorTotal")
+                        .HasColumnType("BINARY_DOUBLE");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Compras");
+                    b.ToTable("BD_Purchases", (string)null);
                 });
 
             modelBuilder.Entity("BibliotecaELM.Domain.Entities.Emprestimo", b =>
@@ -83,7 +88,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Emprestimos");
+                    b.ToTable("BD_Loans", (string)null);
                 });
 
             modelBuilder.Entity("BibliotecaELM.Domain.Entities.Endereco", b =>
@@ -125,7 +130,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
                     b.HasIndex("UsuarioId")
                         .IsUnique();
 
-                    b.ToTable("PG_Addresses", (string)null);
+                    b.ToTable("BD_Addresses", (string)null);
                 });
 
             modelBuilder.Entity("BibliotecaELM.Domain.Entities.Livro", b =>
@@ -154,7 +159,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
 
                     b.HasIndex("AutorId");
 
-                    b.ToTable("PG_Books", (string)null);
+                    b.ToTable("BD_Books", (string)null);
                 });
 
             modelBuilder.Entity("BibliotecaELM.Domain.Entities.Usuario", b =>
@@ -187,7 +192,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("PG_Users", (string)null);
+                    b.ToTable("BD_Users", (string)null);
                 });
 
             modelBuilder.Entity("CompraLivro", b =>
@@ -202,7 +207,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
 
                     b.HasIndex("LivrosId");
 
-                    b.ToTable("CompraLivro");
+                    b.ToTable("BD_PurchaseBooks", (string)null);
                 });
 
             modelBuilder.Entity("EmprestimoLivro", b =>
@@ -217,7 +222,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
 
                     b.HasIndex("LivrosId");
 
-                    b.ToTable("EmprestimoLivro");
+                    b.ToTable("BD_LoanBooks", (string)null);
                 });
 
             modelBuilder.Entity("BibliotecaELM.Domain.Entities.Compra", b =>
@@ -225,7 +230,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
                     b.HasOne("BibliotecaELM.Domain.Entities.Usuario", "Usuario")
                         .WithMany("Compras")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Usuario");
@@ -236,7 +241,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
                     b.HasOne("BibliotecaELM.Domain.Entities.Usuario", "Usuario")
                         .WithMany("Emprestimos")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Usuario");

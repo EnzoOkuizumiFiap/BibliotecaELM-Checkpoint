@@ -8,7 +8,7 @@ public class LivroConfiguration : IEntityTypeConfiguration<Livro>
 {
     public void Configure(EntityTypeBuilder<Livro> builder)
     {
-        builder.ToTable("PG_Books");
+        builder.ToTable("BD_Books");
 
         builder.HasKey(l => l.Id);
         
@@ -28,12 +28,14 @@ public class LivroConfiguration : IEntityTypeConfiguration<Livro>
             .WithMany(a => a.Livros)
             .IsRequired();
 
-        // N Livros N Compras
+        // Mapeamento N:N com Compra
         builder.HasMany(l => l.Compras)
-            .WithMany(c => c.Livros);
+            .WithMany(c => c.Livros)
+            .UsingEntity(j => j.ToTable("BD_PurchaseBooks"));
         
-        // N Livros N Emprestimos
+        // Mapeamento N:N com Emprestimo
         builder.HasMany(l => l.Emprestimos)
-            .WithMany(e => e.Livros);
+            .WithMany(e => e.Livros)
+            .UsingEntity(j => j.ToTable("BD_LoanBooks"));
     }
 }

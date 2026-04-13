@@ -8,7 +8,7 @@ public class AutorConfiguration : IEntityTypeConfiguration<Autor>
 {
     public void Configure(EntityTypeBuilder<Autor> builder)
     {
-        builder.ToTable("PG_Authors");
+        builder.ToTable("BD_Authors");
 
         builder.HasKey(a => a.Id);
 

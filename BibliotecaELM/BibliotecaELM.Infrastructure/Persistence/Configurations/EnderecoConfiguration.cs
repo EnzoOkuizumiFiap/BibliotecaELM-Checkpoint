@@ -8,7 +8,7 @@ public class EnderecoConfiguration : IEntityTypeConfiguration<Endereco>
 {
     public void Configure(EntityTypeBuilder<Endereco> builder)
     {
-        builder.ToTable("PG_Addresses");
+        builder.ToTable("BD_Addresses");
 
         builder.HasKey(e => e.Id);
         
