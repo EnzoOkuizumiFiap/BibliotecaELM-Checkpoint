@@ -2,7 +2,7 @@
 using BibliotecaELM.Application.Services;
 using BibliotecaELM.Infrastructure.Persistence;
 
-namespace BibliotecaELM.Infrastructure;
+namespace BibliotecaELM.Infrastructure.Repositories;
 
 public sealed class LivroRepository(BibliotecaElmContext bibliotecaElmContext) : ILivroRepository
 {
@@ -47,15 +47,18 @@ public sealed class LivroRepository(BibliotecaElmContext bibliotecaElmContext) :
             return false;
 
         var normalizedTitle = nomeLivro.Trim().ToLower();
+        var livro = bibliotecaElmContext.Livros
+            .FirstOrDefault(m => m.NomeLivro.ToLower() == normalizedTitle);
 
-        return bibliotecaElmContext.Livros
-            .Any(m => m.NomeLivro.ToLower() == normalizedTitle);
+        return livro is not null;
     }
     
     public bool ExistsById(Guid id)
     {
-        return bibliotecaElmContext.Livros
-            .Any(m => m.Id == id);
+        var livro = bibliotecaElmContext.Livros
+            .FirstOrDefault(m => m.Id == id);
+
+        return livro is not null;
     }
     
     public bool Delete(Guid id)

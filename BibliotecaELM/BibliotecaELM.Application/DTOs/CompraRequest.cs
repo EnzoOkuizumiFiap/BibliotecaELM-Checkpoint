@@ -8,17 +8,17 @@ using BibliotecaELM.Domain.Enums;
 namespace BibliotecaELM.Application.DTOs;
 
 public record CompraRequest(
-    [property: Required(ErrorMessage = "A forma de compra é obrigatória")]
+    [param: Required(ErrorMessage = "A forma de compra é obrigatória")]
     FormaCompraEnum FormaCompra,
 
-    [property: Required(ErrorMessage = "A data da compra é obrigatória")]
+    [param: Required(ErrorMessage = "A data da compra é obrigatória")]
     DateTime DataCompra,
 
-    [property: Required(ErrorMessage = "O UsuarioId é obrigatório")]
+    [param: Required(ErrorMessage = "O UsuarioId é obrigatório")]
     Guid UsuarioId,
 
-    [property: Required(ErrorMessage = "Os Ids dos livros são obrigatórios")]
-    [property: MinLength(1, ErrorMessage = "Ao menos um livro é obrigatório na compra")]
+    [param: Required(ErrorMessage = "Os Ids dos livros são obrigatórios")]
+    [param: MinLength(1, ErrorMessage = "Ao menos um livro é obrigatório na compra")]
     List<Guid> LivroIds
 )
 {

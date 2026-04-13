@@ -24,7 +24,7 @@ public class CompraConfiguration : IEntityTypeConfiguration<Compra>
             .IsUnique();
         
         //1..N
-        builder.HasMany(c => c.Livros)
-            .WithMany();
+        //builder.HasMany(c => c.Livros)
+        //    .WithMany();
     }
 }

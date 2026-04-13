@@ -7,17 +7,17 @@ using BibliotecaELM.Domain.Entities;
 namespace BibliotecaELM.Application.DTOs;
 
 public record EmprestimoRequest(
-    [property: Required(ErrorMessage = "A data de empréstimo é obrigatória")]
+    [param: Required(ErrorMessage = "A data de empréstimo é obrigatória")]
     DateTime DataEmprestimo,
 
-    [property: Required(ErrorMessage = "A data de devolução é obrigatória")]
+    [param: Required(ErrorMessage = "A data de devolução é obrigatória")]
     DateTime DataDevolucao,
 
-    [property: Required(ErrorMessage = "O UsuarioId é obrigatório")]
+    [param: Required(ErrorMessage = "O UsuarioId é obrigatório")]
     Guid UsuarioId,
 
-    [property: Required(ErrorMessage = "Os Ids dos livros são obrigatórios")]
-    [property: MinLength(1, ErrorMessage = "Ao menos um livro é obrigatório no empréstimo")]
+    [param: Required(ErrorMessage = "Os Ids dos livros são obrigatórios")]
+    [param: MinLength(1, ErrorMessage = "Ao menos um livro é obrigatório no empréstimo")]
     List<Guid> LivroIds
 )
 {

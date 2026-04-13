@@ -24,9 +24,9 @@ public class EmprestimoConfiguration
             .IsUnique();
         
         //1..N
-        builder.HasMany(c => c.Livros)
-            .WithOne()
-            .HasForeignKey(l => l.Compras)
-            .OnDelete(DeleteBehavior.Cascade);
+        //builder.HasMany(c => c.Livros)
+        //    .WithOne()
+        //   .HasForeignKey(l => l.Compras)
+        //    .OnDelete(DeleteBehavior.Cascade);
     }
 }

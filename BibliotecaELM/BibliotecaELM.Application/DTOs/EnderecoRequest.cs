@@ -5,19 +5,19 @@ using BibliotecaELM.Domain.Entities;
 namespace BibliotecaELM.Application.DTOs;
 
 public record EnderecoRequest(
-    [property: Required(ErrorMessage = "O CEP é obrigatório")]
+    [param: Required(ErrorMessage = "O CEP é obrigatório")]
     string Cep,
 
-    [property: Required(ErrorMessage = "O estado é obrigatório")]
+    [param: Required(ErrorMessage = "O estado é obrigatório")]
     string Estado,
 
-    [property: Required(ErrorMessage = "A cidade é obrigatória")]
+    [param: Required(ErrorMessage = "A cidade é obrigatória")]
     string Cidade,
 
-    [property: Required(ErrorMessage = "O bairro é obrigatório")]
+    [param: Required(ErrorMessage = "O bairro é obrigatório")]
     string Bairro,
 
-    [property: Required(ErrorMessage = "A rua é obrigatória")]
+    [param: Required(ErrorMessage = "A rua é obrigatória")]
     string Rua
 )
 {

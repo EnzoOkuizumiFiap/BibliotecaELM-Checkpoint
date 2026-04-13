@@ -3,6 +3,7 @@ using System;
 using BibliotecaELM.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Oracle.EntityFrameworkCore.Metadata;
 
@@ -11,9 +12,11 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace BibliotecaELM.Infrastructure.Migrations
 {
     [DbContext(typeof(BibliotecaElmContext))]
-    partial class BibliotecaElmContextModelSnapshot : ModelSnapshot
+    [Migration("20260413181029_EsperoQueExplodaPt2")]
+    partial class EsperoQueExplodaPt2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

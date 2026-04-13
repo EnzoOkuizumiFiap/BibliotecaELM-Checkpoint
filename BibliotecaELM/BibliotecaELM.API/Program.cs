@@ -1,5 +1,5 @@
 using BibliotecaELM.Application.Services;
-using BibliotecaELM.Infrastructure;
+using BibliotecaELM.Infrastructure.Repositories;
 using BibliotecaELM.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +19,7 @@ public class Program
             options.UseOracle(builder.Configuration.GetConnectionString("BibliotecaElmOracle"));
         });
         
+        builder.Services.AddScoped<IAutorRepository, AutorRepository>();
         builder.Services.AddScoped<ILivroRepository, LivroRepository>();
 
         builder.Services.AddControllers();
