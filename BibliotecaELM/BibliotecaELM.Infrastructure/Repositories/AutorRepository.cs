@@ -8,7 +8,7 @@ public sealed class AutorRepository(BibliotecaElmContext bibliotecaElmContext) :
     public IReadOnlyList<AutorResponse> GetAll()
     {
         return bibliotecaElmContext.Autores
-            .OrderBy(a => a.NomeAutor)
+            .OrderBy(a => a.Id)
             .Select(AutorResponse.FromDomain)
             .ToList();
     }

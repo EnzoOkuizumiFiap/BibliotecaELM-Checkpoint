@@ -9,7 +9,7 @@ public sealed class LivroRepository(BibliotecaElmContext bibliotecaElmContext) :
     public IReadOnlyList<LivroResponse> GetAll()
     {
         return bibliotecaElmContext.Livros
-            .OrderBy(m => m.NomeLivro)
+            .OrderBy(f => f.Id)
             .Select(LivroResponse.FromDomain)
             .ToList();
     }
@@ -17,7 +17,7 @@ public sealed class LivroRepository(BibliotecaElmContext bibliotecaElmContext) :
     public LivroResponse? GetById(Guid id)
     {
         var livro = bibliotecaElmContext.Livros
-            .FirstOrDefault(m => m.Id == id);
+            .FirstOrDefault(f => f.Id == id);
 
         return livro is null ? null : LivroResponse.FromDomain(livro);
     }
@@ -48,7 +48,7 @@ public sealed class LivroRepository(BibliotecaElmContext bibliotecaElmContext) :
 
         var normalizedTitle = nomeLivro.Trim().ToLower();
         var livro = bibliotecaElmContext.Livros
-            .FirstOrDefault(m => m.NomeLivro.ToLower() == normalizedTitle);
+            .FirstOrDefault(f => f.NomeLivro.ToLower() == normalizedTitle);
 
         return livro is not null;
     }
@@ -56,14 +56,14 @@ public sealed class LivroRepository(BibliotecaElmContext bibliotecaElmContext) :
     public bool ExistsById(Guid id)
     {
         var livro = bibliotecaElmContext.Livros
-            .FirstOrDefault(m => m.Id == id);
+            .FirstOrDefault(f => f.Id == id);
 
         return livro is not null;
     }
     
     public bool Delete(Guid id)
     {
-        var movie = bibliotecaElmContext.Livros.FirstOrDefault(m => m.Id == id);
+        var movie = bibliotecaElmContext.Livros.FirstOrDefault(f => f.Id == id);
         if (movie is null)
             return false;
 

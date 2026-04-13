@@ -21,6 +21,7 @@ public class Program
         
         builder.Services.AddScoped<IAutorRepository, AutorRepository>();
         builder.Services.AddScoped<ILivroRepository, LivroRepository>();
+        builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
         builder.Services.AddControllers();
 

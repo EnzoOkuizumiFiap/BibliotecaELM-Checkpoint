@@ -22,9 +22,8 @@ public record UsuarioRequest(
     string Cpf,
 
     [param: Required]
-    EnderecoRequest Endereco
+    Endereco Endereco
 )
 {
-    // A conversão para domínio fica na camada de aplicação/repositório,
-    // porque o Endereco depende do UsuarioId gerado no fluxo de persistência.
+    public Usuario ToDomain() => new Usuario(NomeUsuario, Nascimento, Email,  Cpf, Endereco);
 }
