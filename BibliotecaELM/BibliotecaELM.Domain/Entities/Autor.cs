@@ -9,16 +9,16 @@ public class Autor : BaseEntity
 
     public List<Livro> Livros { get; private set; }
     
+    
+
+    protected Autor()
+    {
+    }
+    
     public Autor(string nomeAutor, DateOnly nascimento, List<Livro> livros)
     {
-        if (string.IsNullOrWhiteSpace(nomeAutor)) throw new ArgumentException("O nome do autor não pode ser vazio ou nulo.", nameof(nomeAutor));
         this.NomeAutor = nomeAutor;
-        
-        DateOnly dataAtual = DateOnly.FromDateTime(DateTime.Now);
-        if (nascimento > dataAtual) throw new ArgumentOutOfRangeException(nameof(nascimento), "A data de nascimento não pode estar no futuro.");
-        if (nascimento.Year < 1000) throw new ArgumentOutOfRangeException(nameof(nascimento), "O ano de nascimento é inválido (muito antigo).");
         this.Nascimento = nascimento;
-
         this.Livros = livros;
     }
 }

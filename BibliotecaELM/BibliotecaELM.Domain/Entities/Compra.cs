@@ -11,16 +11,15 @@ public class Compra : BaseEntity
     public Guid UsuarioId { get; private set; }
     public List<Livro> Livros { get; private set; }
 
+    protected Compra()
+    {
+    }
+
     public Compra(FormaCompraEnum formaCompra, DateTime dataCompra, Guid usuarioId, List<Livro> livros)
     {
         this.FormaCompra = formaCompra;
-        
-        if (dataCompra.Date < new DateTime(1900, 1, 1) || dataCompra.Date > DateTime.Today) throw new ArgumentOutOfRangeException(nameof(dataCompra), "A data de compra deve estar entre 01/01/1900 e hoje.");
         this.DataCompra = dataCompra;
-        
         this.UsuarioId = usuarioId;
-        
-        if (livros == null || livros.Count == 0) throw new ArgumentException("A compra deve possuir ao menos um livro.", nameof(livros));
         this.Livros = livros;
     }
 }

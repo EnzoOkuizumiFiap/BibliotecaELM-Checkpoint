@@ -21,7 +21,7 @@ public class AutorConfiguration : IEntityTypeConfiguration<Autor>
         
         //1..N
         builder.HasMany(a => a.Livros)
-            .WithOne()
+            .WithOne(l => l.Autor)
             .HasForeignKey(l => l.AutorId)
             .OnDelete(DeleteBehavior.Cascade);
     }

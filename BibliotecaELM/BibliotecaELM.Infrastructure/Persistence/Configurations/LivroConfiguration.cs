@@ -23,8 +23,7 @@ public class LivroConfiguration : IEntityTypeConfiguration<Livro>
         builder.Property(l => l.DataLancamento)
             .IsRequired();
 
-        builder.HasIndex(l => new { l.AutorId })
-            .IsUnique();
+        builder.HasIndex(l => new { l.AutorId });
 
         // Mapeamento N:N com Compra
         builder.HasMany(l => l.Compras)
