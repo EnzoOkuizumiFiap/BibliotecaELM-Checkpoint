@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BibliotecaELM.Infrastructure.Persistence.Configurations;
 
-public class EmprestimoConfiguration
+public class EmprestimoConfiguration : IEntityTypeConfiguration<Emprestimo>
 {
     public void Configure(EntityTypeBuilder<Emprestimo> builder)
     {
-        builder.ToTable("PG_Loan");
+        builder.ToTable("BD_Loans");
 
         builder.HasKey(l => l.Id);
 
@@ -20,13 +20,8 @@ public class EmprestimoConfiguration
             .HasColumnType("date")
             .IsRequired();
 
-        builder.HasIndex(e => new { e.UsuarioId })
-            .IsUnique();
+        builder.HasIndex(e => e.UsuarioId);
         
-        //1..N
-        //builder.HasMany(c => c.Livros)
-        //    .WithOne()
-        //   .HasForeignKey(l => l.Compras)
-        //    .OnDelete(DeleteBehavior.Cascade);
+        // O mapeamento N:N com Livro é feito em LivroConfiguration.
     }
 }

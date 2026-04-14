@@ -27,6 +27,9 @@ public sealed class EnderecoRepository(BibliotecaElmContext bibliotecaElmContext
         if (request is null)
             throw new ArgumentNullException(nameof(request));
 
+        if (idUsuario == Guid.Empty)
+            throw new InvalidOperationException("O UsuarioId do endereco é obrigatório");
+
         if (string.IsNullOrWhiteSpace(request.Cep))
             throw new InvalidOperationException("O CEP do Endereco é obrigatório");
         
@@ -41,11 +44,18 @@ public sealed class EnderecoRepository(BibliotecaElmContext bibliotecaElmContext
         
         if (string.IsNullOrWhiteSpace(request.Rua))
             throw new InvalidOperationException("A rua do Endereco é obrigatório");
-        
-        if (ExistsByIdUsuario(request.UsuarioId))
-            throw new InvalidOperationException("Já existe um endereco com este CEP");
 
-        var endereco = request.ToDomain();
+        var usuarioExiste = bibliotecaElmContext.Usuarios
+            .Any(u => u.Id == idUsuario);
+
+        if (!usuarioExiste)
+            throw new InvalidOperationException("Usuário não encontrado");
+        
+        if (ExistsByIdUsuario(idUsuario))
+            throw new InvalidOperationException("Já existe um endereco para este usuário");
+
+        var requestComUsuario = request with { UsuarioId = idUsuario };
+        var endereco = requestComUsuario.ToDomain();
 
         bibliotecaElmContext.Enderecos.Add(endereco);
         bibliotecaElmContext.SaveChanges();

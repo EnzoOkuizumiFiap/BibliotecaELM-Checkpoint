@@ -1,9 +1,6 @@
-using System.Collections;
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services;
-using BibliotecaELM.Domain.Entities;
 using BibliotecaELM.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace BibliotecaELM.Infrastructure.Repositories;
 
@@ -30,11 +27,32 @@ public sealed class CompraRepository(BibliotecaElmContext bibliotecaElmContext) 
         if (request is null)
             throw new ArgumentNullException(nameof(request));
 
-        if (string.IsNullOrWhiteSpace(request.FormaCompra.ToString()))
+        if (!Enum.IsDefined(request.FormaCompra))
             throw new InvalidOperationException("O formato do pagamento da compra é obrigatório");
 
-        IEnumerable<Livro> livros = bibliotecaElmContext.Livros;
-        
+        if (request.UsuarioId == Guid.Empty)
+            throw new InvalidOperationException("O UsuarioId da compra é obrigatório");
+
+        if (request.LivroIds is null || request.LivroIds.Count == 0)
+            throw new InvalidOperationException("Ao menos um livro é obrigatório na compra");
+
+        var usuarioExiste = bibliotecaElmContext.Usuarios
+            .Any(u => u.Id == request.UsuarioId);
+
+        if (!usuarioExiste)
+            throw new InvalidOperationException("Usuário não encontrado");
+
+        var livroIds = request.LivroIds
+            .Distinct()
+            .ToList();
+
+        var livros = bibliotecaElmContext.Livros
+            .Where(l => livroIds.Contains(l.Id))
+            .ToList();
+
+        if (livros.Count != livroIds.Count)
+            throw new InvalidOperationException("Um ou mais livros não foram encontrados");
+
         var compra = request.ToDomain(livros);
 
         bibliotecaElmContext.Compras.Add(compra);
