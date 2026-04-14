@@ -11,6 +11,8 @@ public interface IEnderecoRepository
     EnderecoResponse Create(EnderecoRequest request, Guid usuarioId);
 
     bool ExistsById(Guid id);
+    
+    bool ExistsByIdUsuario(Guid usuarioId);
 
     bool Delete(Guid id);
 }

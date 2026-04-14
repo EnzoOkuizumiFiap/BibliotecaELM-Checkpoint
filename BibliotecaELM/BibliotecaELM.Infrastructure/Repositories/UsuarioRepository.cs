@@ -63,11 +63,11 @@ public sealed class UsuarioRepository(BibliotecaElmContext bibliotecaElmContext)
     
     public bool Delete(Guid id)
     {
-        var movie = bibliotecaElmContext.Usuarios.FirstOrDefault(u => u.Id == id);
-        if (movie is null)
+        var usuario = bibliotecaElmContext.Usuarios.FirstOrDefault(u => u.Id == id);
+        if (usuario is null)
             return false;
 
-        bibliotecaElmContext.Usuarios.Remove(movie);
+        bibliotecaElmContext.Usuarios.Remove(usuario);
         bibliotecaElmContext.SaveChanges();
 
         return true;

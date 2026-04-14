@@ -63,11 +63,11 @@ public sealed class LivroRepository(BibliotecaElmContext bibliotecaElmContext) :
     
     public bool Delete(Guid id)
     {
-        var movie = bibliotecaElmContext.Livros.FirstOrDefault(f => f.Id == id);
-        if (movie is null)
+        var livro = bibliotecaElmContext.Livros.FirstOrDefault(f => f.Id == id);
+        if (livro is null)
             return false;
 
-        bibliotecaElmContext.Livros.Remove(movie);
+        bibliotecaElmContext.Livros.Remove(livro);
         bibliotecaElmContext.SaveChanges();
 
         return true;
