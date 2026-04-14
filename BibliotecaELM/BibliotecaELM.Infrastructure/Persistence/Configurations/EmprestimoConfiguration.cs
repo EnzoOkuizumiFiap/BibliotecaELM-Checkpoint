@@ -22,11 +22,5 @@ public class EmprestimoConfiguration
 
         builder.HasIndex(e => new { e.UsuarioId })
             .IsUnique();
-        
-        //1..N
-        //builder.HasMany(c => c.Livros)
-        //    .WithOne()
-        //   .HasForeignKey(l => l.Compras)
-        //    .OnDelete(DeleteBehavior.Cascade);
     }
 }

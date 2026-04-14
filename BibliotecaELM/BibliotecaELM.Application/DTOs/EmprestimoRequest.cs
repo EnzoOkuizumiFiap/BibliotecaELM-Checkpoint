@@ -16,10 +16,10 @@ public record EmprestimoRequest(
     [param: Required(ErrorMessage = "O UsuarioId é obrigatório")]
     Guid UsuarioId,
 
-    [param: Required(ErrorMessage = "Os Ids dos livros são obrigatórios")]
+    [param: Required(ErrorMessage = "Os livros são obrigatórios")]
     [param: MinLength(1, ErrorMessage = "Ao menos um livro é obrigatório no empréstimo")]
-    List<Guid> LivroIds
+    List<Livro> Livros
 )
 {
-    public Emprestimo ToDomain(IEnumerable<Livro> livros) => new Emprestimo(DataEmprestimo, DataDevolucao, UsuarioId, livros.ToList());
+    public Emprestimo ToDomain() => new Emprestimo(DataEmprestimo, DataDevolucao, UsuarioId, Livros);
 }

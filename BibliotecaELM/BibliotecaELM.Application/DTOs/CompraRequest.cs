@@ -17,10 +17,10 @@ public record CompraRequest(
     [param: Required(ErrorMessage = "O UsuarioId é obrigatório")]
     Guid UsuarioId,
 
-    [param: Required(ErrorMessage = "Os Ids dos livros são obrigatórios")]
+    [param: Required(ErrorMessage = "Os livros são obrigatórios")]
     [param: MinLength(1, ErrorMessage = "Ao menos um livro é obrigatório na compra")]
-    List<Guid> LivroIds
+    List<Livro> Livros
 )
 {
-    public Compra ToDomain(IEnumerable<Livro> livros) => new Compra(FormaCompra, DataCompra, UsuarioId, livros.ToList());
+    public Compra ToDomain() => new Compra(FormaCompra, DataCompra, UsuarioId, Livros);
 }

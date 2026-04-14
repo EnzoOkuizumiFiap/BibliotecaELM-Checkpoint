@@ -32,10 +32,8 @@ public sealed class CompraRepository(BibliotecaElmContext bibliotecaElmContext) 
 
         if (string.IsNullOrWhiteSpace(request.FormaCompra.ToString()))
             throw new InvalidOperationException("O formato do pagamento da compra é obrigatório");
-
-        IEnumerable<Livro> livros = bibliotecaElmContext.Livros;
         
-        var compra = request.ToDomain(livros);
+        var compra = request.ToDomain();
 
         bibliotecaElmContext.Compras.Add(compra);
         bibliotecaElmContext.SaveChanges();
