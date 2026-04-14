@@ -1,6 +1,7 @@
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services;
 using BibliotecaELM.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaELM.Infrastructure.Repositories;
 
@@ -9,6 +10,7 @@ public sealed class UsuarioRepository(BibliotecaElmContext bibliotecaElmContext)
     public IReadOnlyList<UsuarioResponse> GetAll()
     {
         return bibliotecaElmContext.Usuarios
+            .Include(u => u.Endereco)
             .OrderBy(u => u.Id)
             .Select(UsuarioResponse.FromDomain)
             .ToList();
@@ -17,6 +19,7 @@ public sealed class UsuarioRepository(BibliotecaElmContext bibliotecaElmContext)
     public UsuarioResponse? GetById(Guid id)
     {
         var usuario = bibliotecaElmContext.Usuarios
+            .Include(u => u.Endereco)
             .FirstOrDefault(u => u.Id == id);
 
         return usuario is null ? null : UsuarioResponse.FromDomain(usuario);

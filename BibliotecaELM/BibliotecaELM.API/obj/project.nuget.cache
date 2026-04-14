@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xOGM4rOPEAk=",
+  "dgSpecHash": "5N/RMFdH508=",
   "success": true,
-  "projectFilePath": "c:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.API\\BibliotecaELM.API.csproj",
+  "projectFilePath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.API\\BibliotecaELM.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Enzo\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Enzo\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.4\\microsoft.aspnetcore.openapi.10.0.4.nupkg.sha512",
