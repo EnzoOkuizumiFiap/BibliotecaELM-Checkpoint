@@ -30,6 +30,12 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 		if (request.UsuarioId == Guid.Empty)
 			throw new InvalidOperationException("O UsuarioId do empréstimo é obrigatório");
 
+		if (request.DataEmprestimo == default)
+			throw new InvalidOperationException("A data de empréstimo é obrigatória");
+
+		if (request.DataDevolucao == default)
+			throw new InvalidOperationException("A data de devolução é obrigatória");
+
 		if (request.DataDevolucao < request.DataEmprestimo)
 			throw new InvalidOperationException("A data de devolução não pode ser menor que a data de empréstimo");
 
@@ -63,10 +69,7 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 
 	public bool ExistsById(Guid id)
 	{
-		var emprestimo = bibliotecaElmContext.Emprestimos
-			.FirstOrDefault(e => e.Id == id);
-
-		return emprestimo is not null;
+		return bibliotecaElmContext.Emprestimos.Any(e => e.Id == id);
 	}
 
 	public bool Delete(Guid id)
