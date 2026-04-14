@@ -33,7 +33,7 @@ public sealed class CompraRepository(BibliotecaElmContext bibliotecaElmContext) 
         if (request.UsuarioId == Guid.Empty)
             throw new InvalidOperationException("O UsuarioId da compra é obrigatório");
 
-        if (request.LivroIds is null || request.LivroIds.Count == 0)
+        if (request.Livros is null || request.Livros.Count == 0)
             throw new InvalidOperationException("Ao menos um livro é obrigatório na compra");
 
         var usuarioExiste = bibliotecaElmContext.Usuarios
@@ -42,9 +42,14 @@ public sealed class CompraRepository(BibliotecaElmContext bibliotecaElmContext) 
         if (!usuarioExiste)
             throw new InvalidOperationException("Usuário não encontrado");
 
-        var livroIds = request.LivroIds
+        var livroIds = request.Livros
+            .Select(l => l.Id)
+            .Where(id => id != Guid.Empty)
             .Distinct()
             .ToList();
+
+        if (livroIds.Count == 0)
+            throw new InvalidOperationException("Os livros da compra são inválidos");
 
         var livros = bibliotecaElmContext.Livros
             .Where(l => livroIds.Contains(l.Id))
@@ -53,12 +58,13 @@ public sealed class CompraRepository(BibliotecaElmContext bibliotecaElmContext) 
         if (livros.Count != livroIds.Count)
             throw new InvalidOperationException("Um ou mais livros não foram encontrados");
 
-        var compra = request.ToDomain(livros);
+        var compra = request with { Livros = livros };
+        var compraDomain = compra.ToDomain();
 
-        bibliotecaElmContext.Compras.Add(compra);
+        bibliotecaElmContext.Compras.Add(compraDomain);
         bibliotecaElmContext.SaveChanges();
 
-        return CompraResponse.FromDomain(compra);
+        return CompraResponse.FromDomain(compraDomain);
     }
 
     public bool ExistsById(Guid id)

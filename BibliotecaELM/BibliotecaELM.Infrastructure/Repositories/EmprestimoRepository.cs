@@ -39,7 +39,7 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 		if (request.DataDevolucao < request.DataEmprestimo)
 			throw new InvalidOperationException("A data de devolução não pode ser menor que a data de empréstimo");
 
-		if (request.LivroIds is null || request.LivroIds.Count == 0)
+		if (request.Livros is null || request.Livros.Count == 0)
 			throw new InvalidOperationException("Ao menos um livro é obrigatório no empréstimo");
 
 		var usuarioExiste = bibliotecaElmContext.Usuarios
@@ -48,9 +48,14 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 		if (!usuarioExiste)
 			throw new InvalidOperationException("Usuário não encontrado");
 
-		var livroIds = request.LivroIds
+		var livroIds = request.Livros
+			.Select(l => l.Id)
+			.Where(id => id != Guid.Empty)
 			.Distinct()
 			.ToList();
+
+		if (livroIds.Count == 0)
+			throw new InvalidOperationException("Os livros do empréstimo são inválidos");
 
 		var livros = bibliotecaElmContext.Livros
 			.Where(l => livroIds.Contains(l.Id))
@@ -59,12 +64,13 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 		if (livros.Count != livroIds.Count)
 			throw new InvalidOperationException("Um ou mais livros não foram encontrados");
 
-		var emprestimo = request.ToDomain(livros);
+		var emprestimo = request with { Livros = livros };
+		var emprestimoDomain = emprestimo.ToDomain();
 
-		bibliotecaElmContext.Emprestimos.Add(emprestimo);
+		bibliotecaElmContext.Emprestimos.Add(emprestimoDomain);
 		bibliotecaElmContext.SaveChanges();
 
-		return EmprestimoResponse.FromDomain(emprestimo);
+		return EmprestimoResponse.FromDomain(emprestimoDomain);
 	}
 
 	public bool ExistsById(Guid id)
