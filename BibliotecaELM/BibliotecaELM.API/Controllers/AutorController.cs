@@ -54,4 +54,14 @@ public class AutorController : ControllerBase
 
         return NoContent();
     }
+    
+    [HttpGet("{nomeAutor}")]
+    public IActionResult ExistsByNomeAutor(string nomeAutor)
+    {
+        var autorNome = _autorRepository.ExistsByNomeAutor(nomeAutor);
+        if (autorNome is null)
+            return NotFound();
+        
+        return Ok(autorNome);
+    }
 }

@@ -28,11 +28,11 @@ public class Usuario : BaseEntity
         this.Endereco = endereco;
     }
     
-    private static int CalculateAge(DateOnly date)
-    {
-        var today = DateOnly.FromDateTime(DateTime.Today);
-        var age = today.Year - date.Year;
-        if (date > today.AddYears(-age)) age--;
-        return age;
-    }
+    // private static int CalculateAge(DateOnly date)
+    // {
+    //     var today = DateOnly.FromDateTime(DateTime.Today);
+    //     var age = today.Year - date.Year;
+    //     if (date > today.AddYears(-age)) age--;
+    //     return age;
+    // }
 }
