@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using BibliotecaELM.Domain.Entities;
 using BibliotecaELM.Domain.Enums;
 
@@ -17,10 +16,10 @@ public record CompraRequest(
     [param: Required(ErrorMessage = "O UsuarioId é obrigatório")]
     Guid UsuarioId,
 
-    [param: Required(ErrorMessage = "Os livros são obrigatórios")]
+    [param: Required(ErrorMessage = "Os IDs dos livros são obrigatórios")]
     [param: MinLength(1, ErrorMessage = "Ao menos um livro é obrigatório na compra")]
-    List<Livro> Livros
+    List<Guid> LivrosIds
 )
 {
-    public Compra ToDomain() => new Compra(FormaCompra, DataCompra, UsuarioId, Livros);
+    public Compra ToDomain(List<Livro> livros) => new Compra(FormaCompra, DataCompra, UsuarioId, livros);
 }

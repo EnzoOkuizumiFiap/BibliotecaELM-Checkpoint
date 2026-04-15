@@ -21,5 +21,11 @@ public class EmprestimoConfiguration : IEntityTypeConfiguration<Emprestimo>
             .IsRequired();
 
         builder.HasIndex(e => e.UsuarioId);
+
+        //1..N (Usuario -> Emprestimos)
+        builder.HasOne<Usuario>()
+            .WithMany(u => u.Emprestimos)
+            .HasForeignKey(e => e.UsuarioId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

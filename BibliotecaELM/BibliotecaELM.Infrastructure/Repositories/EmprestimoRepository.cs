@@ -1,6 +1,7 @@
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services;
 using BibliotecaELM.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaELM.Infrastructure.Repositories;
 
@@ -9,6 +10,7 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 	public IReadOnlyList<EmprestimoResponse> GetAll()
 	{
 		return bibliotecaElmContext.Emprestimos
+			.Include(e => e.Livros)
 			.OrderBy(e => e.Id)
 			.Select(EmprestimoResponse.FromDomain)
 			.ToList();
@@ -17,6 +19,7 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 	public EmprestimoResponse? GetById(Guid id)
 	{
 		var emprestimo = bibliotecaElmContext.Emprestimos
+			.Include(e => e.Livros)
 			.FirstOrDefault(e => e.Id == id);
 
 		return emprestimo is null ? null : EmprestimoResponse.FromDomain(emprestimo);
@@ -39,17 +42,16 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 		if (request.DataDevolucao < request.DataEmprestimo)
 			throw new InvalidOperationException("A data de devolução não pode ser menor que a data de empréstimo");
 
-		if (request.Livros is null || request.Livros.Count == 0)
+		if (request.LivrosIds is null || request.LivrosIds.Count == 0)
 			throw new InvalidOperationException("Ao menos um livro é obrigatório no empréstimo");
 
 		var usuarioExiste = bibliotecaElmContext.Usuarios
-			.Any(u => u.Id == request.UsuarioId);
+			.FirstOrDefault(u => u.Id == request.UsuarioId) is not null;
 
 		if (!usuarioExiste)
 			throw new InvalidOperationException("Usuário não encontrado");
 
-		var livroIds = request.Livros
-			.Select(l => l.Id)
+		var livroIds = request.LivrosIds
 			.Where(id => id != Guid.Empty)
 			.Distinct()
 			.ToList();
@@ -64,8 +66,7 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 		if (livros.Count != livroIds.Count)
 			throw new InvalidOperationException("Um ou mais livros não foram encontrados");
 
-		var emprestimo = request with { Livros = livros };
-		var emprestimoDomain = emprestimo.ToDomain();
+		var emprestimoDomain = request.ToDomain(livros);
 
 		bibliotecaElmContext.Emprestimos.Add(emprestimoDomain);
 		bibliotecaElmContext.SaveChanges();
@@ -75,7 +76,7 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 
 	public bool ExistsById(Guid id)
 	{
-		return bibliotecaElmContext.Emprestimos.Any(e => e.Id == id);
+		return bibliotecaElmContext.Emprestimos.FirstOrDefault(e => e.Id == id) is not null;
 	}
 
 	public bool Delete(Guid id)

@@ -5,7 +5,12 @@ using BibliotecaELM.Domain.Entities;
 
 namespace BibliotecaELM.Application.DTOs;
 
-public record EmprestimoResponse(Guid Id, DateTime DataEmprestimo, DateTime DataDevolucao, Guid UsuarioId, List<Guid> LivroIds)
+public record EmprestimoResponse(Guid Id, DateTime DataEmprestimo, DateTime DataDevolucao, Guid UsuarioId, List<Guid> LivrosIds)
 {
-    public static EmprestimoResponse FromDomain(Emprestimo emprestimo) => new(emprestimo.Id, emprestimo.DataEmprestimo, emprestimo.DataDevolucao, emprestimo.UsuarioId, emprestimo.Livros.Select(l => l.Id).ToList());
+    public static EmprestimoResponse FromDomain(Emprestimo emprestimo) => new(
+        emprestimo.Id,
+        emprestimo.DataEmprestimo,
+        emprestimo.DataDevolucao,
+        emprestimo.UsuarioId,
+        (emprestimo.Livros ?? new List<Livro>()).Select(l => l.Id).ToList());
 }

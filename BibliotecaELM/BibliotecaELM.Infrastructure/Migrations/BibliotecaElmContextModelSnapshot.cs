@@ -61,8 +61,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("BD_Purchases", (string)null);
                 });
@@ -74,10 +73,10 @@ namespace BibliotecaELM.Infrastructure.Migrations
                         .HasColumnType("RAW(16)");
 
                     b.Property<DateTime>("DataDevolucao")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("date");
 
                     b.Property<DateTime>("DataEmprestimo")
-                        .HasColumnType("TIMESTAMP(7)");
+                        .HasColumnType("date");
 
                     b.Property<Guid>("UsuarioId")
                         .HasColumnType("RAW(16)");
@@ -86,7 +85,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Emprestimos");
+                    b.ToTable("BD_Loans", (string)null);
                 });
 
             modelBuilder.Entity("BibliotecaELM.Domain.Entities.Endereco", b =>

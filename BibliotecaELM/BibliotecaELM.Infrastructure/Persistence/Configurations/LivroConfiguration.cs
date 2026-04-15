@@ -25,12 +25,12 @@ public class LivroConfiguration : IEntityTypeConfiguration<Livro>
 
         builder.HasIndex(l => new { l.AutorId });
 
-        // Mapeamento N:N com Compra
+        //N..N (Livro <-> Compras)
         builder.HasMany(l => l.Compras)
             .WithMany(c => c.Livros)
             .UsingEntity(j => j.ToTable("BD_PurchaseBooks"));
         
-        // Mapeamento N:N com Emprestimo
+        //N..N (Livro <-> Emprestimos)
         builder.HasMany(l => l.Emprestimos)
             .WithMany(e => e.Livros)
             .UsingEntity(j => j.ToTable("BD_LoanBooks"));
