@@ -59,7 +59,7 @@ public class AutorController : ControllerBase
     public IActionResult ExistsByNomeAutor(string nomeAutor)
     {
         var autorNome = _autorRepository.ExistsByNomeAutor(nomeAutor);
-        if (autorNome is null)
+        if (!autorNome)
             return NotFound();
         
         return Ok(autorNome);
