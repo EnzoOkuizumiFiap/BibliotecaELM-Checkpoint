@@ -21,7 +21,5 @@ public class EmprestimoConfiguration : IEntityTypeConfiguration<Emprestimo>
             .IsRequired();
 
         builder.HasIndex(e => e.UsuarioId);
-        
-        // O mapeamento N:N com Livro é feito em LivroConfiguration.
     }
 }

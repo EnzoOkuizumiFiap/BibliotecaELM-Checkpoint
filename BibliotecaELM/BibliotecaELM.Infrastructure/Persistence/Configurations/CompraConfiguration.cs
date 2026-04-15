@@ -20,11 +20,6 @@ public class CompraConfiguration : IEntityTypeConfiguration<Compra>
         builder.Property(c => c.DataCompra)
             .IsRequired();
         
-        builder.HasIndex(e => new { e.UsuarioId })
-            .IsUnique();
-        
-        //1..N
-        //builder.HasMany(c => c.Livros)
-        //    .WithMany();
+        builder.HasIndex(e => new { e.UsuarioId });
     }
 }
