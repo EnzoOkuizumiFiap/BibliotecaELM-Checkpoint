@@ -10,6 +10,8 @@ public interface IUsuarioRepository
 
     UsuarioResponse Create(UsuarioRequest request);
 
+    UsuarioResponse? Update(Guid id, UsuarioRequest request);
+
     bool ExistsByEmail(string email);
 
     bool ExistsById(Guid id);

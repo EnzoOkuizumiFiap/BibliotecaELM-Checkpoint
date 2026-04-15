@@ -46,6 +46,23 @@ public class UsuarioController : ControllerBase
         }
     }
 
+    [HttpPut("{id:guid}")]
+    public IActionResult Update(Guid id, [FromBody] UsuarioRequest request)
+    {
+        try
+        {
+            var usuario = _usuarioRepository.Update(id, request);
+            if (usuario is null)
+                return NotFound();
+
+            return Ok(usuario);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpDelete("{id:guid}")]
     public IActionResult Delete(Guid id)
     {
