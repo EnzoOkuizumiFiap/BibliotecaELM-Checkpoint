@@ -1,94 +1,68 @@
-# 📌 CP2 — Persistência com EF Core, Mapeamento e Camada de Infraestrutura
+# 📌 BibliotecaELM - Checkpoint 02
 
-## 🎯 Objetivo
+**Integrantes do Grupo:**
+- [Seu Nome Aqui] - RM: [Seu RM Aqui]
+- [Nome do Integrante 2 (Se houver)] - RM: [RM Aqui]
+- [Nome do Integrante 3 (Se houver)] - RM: [RM Aqui]
 
-1. **Persistir o modelo COMPLETO do MER** usando **Entity Framework Core** (.NET 9/10), respeitando o **Clean Architecture**:
-  - `DbContext` na camada **Infrastructure**.
-  - **Mapeamento** das entidades (Fluent API).
-  - **Relacionamentos** fiéis ao CP1: cardinalidade, opcionalidade, chaves primárias/estrangeiras e índices quando fizer sentido (ex.: unicidade, FKs).
+## 🎯 Sobre o Projeto (Domínio Escolhido)
+Este projeto é uma API em .NET desenvolvida seguindo os princípios de **Clean Architecture**, abordando o domínio de uma **Biblioteca**. O sistema gerencia o serviço clássico de empréstimos (locação de acervo físico) e transações de compras/aquisição de livros em definitivo pelos usuários.
 
-2. **Migrations** versionadas no repositório:
-  - Pelo menos **uma migration inicial** que materialize o esquema completo (no máximo duas migrations, se houver justificativa explícita no README).
-  - Banco de dados à escolha do grupo, desde que a execução seja **reproduzível** (ex.: **SQLite** para simplicidade; **SQL Server**, **PostgreSQL**, **Oracle** ou **MySQL** com instruções claras no README).
-
-3. **Padrão de acesso a dados**:
-  - Interfaces de repositório na camada **Application**
-  - Implementações na **Infrastructure**.
-  - **Injeção de dependência** registrada no **Program.cs** do projeto **API**.
-
-4. **Configuração segura**:
-  - Connection string em `appsettings` (e `User Secrets` / variáveis de ambiente para dados sensíveis em desenvolvimento).
-  - **Não** commitar senhas ou segredos reais.
+Este projeto iniciou-se no **Checkpoint 01 (CP1)** focado na modelagem do Domínio (MER) e agora evoluiu no **Checkpoint 02 (CP2)** com a inclusão de acesso a dados (**Entity Framework Core**), camada de **Infrastructure**, Mapeamento Fluent API e criação do banco por meio de **Migrations**.
 
 ---
 
-## 👥 Forma de Trabalho
+## 🧱 Arquitetura e Estrutura do Projeto (Checkpoin 02)
 
-- O trabalho deverá ser realizado **em grupo** com até **3 integrantes**.
-- Cada grupo deverá entregar **um único repositório** no GitHub.
-- Somente **um integrante** deverá entregar o link no portal do aluno.
+Esta entrega foi refatorada para comportar persistência e a lógica em camadas separadas:
+1. **API (`BibliotecaELM.API`)**: Controladores e injeção de dependência (`Program.cs`).
+2. **Application (`BibliotecaELM.Application`)**: Serviços (interfaces de repositório) e DTOs.
+3. **Domain (`BibliotecaELM.Domain`)**: Entidades de domínio originárias do CP1 e classe base `BaseEntity`.
+4. **Infrastructure (`BibliotecaELM.Infrastructure`)**: 
+   - `DbContext` (`BibliotecaElmContext`) persistindo o contexto com **Oracle**.
+   - Mapeamentos das entidades usando **Fluent API** (ex. `IEntityTypeConfiguration<T>`).
+   - Implementações correspondentes aos Repositórios Genéricos / Agregados.
+   - Migrations do Entity Framework.
 
----
+### 💾 Persistência e Banco de Dados
+Para o escopo do **CP2**, utilizamos:
+- **SGBD**: Banco de Dados **Oracle** (`Oracle.EntityFrameworkCore`).
+- **ORM Configurado**: Entity Framework Core 9/10.
 
-## 🧭 Escopo (o que fazer)
-
-1. Adicionar os pacotes NuGet necessários ao **EF Core** e ao **provider** do banco escolhido (e `Microsoft.EntityFrameworkCore.Design` no projeto correto para gerar migrations).
-2. Criar o **`DbContext`** (ex.: `ApplicationDbContext`) incluindo **todas** as entidades modeladas no CP1.
-3. Implementar o mapeamento (**Fluent API** com `IEntityTypeConfiguration<T>` e/ou **Data Annotations**):
-  - **Mínimo obrigatório:** mapear explicitamente todas as entidades que participam de relacionamentos **N:N** ou com **opcionalidade** que não seja óbvia só pelas propriedades.
-4. Gerar **migration(es)** e garantir que o banco seja criado/atualizado com sucesso (ex.: `dotnet ef database update`).
-5. Implementar **repositório genérico** *ou* **repositórios por agregado** — **uma** estratégia, aplicada de forma consistente.
-6. Registrar serviços no container de DI (**AddDbContext**, repositórios/UoW).
-7. **Validação do cenário** — **uma** das opções (definir em conjunto com o professor):
-  - **(A)** Apenas camada de dados + README com comandos e evidência (print da ferramenta do banco ou do esquema gerado); **ou**
-  - **(B)** Incluir **um endpoint mínimo** (ex.: `GET` de health + **um** `GET` que demonstre leitura no banco, com **seed** opcional de dados de exemplo).
-
----
-
-## 🧱 Restrições (o que NÃO fazer)
-
-- ❌ Nada de regras de negócio complexas na **Infrastructure** (foco em persistência, mapeamento e acesso a dados).
-- ❌ Não commitar **credenciais reais** nem connection strings com segredos.
-- ✅ Foco em **EF Core**, **migrations**, **mapeamento** e **organização** em camadas.
+#### Como Executar e aplicar as Migrations:
+1. Certifique-se de configurar a *Connection String* do Oracle (`BibliotecaElmOracle`) em `appsettings.Development.json` no projeto da API. *(Nota: as credenciais reais de banco não foram comitadas por segurança).*
+2. Pelo terminal (na pasta principal ou do projeto web), aplique a migration no banco:
+   ```bash
+   dotnet ef database update --project BibliotecaELM.Infrastructure --startup-project BibliotecaELM.API
+   ```
 
 ---
 
-## 🗂️ Entregáveis (no GitHub público)
+## 📚 Entidades Modeladas
+Todas as entidades listadas abaixo (originadas no CP1) implementam a classe abstrata `BaseEntity` utilizando o identificador único padrão (`Id` do tipo `Guid`).
 
-- Solução atualizada com **Infrastructure** contendo `DbContext`, implementações de repositório e pasta de **Migrations**.
-- **`README.md`** na raiz **atualizado** com:
-  - Nome e RM dos integrantes do grupo.
-  - Domínio escolhido (pode resumir o do CP1).
-  - **Qual SGBD** foi usado
-- **`/docs/`** (recomendado): diagrama ou print do **esquema físico** no banco (ou atualização do MER se o modelo evoluiu, com breve justificativa).
-- A entrega no portal continua sendo **somente o link do Git** (não enviar ZIP do código).
-
----
-
-## 🏅 Avaliação (até 10 pontos)
-
-| Critério | Pontos |
-|----------|--------|
-| **Mapeamento EF** — Fluent API/anotações, tipos, nullability, relacionamentos fiéis ao MER | até **3,0** |
-| **Migrations e banco** — migration aplicável sem erros, esquema coerente | até **2,5** |
-| **Clean Architecture** — DbContext e implementações na Infrastructure; contratos claros; DI correto na API | até **2,5** |
-| **Repositórios* — interfaces bem definidas, uso consistente, sem acoplamento indevido | até **2,0** |
+- **Usuario**: Representa os leitores/clientes da biblioteca.
+- **Endereco**: Representa a localização de residência do usuário.
+- **Livro**: Representa as obras literárias e físicas da biblioteca.
+- **Autor**: Representa os escritores responsáveis pelas obras.
+- **Emprestimo**: Representa o ato transacional (histórico) onde o usuário leva o livro temporariamente com prazos definidos.
+- **Compra**: Representa a transação comercial onde o usuário adquire livros em definitivo.
 
 ---
 
-## 🌟 Propósito
+## 🔗 Resumo dos Relacionamentos
 
-> “Faça o teu melhor, na condição que você tem, enquanto você não tem condições melhores, para fazer melhor ainda”  
-> — Mario Sergio Cortella
+Baseado na modelagem e devidamente mapeados com EF Core no CP2:
 
----
-
-## 📎 Relação com o CP1
-
-| CP1 | CP2 |
-|-----|-----|
-| MER + entidades em C# | Esquema físico + EF Core + migrations |
-| Sem banco de dados | Banco configurado e reproduzível |
-| Sem persistência | Repositórios/UoW + DI |
-
----
+- **Usuario (1) ↔ (1) Endereco**
+  - Relacionamento 1:1 obrigatório no modelo atual. Cada usuário possui exatamente um endereço e cada endereço pertence a exatamente um usuário (FK `UsuarioId` com índice único em `BD_Addresses`).
+- **Usuario (1) ↔ (N) Emprestimo**
+  - Relacionamento 1:N obrigatório. Um usuário pode ter vários empréstimos e todo empréstimo exige um usuário vinculado (`UsuarioId` obrigatório em `BD_Loans`).
+- **Usuario (1) ↔ (N) Compra**
+  - Relacionamento 1:N obrigatório. Um usuário pode efetuar inúmeras compras e toda compra exige um usuário vinculado (`UsuarioId` obrigatório em `BD_Purchases`).
+- **Livro (N) ↔ (N) Emprestimo**
+  - Relacionamento N:N implementado por tabela de junção `BD_LoanBooks`.
+- **Autor (1) ↔ (N) Livro**
+  - Relacionamento 1:N obrigatório. Um autor possui vários livros e todo livro exige um autor (`AutorId` obrigatório em `BD_Books`).
+- **Compra (N) ↔ (N) Livro**
+  - Relacionamento N:N implementado por tabela de junção `BD_PurchaseBooks`.
