@@ -10,6 +10,8 @@ public interface ICompraRepository
 
     CompraResponse Create(CompraRequest request);
 
+    CompraResponse? Update(Guid id, CompraRequest request);
+
     bool ExistsById(Guid id);
 
     bool Delete(Guid id);

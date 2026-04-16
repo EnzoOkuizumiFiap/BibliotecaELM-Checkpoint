@@ -40,6 +40,39 @@ public sealed class AutorRepository(BibliotecaElmContext bibliotecaElmContext) :
         return AutorResponse.FromDomain(autor);
     }
 
+    public AutorResponse? Update(Guid id, AutorRequest request)
+    {
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+
+        if (id == Guid.Empty)
+            throw new InvalidOperationException("O Id do Autor é obrigatório");
+
+        if (string.IsNullOrWhiteSpace(request.NomeAutor))
+            throw new InvalidOperationException("O Nome do Autor é obrigatório");
+
+        var normalizedName = request.NomeAutor.Trim().ToLower();
+        var nomeEmUsoPorOutroAutor = bibliotecaElmContext.Autores
+            .FirstOrDefault(a => a.Id != id && a.NomeAutor.ToLower() == normalizedName) is not null;
+
+        if (nomeEmUsoPorOutroAutor)
+            throw new InvalidOperationException("Já existe um autor com este nome");
+
+        var autor = bibliotecaElmContext.Autores
+            .FirstOrDefault(a => a.Id == id);
+
+        if (autor is null)
+            return null;
+
+        var entry = bibliotecaElmContext.Entry(autor);
+        entry.Property(a => a.NomeAutor).CurrentValue = request.NomeAutor;
+        entry.Property(a => a.Nascimento).CurrentValue = request.Nascimento;
+
+        bibliotecaElmContext.SaveChanges();
+
+        return AutorResponse.FromDomain(autor);
+    }
+
     public bool ExistsByNomeAutor(string nomeAutor)
     {
         if (string.IsNullOrWhiteSpace(nomeAutor))

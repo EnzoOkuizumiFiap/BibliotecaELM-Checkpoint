@@ -9,6 +9,8 @@ public interface ILivroRepository
     LivroResponse? GetById(Guid id);
     
     LivroResponse Create(LivroRequest request);
+
+    LivroResponse? Update(Guid id, LivroRequest request);
     
     bool ExistsByNomeLivro(string nomeLivro);
     

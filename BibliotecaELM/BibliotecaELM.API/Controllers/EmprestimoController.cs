@@ -46,6 +46,23 @@ public class EmprestimoController : ControllerBase
         }
     }
 
+    [HttpPut("{id:guid}")]
+    public IActionResult Update(Guid id, [FromBody] EmprestimoRequest request)
+    {
+        try
+        {
+            var emprestimo = _emprestimoRepository.Update(id, request);
+            if (emprestimo is null)
+                return NotFound();
+
+            return Ok(emprestimo);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpDelete("{id:guid}")]
     public IActionResult Delete(Guid id)
     {

@@ -10,6 +10,8 @@ public interface IAutorRepository
 
     AutorResponse Create(AutorRequest request);
 
+    AutorResponse? Update(Guid id, AutorRequest request);
+
     bool ExistsByNomeAutor(string nomeAutor);
 
     bool ExistsById(Guid id);

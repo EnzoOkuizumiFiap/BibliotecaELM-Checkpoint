@@ -45,6 +45,23 @@ public class LivroController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("{id:guid}")]
+    public IActionResult Update(Guid id, [FromBody] LivroRequest request)
+    {
+        try
+        {
+            var livro = _livroRepository.Update(id, request);
+            if (livro is null)
+                return NotFound();
+
+            return Ok(livro);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
     
     [HttpDelete("{id:guid}")]
     public IActionResult Delete(Guid id)

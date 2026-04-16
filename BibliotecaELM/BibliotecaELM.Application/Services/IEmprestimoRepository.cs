@@ -10,6 +10,8 @@ public interface IEmprestimoRepository
 
     EmprestimoResponse Create(EmprestimoRequest request);
 
+    EmprestimoResponse? Update(Guid id, EmprestimoRequest request);
+
     bool ExistsById(Guid id);
 
     bool Delete(Guid id);

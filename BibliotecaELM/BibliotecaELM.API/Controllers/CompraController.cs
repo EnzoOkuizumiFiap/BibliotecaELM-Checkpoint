@@ -46,6 +46,23 @@ public class CompraController : ControllerBase
         }
     }
 
+    [HttpPut("{id:guid}")]
+    public IActionResult Update(Guid id, [FromBody] CompraRequest request)
+    {
+        try
+        {
+            var compra = _compraRepository.Update(id, request);
+            if (compra is null)
+                return NotFound();
+
+            return Ok(compra);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpDelete("{id:guid}")]
     public IActionResult Delete(Guid id)
     {

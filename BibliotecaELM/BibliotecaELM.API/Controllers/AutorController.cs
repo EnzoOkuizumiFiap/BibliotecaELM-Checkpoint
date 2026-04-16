@@ -46,6 +46,23 @@ public class AutorController : ControllerBase
         }
     }
 
+    [HttpPut("{id:guid}")]
+    public IActionResult Update(Guid id, [FromBody] AutorRequest request)
+    {
+        try
+        {
+            var autor = _autorRepository.Update(id, request);
+            if (autor is null)
+                return NotFound();
+
+            return Ok(autor);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpDelete("{id:guid}")]
     public IActionResult Delete(Guid id)
     {
