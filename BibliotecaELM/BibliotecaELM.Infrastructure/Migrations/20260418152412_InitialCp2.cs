@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BibliotecaELM.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCp2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "PG_Authors",
+                name: "BD_Authors",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "RAW(16)", nullable: false),
@@ -21,11 +21,11 @@ namespace BibliotecaELM.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PG_Authors", x => x.Id);
+                    table.PrimaryKey("PK_BD_Authors", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PG_Users",
+                name: "BD_Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "RAW(16)", nullable: false),
@@ -36,11 +36,11 @@ namespace BibliotecaELM.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PG_Users", x => x.Id);
+                    table.PrimaryKey("PK_BD_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PG_Books",
+                name: "BD_Books",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "RAW(16)", nullable: false),
@@ -51,57 +51,17 @@ namespace BibliotecaELM.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PG_Books", x => x.Id);
+                    table.PrimaryKey("PK_BD_Books", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PG_Books_PG_Authors_AutorId",
+                        name: "FK_BD_Books_BD_Authors_AutorId",
                         column: x => x.AutorId,
-                        principalTable: "PG_Authors",
+                        principalTable: "BD_Authors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Compras",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "RAW(16)", nullable: false),
-                    FormaCompra = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    DataCompra = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    UsuarioId = table.Column<Guid>(type: "RAW(16)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Compras", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Compras_PG_Users_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "PG_Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Emprestimos",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "RAW(16)", nullable: false),
-                    DataEmprestimo = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    DataDevolucao = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
-                    UsuarioId = table.Column<Guid>(type: "RAW(16)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Emprestimos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Emprestimos_PG_Users_UsuarioId",
-                        column: x => x.UsuarioId,
-                        principalTable: "PG_Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PG_Addresses",
+                name: "BD_Addresses",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "RAW(16)", nullable: false),
@@ -114,41 +74,57 @@ namespace BibliotecaELM.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PG_Addresses", x => x.Id);
+                    table.PrimaryKey("PK_BD_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PG_Addresses_PG_Users_UsuarioId",
+                        name: "FK_BD_Addresses_BD_Users_UsuarioId",
                         column: x => x.UsuarioId,
-                        principalTable: "PG_Users",
+                        principalTable: "BD_Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompraLivro",
+                name: "BD_Loans",
                 columns: table => new
                 {
-                    ComprasId = table.Column<Guid>(type: "RAW(16)", nullable: false),
-                    LivrosId = table.Column<Guid>(type: "RAW(16)", nullable: false)
+                    Id = table.Column<Guid>(type: "RAW(16)", nullable: false),
+                    DataEmprestimo = table.Column<DateTime>(type: "date", nullable: false),
+                    DataDevolucao = table.Column<DateTime>(type: "date", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "RAW(16)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CompraLivro", x => new { x.ComprasId, x.LivrosId });
+                    table.PrimaryKey("PK_BD_Loans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CompraLivro_Compras_ComprasId",
-                        column: x => x.ComprasId,
-                        principalTable: "Compras",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CompraLivro_PG_Books_LivrosId",
-                        column: x => x.LivrosId,
-                        principalTable: "PG_Books",
+                        name: "FK_BD_Loans_BD_Users_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "BD_Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmprestimoLivro",
+                name: "BD_Purchases",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "RAW(16)", nullable: false),
+                    FormaCompra = table.Column<string>(type: "NVARCHAR2(30)", maxLength: 30, nullable: false),
+                    DataCompra = table.Column<DateTime>(type: "TIMESTAMP(7)", nullable: false),
+                    UsuarioId = table.Column<Guid>(type: "RAW(16)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BD_Purchases", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BD_Purchases_BD_Users_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "BD_Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BD_LoanBooks",
                 columns: table => new
                 {
                     EmprestimosId = table.Column<Guid>(type: "RAW(16)", nullable: false),
@@ -156,85 +132,103 @@ namespace BibliotecaELM.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_EmprestimoLivro", x => new { x.EmprestimosId, x.LivrosId });
+                    table.PrimaryKey("PK_BD_LoanBooks", x => new { x.EmprestimosId, x.LivrosId });
                     table.ForeignKey(
-                        name: "FK_EmprestimoLivro_Emprestimos_EmprestimosId",
-                        column: x => x.EmprestimosId,
-                        principalTable: "Emprestimos",
+                        name: "FK_BD_LoanBooks_BD_Books_LivrosId",
+                        column: x => x.LivrosId,
+                        principalTable: "BD_Books",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_EmprestimoLivro_PG_Books_LivrosId",
+                        name: "FK_BD_LoanBooks_BD_Loans_EmprestimosId",
+                        column: x => x.EmprestimosId,
+                        principalTable: "BD_Loans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BD_PurchaseBooks",
+                columns: table => new
+                {
+                    ComprasId = table.Column<Guid>(type: "RAW(16)", nullable: false),
+                    LivrosId = table.Column<Guid>(type: "RAW(16)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BD_PurchaseBooks", x => new { x.ComprasId, x.LivrosId });
+                    table.ForeignKey(
+                        name: "FK_BD_PurchaseBooks_BD_Books_LivrosId",
                         column: x => x.LivrosId,
-                        principalTable: "PG_Books",
+                        principalTable: "BD_Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BD_PurchaseBooks_BD_Purchases_ComprasId",
+                        column: x => x.ComprasId,
+                        principalTable: "BD_Purchases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CompraLivro_LivrosId",
-                table: "CompraLivro",
-                column: "LivrosId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Compras_UsuarioId",
-                table: "Compras",
-                column: "UsuarioId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EmprestimoLivro_LivrosId",
-                table: "EmprestimoLivro",
-                column: "LivrosId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Emprestimos_UsuarioId",
-                table: "Emprestimos",
-                column: "UsuarioId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PG_Addresses_UsuarioId",
-                table: "PG_Addresses",
+                name: "IX_BD_Addresses_UsuarioId",
+                table: "BD_Addresses",
                 column: "UsuarioId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_PG_Books_AutorId",
-                table: "PG_Books",
+                name: "IX_BD_Books_AutorId",
+                table: "BD_Books",
                 column: "AutorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PG_Users_Email",
-                table: "PG_Users",
-                column: "Email",
-                unique: true);
+                name: "IX_BD_LoanBooks_LivrosId",
+                table: "BD_LoanBooks",
+                column: "LivrosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BD_Loans_UsuarioId",
+                table: "BD_Loans",
+                column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BD_PurchaseBooks_LivrosId",
+                table: "BD_PurchaseBooks",
+                column: "LivrosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BD_Purchases_UsuarioId",
+                table: "BD_Purchases",
+                column: "UsuarioId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CompraLivro");
+                name: "BD_Addresses");
 
             migrationBuilder.DropTable(
-                name: "EmprestimoLivro");
+                name: "BD_LoanBooks");
 
             migrationBuilder.DropTable(
-                name: "PG_Addresses");
+                name: "BD_PurchaseBooks");
 
             migrationBuilder.DropTable(
-                name: "Compras");
+                name: "BD_Loans");
 
             migrationBuilder.DropTable(
-                name: "Emprestimos");
+                name: "BD_Books");
 
             migrationBuilder.DropTable(
-                name: "PG_Books");
+                name: "BD_Purchases");
 
             migrationBuilder.DropTable(
-                name: "PG_Users");
+                name: "BD_Authors");
 
             migrationBuilder.DropTable(
-                name: "PG_Authors");
+                name: "BD_Users");
         }
     }
 }

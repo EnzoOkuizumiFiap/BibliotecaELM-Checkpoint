@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("f14e9751-7de1-47b4-9424-5d2e097ebc16")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("BibliotecaELM.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d0d9c4403e7d7fa50338cedf4788ef92c2fcb104")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a66dc08a16c3459885369cded716c29db8f4fd29")]
 [assembly: System.Reflection.AssemblyProductAttribute("BibliotecaELM.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BibliotecaELM.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

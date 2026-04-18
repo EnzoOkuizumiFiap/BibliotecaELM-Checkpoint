@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace BibliotecaELM.Infrastructure.Migrations
 {
     [DbContext(typeof(BibliotecaElmContext))]
-    [Migration("20260415180609_AjustaRelacionamentosUsuarioCompraEmprestimo")]
-    partial class AjustaRelacionamentosUsuarioCompraEmprestimo
+    [Migration("20260418152412_InitialCp2")]
+    partial class InitialCp2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

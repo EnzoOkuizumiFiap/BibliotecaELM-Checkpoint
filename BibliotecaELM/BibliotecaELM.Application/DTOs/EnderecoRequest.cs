@@ -18,11 +18,8 @@ public record EnderecoRequest(
     string Bairro,
 
     [param: Required(ErrorMessage = "A rua é obrigatória")]
-    string Rua,
-    
-    [param: Required(ErrorMessage = "O AutorId é obrigatório")]
-    Guid UsuarioId
+    string Rua
 )
 {
-    public Endereco ToDomain() => new Endereco(Cep, Estado, Cidade, Bairro, Rua, UsuarioId);
+    public Endereco ToDomain(Guid usuarioId) => new Endereco(Cep, Estado, Cidade, Bairro, Rua, usuarioId);
 }

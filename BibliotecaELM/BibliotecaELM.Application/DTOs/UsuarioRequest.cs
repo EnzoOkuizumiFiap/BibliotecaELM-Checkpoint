@@ -21,9 +21,13 @@ public record UsuarioRequest(
     [param: StringLength(11, MinimumLength = 11, ErrorMessage = "O CPF deve conter exatamente 11 caracteres")]
     string Cpf,
 
-    [param: Required]
-    Endereco Endereco
+    EnderecoRequest? Endereco
 )
 {
-    public Usuario ToDomain() => new Usuario(NomeUsuario, Nascimento, Email,  Cpf, Endereco);
+    public Usuario ToDomain() => new Usuario(
+        NomeUsuario,
+        Nascimento,
+        Email,
+        Cpf,
+        Endereco?.ToDomain(Guid.Empty));
 }

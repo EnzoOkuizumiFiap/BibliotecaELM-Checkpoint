@@ -10,6 +10,8 @@ public interface IEnderecoRepository
 
     EnderecoResponse Create(EnderecoRequest request, Guid usuarioId);
 
+    EnderecoResponse? Update(Guid id, EnderecoRequest request);
+
     bool ExistsById(Guid id);
     
     bool ExistsByIdUsuario(Guid usuarioId);

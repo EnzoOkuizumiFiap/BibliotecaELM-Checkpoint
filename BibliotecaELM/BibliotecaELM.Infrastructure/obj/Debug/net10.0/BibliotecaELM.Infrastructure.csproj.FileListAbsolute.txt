@@ -16,3 +16,6 @@ C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\Biblioteca
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.Infrastructure\obj\Debug\net10.0\refint\BibliotecaELM.Infrastructure.dll
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.Infrastructure\obj\Debug\net10.0\BibliotecaELM.Infrastructure.pdb
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.Infrastructure\obj\Debug\net10.0\ref\BibliotecaELM.Infrastructure.dll
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.Infrastructure.deps.json
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.Infrastructure.dll
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.Infrastructure.pdb

@@ -39,6 +39,12 @@ public sealed class UsuarioRepository(BibliotecaElmContext bibliotecaElmContext)
         var usuario = request.ToDomain();
 
         bibliotecaElmContext.Usuarios.Add(usuario);
+        if (usuario.Endereco is not null)
+        {
+            var enderecoEntry = bibliotecaElmContext.Entry(usuario.Endereco);
+            enderecoEntry.Property(e => e.UsuarioId).CurrentValue = usuario.Id;
+        }
+
         bibliotecaElmContext.SaveChanges();
 
         return UsuarioResponse.FromDomain(usuario);
@@ -54,9 +60,6 @@ public sealed class UsuarioRepository(BibliotecaElmContext bibliotecaElmContext)
 
         if (string.IsNullOrWhiteSpace(request.Email))
             throw new InvalidOperationException("O email do usuario é obrigatório");
-
-        if (request.Endereco is null)
-            throw new InvalidOperationException("O endereço do usuario é obrigatório");
 
         var normalizedEmail = request.Email.Trim().ToLower();
         var emailEmUsoPorOutroUsuario = bibliotecaElmContext.Usuarios
@@ -78,28 +81,32 @@ public sealed class UsuarioRepository(BibliotecaElmContext bibliotecaElmContext)
         usuarioEntry.Property(u => u.Email).CurrentValue = request.Email;
         usuarioEntry.Property(u => u.Cpf).CurrentValue = request.Cpf;
 
-        var enderecoRequest = request.Endereco;
-        if (usuario.Endereco is null)
+        // Regra: quando Endereco vier nulo, mantem o endereco atual sem alteracoes.
+        if (request.Endereco is not null)
         {
-            var novoEndereco = new Domain.Entities.Endereco(
-                enderecoRequest.Cep,
-                enderecoRequest.Estado,
-                enderecoRequest.Cidade,
-                enderecoRequest.Bairro,
-                enderecoRequest.Rua,
-                id);
+            var enderecoRequest = request.Endereco;
+            if (usuario.Endereco is null)
+            {
+                var novoEndereco = new Domain.Entities.Endereco(
+                    enderecoRequest.Cep,
+                    enderecoRequest.Estado,
+                    enderecoRequest.Cidade,
+                    enderecoRequest.Bairro,
+                    enderecoRequest.Rua,
+                    id);
 
-            bibliotecaElmContext.Enderecos.Add(novoEndereco);
-        }
-        else
-        {
-            var enderecoEntry = bibliotecaElmContext.Entry(usuario.Endereco);
-            enderecoEntry.Property(e => e.Cep).CurrentValue = enderecoRequest.Cep;
-            enderecoEntry.Property(e => e.Estado).CurrentValue = enderecoRequest.Estado;
-            enderecoEntry.Property(e => e.Cidade).CurrentValue = enderecoRequest.Cidade;
-            enderecoEntry.Property(e => e.Bairro).CurrentValue = enderecoRequest.Bairro;
-            enderecoEntry.Property(e => e.Rua).CurrentValue = enderecoRequest.Rua;
-            enderecoEntry.Property(e => e.UsuarioId).CurrentValue = id;
+                bibliotecaElmContext.Enderecos.Add(novoEndereco);
+            }
+            else
+            {
+                var enderecoEntry = bibliotecaElmContext.Entry(usuario.Endereco);
+                enderecoEntry.Property(e => e.Cep).CurrentValue = enderecoRequest.Cep;
+                enderecoEntry.Property(e => e.Estado).CurrentValue = enderecoRequest.Estado;
+                enderecoEntry.Property(e => e.Cidade).CurrentValue = enderecoRequest.Cidade;
+                enderecoEntry.Property(e => e.Bairro).CurrentValue = enderecoRequest.Bairro;
+                enderecoEntry.Property(e => e.Rua).CurrentValue = enderecoRequest.Rua;
+                enderecoEntry.Property(e => e.UsuarioId).CurrentValue = id;
+            }
         }
 
         bibliotecaElmContext.SaveChanges();

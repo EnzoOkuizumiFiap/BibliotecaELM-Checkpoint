@@ -46,7 +46,7 @@ public sealed class EnderecoRepository(BibliotecaElmContext bibliotecaElmContext
             throw new InvalidOperationException("A rua do Endereco é obrigatório");
 
         var usuarioExiste = bibliotecaElmContext.Usuarios
-            .Any(u => u.Id == idUsuario);
+            .FirstOrDefault(u => u.Id == idUsuario) is not null;
 
         if (!usuarioExiste)
             throw new InvalidOperationException("Usuário não encontrado");
@@ -54,10 +54,50 @@ public sealed class EnderecoRepository(BibliotecaElmContext bibliotecaElmContext
         if (ExistsByIdUsuario(idUsuario))
             throw new InvalidOperationException("Já existe um endereco para este usuário");
 
-        var requestComUsuario = request with { UsuarioId = idUsuario };
-        var endereco = requestComUsuario.ToDomain();
+        var endereco = request.ToDomain(idUsuario);
 
         bibliotecaElmContext.Enderecos.Add(endereco);
+        bibliotecaElmContext.SaveChanges();
+
+        return EnderecoResponse.FromDomain(endereco);
+    }
+
+    public EnderecoResponse? Update(Guid id, EnderecoRequest request)
+    {
+        if (request is null)
+            throw new ArgumentNullException(nameof(request));
+
+        if (id == Guid.Empty)
+            throw new InvalidOperationException("O Id do endereco é obrigatório");
+
+        if (string.IsNullOrWhiteSpace(request.Cep))
+            throw new InvalidOperationException("O CEP do Endereco é obrigatório");
+
+        if (string.IsNullOrWhiteSpace(request.Estado))
+            throw new InvalidOperationException("O estado do Endereco é obrigatório");
+
+        if (string.IsNullOrWhiteSpace(request.Cidade))
+            throw new InvalidOperationException("A cidade do Endereco é obrigatório");
+
+        if (string.IsNullOrWhiteSpace(request.Bairro))
+            throw new InvalidOperationException("O bairro do Endereco é obrigatório");
+
+        if (string.IsNullOrWhiteSpace(request.Rua))
+            throw new InvalidOperationException("A rua do Endereco é obrigatório");
+
+        var endereco = bibliotecaElmContext.Enderecos
+            .FirstOrDefault(e => e.Id == id);
+
+        if (endereco is null)
+            return null;
+
+        var enderecoEntry = bibliotecaElmContext.Entry(endereco);
+        enderecoEntry.Property(e => e.Cep).CurrentValue = request.Cep;
+        enderecoEntry.Property(e => e.Estado).CurrentValue = request.Estado;
+        enderecoEntry.Property(e => e.Cidade).CurrentValue = request.Cidade;
+        enderecoEntry.Property(e => e.Bairro).CurrentValue = request.Bairro;
+        enderecoEntry.Property(e => e.Rua).CurrentValue = request.Rua;
+
         bibliotecaElmContext.SaveChanges();
 
         return EnderecoResponse.FromDomain(endereco);

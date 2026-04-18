@@ -12,14 +12,14 @@ public class Usuario : BaseEntity
     public List<Emprestimo> Emprestimos { get; private set; } = new List<Emprestimo>();
     //1..N
     public List<Compra> Compras { get; private set; } = new List<Compra>();
-    //1..1
-    public Endereco Endereco { get; private set; }
+    //1..1 opcional no usuario
+    public Endereco? Endereco { get; private set; }
 
     protected Usuario()
     {
     }
     
-    public Usuario(string nome, DateOnly nascimento, string email, string cpf, Endereco endereco)
+    public Usuario(string nome, DateOnly nascimento, string email, string cpf, Endereco? endereco)
     {
         this.NomeUsuario = nome;
         this.Nascimento = nascimento;

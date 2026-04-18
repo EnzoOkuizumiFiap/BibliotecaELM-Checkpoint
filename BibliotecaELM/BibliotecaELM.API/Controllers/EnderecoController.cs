@@ -46,6 +46,23 @@ public class EnderecoController : ControllerBase
         }
     }
 
+    [HttpPut("{id:guid}")]
+    public IActionResult Update(Guid id, [FromBody] EnderecoRequest request)
+    {
+        try
+        {
+            var endereco = _enderecoRepository.Update(id, request);
+            if (endereco is null)
+                return NotFound();
+
+            return Ok(endereco);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpDelete("{id:guid}")]
     public IActionResult Delete(Guid id)
     {

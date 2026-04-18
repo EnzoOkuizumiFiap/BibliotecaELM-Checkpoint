@@ -45,6 +45,12 @@ public sealed class CompraRepository(BibliotecaElmContext bibliotecaElmContext) 
         if (!usuarioExiste)
             throw new InvalidOperationException("Usuário não encontrado");
 
+        var usuarioTemEndereco = bibliotecaElmContext.Enderecos
+            .FirstOrDefault(e => e.UsuarioId == request.UsuarioId) is not null;
+
+        if (!usuarioTemEndereco)
+            throw new InvalidOperationException("Usuário sem endereço não pode realizar compra");
+
         var livroIds = request.LivrosIds
             .Where(id => id != Guid.Empty)
             .Distinct()
@@ -97,6 +103,12 @@ public sealed class CompraRepository(BibliotecaElmContext bibliotecaElmContext) 
 
         if (!usuarioExiste)
             throw new InvalidOperationException("Usuário não encontrado");
+
+        var usuarioTemEndereco = bibliotecaElmContext.Enderecos
+            .FirstOrDefault(e => e.UsuarioId == request.UsuarioId) is not null;
+
+        if (!usuarioTemEndereco)
+            throw new InvalidOperationException("Usuário sem endereço não pode realizar compra");
 
         var livroIds = request.LivrosIds
             .Where(livroId => livroId != Guid.Empty)

@@ -169,3 +169,11 @@ C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\Biblioteca
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\BibliotecaELM.Infrastructure.dll
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\BibliotecaELM.Application.pdb
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\BibliotecaELM.Infrastructure.pdb
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\appsettings.Development.json
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\appsettings.json
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.API.staticwebassets.endpoints.json
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.API.exe
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.API.deps.json
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.API.runtimeconfig.json
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.API.dll
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.API.pdb

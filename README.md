@@ -1,10 +1,5 @@
 # 📌 BibliotecaELM - Checkpoint 02
 
-**Integrantes do Grupo:**
-- [Seu Nome Aqui] - RM: [Seu RM Aqui]
-- [Nome do Integrante 2 (Se houver)] - RM: [RM Aqui]
-- [Nome do Integrante 3 (Se houver)] - RM: [RM Aqui]
-
 ## 🎯 Sobre o Projeto (Domínio Escolhido)
 Este projeto é uma API em .NET desenvolvida seguindo os princípios de **Clean Architecture**, abordando o domínio de uma **Biblioteca**. O sistema gerencia o serviço clássico de empréstimos (locação de acervo físico) e transações de compras/aquisição de livros em definitivo pelos usuários.
 
@@ -30,11 +25,32 @@ Para o escopo do **CP2**, utilizamos:
 - **ORM Configurado**: Entity Framework Core 9/10.
 
 #### Como Executar e aplicar as Migrations:
-1. Certifique-se de configurar a *Connection String* do Oracle (`BibliotecaElmOracle`) em `appsettings.Development.json` no projeto da API. *(Nota: as credenciais reais de banco não foram comitadas por segurança).*
-2. Pelo terminal (na pasta principal ou do projeto web), aplique a migration no banco:
+> Execute os comandos abaixo a partir da raiz do repositorio.
+
+1. Inicialize o User Secrets no projeto da API (uma vez por maquina):
    ```bash
-   dotnet ef database update --project BibliotecaELM.Infrastructure --startup-project BibliotecaELM.API
+   dotnet user-secrets init --project BibliotecaELM/BibliotecaELM.API
    ```
+2. Configure a connection string do Oracle no User Secrets (sem commitar senha no repositorio):
+   ```bash
+   dotnet user-secrets set "ConnectionStrings:BibliotecaElmOracle" "Data Source=oracle.fiap.com.br:1521/orcl;User ID=SEU_USUARIO;Password=SUA_SENHA;" --project BibliotecaELM/BibliotecaELM.API
+   ```
+3. Pelo terminal, aplique a migration no banco:
+   ```bash
+   dotnet ef database update --project BibliotecaELM/BibliotecaELM.Infrastructure --startup-project BibliotecaELM/BibliotecaELM.API
+   ```
+
+### 🧾 Estratégia de Migrations (CP2)
+Para manter o historico enxuto e aderente ao critério do CP2 (maximo de duas migrations), o projeto adota uma migration consolidada para o esquema final do MER no checkpoint.
+
+**Se precisar recriar do zero em ambiente local:**
+
+```bash
+dotnet ef migrations remove --project BibliotecaELM/BibliotecaELM.Infrastructure --startup-project BibliotecaELM/BibliotecaELM.API
+# repetir enquanto houver migrations pendentes
+dotnet ef migrations add InitialCp2 --project BibliotecaELM/BibliotecaELM.Infrastructure --startup-project BibliotecaELM/BibliotecaELM.API
+dotnet ef database update --project BibliotecaELM/BibliotecaELM.Infrastructure --startup-project BibliotecaELM/BibliotecaELM.API
+```
 
 ---
 
@@ -55,14 +71,58 @@ Todas as entidades listadas abaixo (originadas no CP1) implementam a classe abst
 Baseado na modelagem e devidamente mapeados com EF Core no CP2:
 
 - **Usuario (1) ↔ (1) Endereco**
-  - Relacionamento 1:1 obrigatório no modelo atual. Cada usuário possui exatamente um endereço e cada endereço pertence a exatamente um usuário (FK `UsuarioId` com índice único em `BD_Addresses`).
+  - Relacionamento 1:1 com endereço opcional no usuário. O usuário pode existir sem endereço, mas cada endereço pertence a exatamente um usuário (FK `UsuarioId` com índice único em `BD_Addresses`).
 - **Usuario (1) ↔ (N) Emprestimo**
   - Relacionamento 1:N obrigatório. Um usuário pode ter vários empréstimos e todo empréstimo exige um usuário vinculado (`UsuarioId` obrigatório em `BD_Loans`).
 - **Usuario (1) ↔ (N) Compra**
   - Relacionamento 1:N obrigatório. Um usuário pode efetuar inúmeras compras e toda compra exige um usuário vinculado (`UsuarioId` obrigatório em `BD_Purchases`).
+  - Regra de negócio: usuário sem endereço não pode realizar compra.
 - **Livro (N) ↔ (N) Emprestimo**
   - Relacionamento N:N implementado por tabela de junção `BD_LoanBooks`.
 - **Autor (1) ↔ (N) Livro**
   - Relacionamento 1:N obrigatório. Um autor possui vários livros e todo livro exige um autor (`AutorId` obrigatório em `BD_Books`).
 - **Compra (N) ↔ (N) Livro**
   - Relacionamento N:N implementado por tabela de junção `BD_PurchaseBooks`.
+
+## ✅ Regras de Negócio Implementadas
+
+- Cadastro de usuário permite endereço opcional.
+- No update de usuário, quando `endereco` vier `null`, o endereço atual é mantido sem alteração.
+- Compras são bloqueadas para usuários sem endereço cadastrado.
+
+## Integrantes da Equipe
+
+<table>
+<tr>
+<th>Nome</th>
+<th>RM</th>
+<th>Turma</th>
+<th>GitHub</th>
+<th>LinkedIn</th>
+</tr>
+
+<tr>
+<td>Enzo Okuizumi</td>
+<td>561432</td>
+<td>2TDSPG</td>
+<td><a href="https://github.com/EnzoOkuizumiFiap">EnzoOkuizumiFiap</a></td>
+<td><a href="https://www.linkedin.com/in/enzo-okuizumi-b60292256/">Enzo Okuizumi</a></td>
+</tr>
+
+<tr>
+<td>Lucas Barros Gouveia</td>
+<td>566422</td>
+<td>2TDSPG</td>
+<td><a href="https://github.com/LuzBGouveia">LuzBGouveia</a></td>
+<td><a href="https://www.linkedin.com/in/lucas-barros-gouveia-09b147355/">Lucas Barros Gouveia</a></td>
+</tr>
+
+<tr>
+<td>Milton Marcelino</td>
+<td>564836</td>
+<td>2TDSPG</td>
+<td><a href="https://github.com/MiltonMarcelino">MiltonMarcelino</a></td>
+<td><a href="http://linkedin.com/in/milton-marcelino-250298142">Milton Marcelino</a></td>
+</tr>
+
+</table>
