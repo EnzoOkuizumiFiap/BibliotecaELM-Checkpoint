@@ -36,8 +36,14 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 		if (request.DataEmprestimo == default)
 			throw new InvalidOperationException("A data de empréstimo é obrigatória");
 
+		if (request.DataEmprestimo > DateTime.Now)
+			throw new InvalidOperationException("A data de empréstimo não pode ser futura");
+
 		if (request.DataDevolucao == default)
 			throw new InvalidOperationException("A data de devolução é obrigatória");
+
+		if (request.DataDevolucao > DateTime.Now)
+			throw new InvalidOperationException("A data de devolução não pode ser futura");
 
 		if (request.DataDevolucao < request.DataEmprestimo)
 			throw new InvalidOperationException("A data de devolução não pode ser menor que a data de empréstimo");
@@ -87,6 +93,9 @@ public sealed class EmprestimoRepository(BibliotecaElmContext bibliotecaElmConte
 
 		if (request.DataEmprestimo == default)
 			throw new InvalidOperationException("A data de empréstimo é obrigatória");
+
+		if (request.DataEmprestimo > DateTime.Now)
+			throw new InvalidOperationException("A data de empréstimo não pode ser futura");
 
 		if (request.DataDevolucao == default)
 			throw new InvalidOperationException("A data de devolução é obrigatória");

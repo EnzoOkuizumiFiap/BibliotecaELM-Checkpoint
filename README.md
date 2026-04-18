@@ -5,6 +5,43 @@ Este projeto é uma API em .NET desenvolvida seguindo os princípios de **Clean 
 
 Este projeto iniciou-se no **Checkpoint 01 (CP1)** focado na modelagem do Domínio (MER) e agora evoluiu no **Checkpoint 02 (CP2)** com a inclusão de acesso a dados (**Entity Framework Core**), camada de **Infrastructure**, Mapeamento Fluent API e criação do banco por meio de **Migrations**.
 
+## Integrantes da Equipe
+
+<table>
+<tr>
+<th>Nome</th>
+<th>RM</th>
+<th>Turma</th>
+<th>GitHub</th>
+<th>LinkedIn</th>
+</tr>
+
+<tr>
+<td>Enzo Okuizumi</td>
+<td>561432</td>
+<td>2TDSPG</td>
+<td><a href="https://github.com/EnzoOkuizumiFiap">EnzoOkuizumiFiap</a></td>
+<td><a href="https://www.linkedin.com/in/enzo-okuizumi-b60292256/">Enzo Okuizumi</a></td>
+</tr>
+
+<tr>
+<td>Lucas Barros Gouveia</td>
+<td>566422</td>
+<td>2TDSPG</td>
+<td><a href="https://github.com/LuzBGouveia">LuzBGouveia</a></td>
+<td><a href="https://www.linkedin.com/in/lucas-barros-gouveia-09b147355/">Lucas Barros Gouveia</a></td>
+</tr>
+
+<tr>
+<td>Milton Marcelino</td>
+<td>564836</td>
+<td>2TDSPG</td>
+<td><a href="https://github.com/MiltonMarcelino">MiltonMarcelino</a></td>
+<td><a href="http://linkedin.com/in/milton-marcelino-250298142">Milton Marcelino</a></td>
+</tr>
+
+</table>
+
 ---
 
 ## 🧱 Arquitetura e Estrutura do Projeto (Checkpoin 02)
@@ -89,40 +126,181 @@ Baseado na modelagem e devidamente mapeados com EF Core no CP2:
 - Cadastro de usuário permite endereço opcional.
 - No update de usuário, quando `endereco` vier `null`, o endereço atual é mantido sem alteração.
 - Compras são bloqueadas para usuários sem endereço cadastrado.
+- Compras não aceitam `dataCompra` futura.
+- Empréstimos não aceitam `dataEmprestimo` futuras.
+- Autor possui validação de faixa para `nascimento` (1500 a 2026).
 
-## Integrantes da Equipe
+## 🗂️ Evidências de Banco e Migrations
 
-<table>
-<tr>
-<th>Nome</th>
-<th>RM</th>
-<th>Turma</th>
-<th>GitHub</th>
-<th>LinkedIn</th>
-</tr>
+## MER
 
-<tr>
-<td>Enzo Okuizumi</td>
-<td>561432</td>
-<td>2TDSPG</td>
-<td><a href="https://github.com/EnzoOkuizumiFiap">EnzoOkuizumiFiap</a></td>
-<td><a href="https://www.linkedin.com/in/enzo-okuizumi-b60292256/">Enzo Okuizumi</a></td>
-</tr>
+![MER](docs/mer.png)
 
-<tr>
-<td>Lucas Barros Gouveia</td>
-<td>566422</td>
-<td>2TDSPG</td>
-<td><a href="https://github.com/LuzBGouveia">LuzBGouveia</a></td>
-<td><a href="https://www.linkedin.com/in/lucas-barros-gouveia-09b147355/">Lucas Barros Gouveia</a></td>
-</tr>
+## Tabela de histórico de migrations
 
-<tr>
-<td>Milton Marcelino</td>
-<td>564836</td>
-<td>2TDSPG</td>
-<td><a href="https://github.com/MiltonMarcelino">MiltonMarcelino</a></td>
-<td><a href="http://linkedin.com/in/milton-marcelino-250298142">Milton Marcelino</a></td>
-</tr>
+![Tabela _EFMigrationsHistory](docs/Tabela%20_EFMigrationHistory.png)
 
-</table>
+## Estrutura das tabelas principais
+
+### Tabela BD_User
+![Tabela BD_Users](docs/Tabela%20BD_Users.png)
+
+### Tabela BD_Address
+![Tabela BD_Address](docs/Tabela%20BD_Address.png)
+
+### Tabela Purchases
+![Tabela BD_Purchases](docs/Tabela%20BD_Purchases.png)
+
+### Tabela BD_Loans
+![Tabela BD_Loans](docs/Tabela%20BD_Loans.png)
+
+### Tabela BD_Books
+![Tabela BD_Books](docs/Tabela%20BD_Books.png)
+
+### Tabela BD_Authors
+![Tabela BD_Authors](docs/Tabela%20BD_Authors.png)
+
+### Tabela BD_PurchasesBooks
+![Tabela BD_PurchasesBooks](docs/Tabela%20BD_PurchasesBooks.png)
+
+### Tabela BD_LoanBooks
+![Tabela BD_LoanBooks](docs/Tabela%20BD_LoanBooks.png)
+
+## 🖼️ Evidências de Testes (Insomnia)
+
+### Usuario
+
+**POST**
+
+![Post Usuario](docs/Post%20Usuario.png)
+
+**GET**
+
+![Get Usuario](docs/Get%20Usuario.png)
+
+**GET By Id**
+
+![Get Usuario By Id](docs/Get%20Usuario%20By%20Id.png)
+
+**PUT**
+
+![Update Usuario](docs/Update%20Usuario.png)
+
+**DELETE**
+
+![Delete Usuario](docs/Delete%20Usuario.png)
+
+### Endereco
+
+**POST**
+
+![Post Endereco](docs/Post%20Endereco.png)
+
+**GET**
+
+![Get Endereco](docs/Get%20Endereco.png)
+
+**GET By Id**
+
+![Get Endereco By Id](docs/Get%20Endereco%20By%20Id.png)
+
+**PUT**
+
+![Update Endereco](docs/Update%20Endereco.png)
+
+**DELETE**
+
+![Delete Endereco](docs/Delete%20Endereco.png)
+
+### Compra
+
+**POST (válido)**
+
+![Post Compra](docs/Post%20Compra.png)
+
+**POST (bloqueio sem endereço)**
+
+![Post Compra Sem Endereco](docs/Post%20Compra%20Sem%20Endereco.png)
+
+**GET**
+
+![Get Compra](docs/Get%20Compra.png)
+
+**GET By Id**
+
+![Get Compra By Id](docs/Get%20Compra%20By%20Id.png)
+
+**PUT**
+
+![Update Compra](docs/Update%20Compra.png)
+
+**DELETE**
+
+![Delete Compra](docs/Delete%20Compra.png)
+
+### Emprestimo
+
+**POST**
+
+![Post Emprestimo](docs/Post%20Emprestimo.png)
+
+**GET**
+
+![Get Emprestimo](docs/Get%20Emprestimo.png)
+
+**GET By Id**
+
+![Get Emprestimo By Id](docs/Get%20Emprestimo%20By%20Id.png)
+
+**PUT**
+
+![Update Emprestimo](docs/Update%20Emprestimo.png)
+
+**DELETE**
+
+![Delete Emprestimo](docs/Delete%20Emprestimo.png)
+
+### Livro
+
+**POST**
+
+![Post Livro](docs/Post%20Livro.png)
+
+**GET**
+
+![Get Livro](docs/Get%20Livro.png)
+
+**GET By Id**
+
+![Get Livro By Id](docs/Get%20Livro%20By%20Id.png)
+
+**PUT**
+
+![Update Livro](docs/Update%20Livro.png)
+
+**DELETE**
+
+![Delete Livro](docs/Delete%20Livro.png)
+
+### Autor
+
+**POST**
+
+![Post Autor](docs/Post%20Autor.png)
+
+**GET**
+
+![Get Autor](docs/Get%20Autor.png)
+
+**GET By Id**
+
+![Get Autor By Id](docs/Get%20Autor%20By%20Id.png)
+
+**PUT**
+
+![Update Autor](docs/Update%20Autor.png)
+
+**DELETE**
+
+![Delete Autor](docs/Delete%20Autor.png)
+

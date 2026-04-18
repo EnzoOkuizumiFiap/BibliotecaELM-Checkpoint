@@ -33,6 +33,12 @@ public sealed class CompraRepository(BibliotecaElmContext bibliotecaElmContext) 
         if (!Enum.IsDefined(request.FormaCompra))
             throw new InvalidOperationException("O formato do pagamento da compra é obrigatório");
 
+        if (request.DataCompra == default)
+            throw new InvalidOperationException("A data da compra é obrigatória");
+
+        if (request.DataCompra > DateTime.Now)
+            throw new InvalidOperationException("A data da compra não pode ser futura");
+
         if (request.UsuarioId == Guid.Empty)
             throw new InvalidOperationException("O UsuarioId da compra é obrigatório");
 
@@ -84,6 +90,12 @@ public sealed class CompraRepository(BibliotecaElmContext bibliotecaElmContext) 
 
         if (!Enum.IsDefined(request.FormaCompra))
             throw new InvalidOperationException("O formato do pagamento da compra é obrigatório");
+
+        if (request.DataCompra == default)
+            throw new InvalidOperationException("A data da compra é obrigatória");
+
+        if (request.DataCompra > DateTime.Now)
+            throw new InvalidOperationException("A data da compra não pode ser futura");
 
         if (request.UsuarioId == Guid.Empty)
             throw new InvalidOperationException("O UsuarioId da compra é obrigatório");
