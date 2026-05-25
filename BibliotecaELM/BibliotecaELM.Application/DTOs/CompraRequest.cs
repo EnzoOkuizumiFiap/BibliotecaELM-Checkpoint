@@ -8,18 +8,18 @@ namespace BibliotecaELM.Application.DTOs;
 
 public record CompraRequest(
     [param: Required(ErrorMessage = "A forma de compra é obrigatória")]
-    FormaCompraEnum FormaCompra,
+    FormaCompraEnum? FormaCompra,
 
     [param: Required(ErrorMessage = "A data da compra é obrigatória")]
-    DateTime DataCompra,
+    DateTime? DataCompra,
 
     [param: Required(ErrorMessage = "O UsuarioId é obrigatório")]
-    Guid UsuarioId,
+    Guid? UsuarioId,
 
     [param: Required(ErrorMessage = "Os IDs dos livros são obrigatórios")]
     [param: MinLength(1, ErrorMessage = "Ao menos um livro é obrigatório na compra")]
     List<Guid> LivrosIds
 )
 {
-    public Compra ToDomain(List<Livro> livros) => new Compra(FormaCompra, DataCompra, UsuarioId, livros);
+    public Compra ToDomain(List<Livro> livros) => new Compra(FormaCompra!.Value, DataCompra!.Value, UsuarioId!.Value, livros);
 }

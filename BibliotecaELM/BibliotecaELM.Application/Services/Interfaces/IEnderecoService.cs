@@ -1,20 +1,12 @@
 using BibliotecaELM.Application.DTOs;
 
-namespace BibliotecaELM.Application.Services;
+namespace BibliotecaELM.Application.Services.Interfaces;
 
-public interface IEnderecoRepository
+public interface IEnderecoService
 {
     IReadOnlyList<EnderecoResponse> GetAll();
-
     EnderecoResponse? GetById(Guid id);
-
     EnderecoResponse Create(EnderecoRequest request, Guid usuarioId);
-
     EnderecoResponse? Update(Guid id, EnderecoRequest request);
-
-    bool ExistsById(Guid id);
-    
-    bool ExistsByIdUsuario(Guid usuarioId);
-
     bool Delete(Guid id);
 }

@@ -1,0 +1,318 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BibliotecaELM.API</name>
+    </assembly>
+    <members>
+        <member name="T:BibliotecaELM.Controllers.AutorController">
+            <summary>
+            Controller responsável por gerenciar as operações de Autores.
+            </summary>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.AutorController.GetAll">
+            <summary>
+            Retorna todos os autores cadastrados.
+            </summary>
+            <returns>Uma lista de autores.</returns>
+            <response code="200">Retorna a lista de autores cadastrados com sucesso.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.AutorController.GetById(System.Guid)">
+            <summary>
+            Busca um autor específico pelo identificador único (GUID).
+            </summary>
+            <param name="id">GUID do autor.</param>
+            <returns>Os detalhes do autor correspondente.</returns>
+            <response code="200">Retorna o autor encontrado.</response>
+            <response code="404">Caso não exista autor com o GUID fornecido.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.AutorController.Create(BibliotecaELM.Application.DTOs.AutorRequest)">
+            <summary>
+            Cadastra um novo autor na base de dados.
+            </summary>
+            <param name="request">Dados para a criação do autor.</param>
+            <returns>Os dados do autor cadastrado.</returns>
+            <response code="201">Autor cadastrado com sucesso.</response>
+            <response code="400">Caso os dados fornecidos sejam inválidos ou o nome do autor já esteja em uso.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.AutorController.Update(System.Guid,BibliotecaELM.Application.DTOs.AutorRequest)">
+            <summary>
+            Atualiza os dados de um autor existente.
+            </summary>
+            <param name="id">GUID do autor a ser atualizado.</param>
+            <param name="request">Novos dados do autor.</param>
+            <returns>O autor atualizado.</returns>
+            <response code="200">Autor atualizado com sucesso.</response>
+            <response code="400">Caso os dados fornecidos sejam inválidos ou o nome já esteja em uso por outro autor.</response>
+            <response code="404">Caso o autor com o GUID informado não seja encontrado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.AutorController.Delete(System.Guid)">
+            <summary>
+            Remove um autor da base de dados pelo seu GUID.
+            </summary>
+            <param name="id">GUID do autor a ser removido.</param>
+            <returns>Sem conteúdo (204 NoContent).</returns>
+            <response code="204">Autor deletado com sucesso.</response>
+            <response code="404">Caso o autor com o GUID fornecido não exista.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.AutorController.ExistsByNomeAutor(System.String)">
+            <summary>
+            Verifica a existência de um autor através de seu nome exato (case-insensitive).
+            </summary>
+            <param name="nomeAutor">Nome do autor a verificar.</param>
+            <returns>Retorna true se o autor existir.</returns>
+            <response code="200">Autor encontrado.</response>
+            <response code="404">Caso não exista autor com o nome informado.</response>
+        </member>
+        <member name="T:BibliotecaELM.Controllers.CompraController">
+            <summary>
+            Controller responsável por gerenciar as transações de Compras de Livros.
+            </summary>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.CompraController.GetAll">
+            <summary>
+            Retorna todas as compras registradas na biblioteca.
+            </summary>
+            <returns>Uma lista de compras realizadas.</returns>
+            <response code="200">Retorna a lista de compras com sucesso.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.CompraController.GetById(System.Guid)">
+            <summary>
+            Busca uma compra específica pelo seu identificador (GUID).
+            </summary>
+            <param name="id">GUID da compra.</param>
+            <returns>Os detalhes da compra correspondente.</returns>
+            <response code="200">Retorna a compra encontrada.</response>
+            <response code="404">Caso não exista compra com o GUID informado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.CompraController.Create(BibliotecaELM.Application.DTOs.CompraRequest)">
+            <summary>
+            Registra uma nova compra de livros na base de dados.
+            </summary>
+            <param name="request">Dados para registro da compra.</param>
+            <returns>A compra registrada.</returns>
+            <response code="201">Compra registrada com sucesso.</response>
+            <response code="400">Caso os dados de entrada sejam inválidos, data futura ou se o usuário não possuir endereço cadastrado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.CompraController.Update(System.Guid,BibliotecaELM.Application.DTOs.CompraRequest)">
+            <summary>
+            Atualiza os dados de uma compra existente.
+            </summary>
+            <param name="id">GUID da compra.</param>
+            <param name="request">Novos dados da compra.</param>
+            <returns>A compra atualizada.</returns>
+            <response code="200">Compra atualizada com sucesso.</response>
+            <response code="400">Caso as regras de validação falhem.</response>
+            <response code="404">Caso a compra com o GUID fornecido não seja encontrada.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.CompraController.Delete(System.Guid)">
+            <summary>
+            Exclui uma compra da base de dados.
+            </summary>
+            <param name="id">GUID da compra a ser excluída.</param>
+            <returns>Sem conteúdo (204 NoContent).</returns>
+            <response code="204">Compra excluída com sucesso.</response>
+            <response code="404">Caso a compra com o GUID informado não seja encontrada.</response>
+        </member>
+        <member name="T:BibliotecaELM.Controllers.EmprestimoController">
+            <summary>
+            Controller responsável por gerenciar os Empréstimos de Livros.
+            </summary>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EmprestimoController.GetAll">
+            <summary>
+            Retorna todos os empréstimos registrados.
+            </summary>
+            <returns>Uma lista de empréstimos.</returns>
+            <response code="200">Retorna a lista de empréstimos com sucesso.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EmprestimoController.GetById(System.Guid)">
+            <summary>
+            Busca um empréstimo pelo seu GUID.
+            </summary>
+            <param name="id">GUID do empréstimo.</param>
+            <returns>Os detalhes do empréstimo.</returns>
+            <response code="200">Empréstimo encontrado.</response>
+            <response code="404">Caso não exista empréstimo com o GUID informado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EmprestimoController.Create(BibliotecaELM.Application.DTOs.EmprestimoRequest)">
+            <summary>
+            Registra um novo empréstimo de livros.
+            </summary>
+            <param name="request">Dados do empréstimo.</param>
+            <returns>O empréstimo registrado.</returns>
+            <response code="201">Empréstimo registrado com sucesso.</response>
+            <response code="400">Caso os dados fornecidos sejam inválidos ou regras de negócio falhem (ex: data futura).</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EmprestimoController.Update(System.Guid,BibliotecaELM.Application.DTOs.EmprestimoRequest)">
+            <summary>
+            Atualiza os dados de um empréstimo existente.
+            </summary>
+            <param name="id">GUID do empréstimo.</param>
+            <param name="request">Novos dados do empréstimo.</param>
+            <returns>O empréstimo atualizado.</returns>
+            <response code="200">Empréstimo atualizado com sucesso.</response>
+            <response code="400">Caso os dados de entrada falhem nas validações.</response>
+            <response code="404">Caso o empréstimo com o GUID informado não seja encontrado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EmprestimoController.Delete(System.Guid)">
+            <summary>
+            Exclui um registro de empréstimo.
+            </summary>
+            <param name="id">GUID do empréstimo a remover.</param>
+            <returns>Sem conteúdo (204 NoContent).</returns>
+            <response code="204">Empréstimo excluído com sucesso.</response>
+            <response code="404">Caso o empréstimo com o GUID informado não exista.</response>
+        </member>
+        <member name="T:BibliotecaELM.Controllers.EnderecoController">
+            <summary>
+            Controller responsável por gerenciar os Endereços dos Usuários.
+            </summary>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EnderecoController.GetAll">
+            <summary>
+            Retorna todos os endereços cadastrados.
+            </summary>
+            <returns>Uma lista de endereços.</returns>
+            <response code="200">Retorna a lista de endereços com sucesso.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EnderecoController.GetById(System.Guid)">
+            <summary>
+            Busca um endereço específico pelo GUID.
+            </summary>
+            <param name="id">GUID do endereço.</param>
+            <returns>Os detalhes do endereço.</returns>
+            <response code="200">Endereço encontrado.</response>
+            <response code="404">Caso não exista endereço com o GUID fornecido.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EnderecoController.Create(System.Guid,BibliotecaELM.Application.DTOs.EnderecoRequest)">
+            <summary>
+            Cadastra um novo endereço associado a um usuário.
+            </summary>
+            <param name="usuarioId">GUID do usuário dono do endereço.</param>
+            <param name="request">Dados do endereço a ser cadastrado.</param>
+            <returns>O endereço cadastrado.</returns>
+            <response code="201">Endereço cadastrado com sucesso.</response>
+            <response code="400">Caso os dados de entrada sejam inválidos ou o usuário já possua endereço cadastrado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EnderecoController.Update(System.Guid,BibliotecaELM.Application.DTOs.EnderecoRequest)">
+            <summary>
+            Atualiza os dados de um endereço existente.
+            </summary>
+            <param name="id">GUID do endereço.</param>
+            <param name="request">Novos dados do endereço.</param>
+            <returns>O endereço atualizado.</returns>
+            <response code="200">Endereço atualizado com sucesso.</response>
+            <response code="400">Caso os dados fornecidos sejam inválidos.</response>
+            <response code="404">Caso o endereço com o GUID informado não seja encontrado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.EnderecoController.Delete(System.Guid)">
+            <summary>
+            Remove um endereço cadastrado.
+            </summary>
+            <param name="id">GUID do endereço a ser removido.</param>
+            <returns>Sem conteúdo (204 NoContent).</returns>
+            <response code="204">Endereço excluído com sucesso.</response>
+            <response code="404">Caso o endereço com o GUID informado não seja encontrado.</response>
+        </member>
+        <member name="T:BibliotecaELM.Controllers.LivroController">
+            <summary>
+            Controller responsável por gerenciar o acervo de Livros.
+            </summary>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.LivroController.GetAll">
+            <summary>
+            Retorna todos os livros do acervo.
+            </summary>
+            <returns>Uma lista de livros.</returns>
+            <response code="200">Retorna a lista de livros com sucesso.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.LivroController.GetById(System.Guid)">
+            <summary>
+            Busca um livro específico pelo GUID.
+            </summary>
+            <param name="id">GUID do livro.</param>
+            <returns>Os detalhes do livro encontrado.</returns>
+            <response code="200">Livro encontrado.</response>
+            <response code="404">Caso não exista livro com o GUID informado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.LivroController.Create(BibliotecaELM.Application.DTOs.LivroRequest)">
+            <summary>
+            Cadastra um novo livro no acervo da biblioteca.
+            </summary>
+            <param name="request">Dados do livro a ser cadastrado.</param>
+            <returns>O livro cadastrado.</returns>
+            <response code="201">Livro cadastrado com sucesso.</response>
+            <response code="400">Caso os dados de entrada sejam inválidos ou o autor associado não exista.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.LivroController.Update(System.Guid,BibliotecaELM.Application.DTOs.LivroRequest)">
+            <summary>
+            Atualiza os dados de um livro do acervo.
+            </summary>
+            <param name="id">GUID do livro a ser atualizado.</param>
+            <param name="request">Novos dados do livro.</param>
+            <returns>O livro atualizado.</returns>
+            <response code="200">Livro atualizado com sucesso.</response>
+            <response code="400">Caso os dados fornecidos falhem nas validações.</response>
+            <response code="404">Caso o livro com o GUID informado não seja encontrado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.LivroController.Delete(System.Guid)">
+            <summary>
+            Exclui um livro do acervo.
+            </summary>
+            <param name="id">GUID do livro a ser removido.</param>
+            <returns>Sem conteúdo (204 NoContent).</returns>
+            <response code="204">Livro deletado com sucesso.</response>
+            <response code="404">Caso o livro com o GUID fornecido não exista.</response>
+        </member>
+        <member name="T:BibliotecaELM.Controllers.UsuarioController">
+            <summary>
+            Controller responsável por gerenciar as operações de Usuários.
+            </summary>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.UsuarioController.GetAll">
+            <summary>
+            Retorna todos os usuários cadastrados.
+            </summary>
+            <returns>Uma lista de usuários.</returns>
+            <response code="200">Retorna a lista de usuários com sucesso.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.UsuarioController.GetById(System.Guid)">
+            <summary>
+            Busca um usuário pelo seu GUID.
+            </summary>
+            <param name="id">GUID do usuário.</param>
+            <returns>Os detalhes do usuário.</returns>
+            <response code="200">Usuário encontrado.</response>
+            <response code="404">Caso não exista usuário com o GUID fornecido.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.UsuarioController.Create(BibliotecaELM.Application.DTOs.UsuarioRequest)">
+            <summary>
+            Cadastra um novo usuário na base de dados.
+            </summary>
+            <param name="request">Dados do usuário a ser cadastrado.</param>
+            <returns>Os dados do usuário cadastrado.</returns>
+            <response code="201">Usuário cadastrado com sucesso.</response>
+            <response code="400">Caso os dados de entrada sejam inválidos.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.UsuarioController.Update(System.Guid,BibliotecaELM.Application.DTOs.UsuarioRequest)">
+            <summary>
+            Atualiza os dados de um usuário existente.
+            </summary>
+            <param name="id">GUID do usuário.</param>
+            <param name="request">Novos dados do usuário.</param>
+            <returns>O usuário atualizado.</returns>
+            <response code="200">Usuário atualizado com sucesso.</response>
+            <response code="400">Caso os dados fornecidos sejam inválidos.</response>
+            <response code="404">Caso o usuário com o GUID informado não seja encontrado.</response>
+        </member>
+        <member name="M:BibliotecaELM.Controllers.UsuarioController.Delete(System.Guid)">
+            <summary>
+            Remove um usuário da base de dados pelo seu GUID.
+            </summary>
+            <param name="id">GUID do usuário a remover.</param>
+            <returns>Sem conteúdo (204 NoContent).</returns>
+            <response code="204">Usuário removido com sucesso.</response>
+            <response code="404">Caso o usuário com o GUID fornecido não exista.</response>
+        </member>
+    </members>
+</doc>

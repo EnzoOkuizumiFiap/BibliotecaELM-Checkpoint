@@ -1,20 +1,13 @@
-﻿using BibliotecaELM.Application.DTOs;
+using BibliotecaELM.Application.DTOs;
 
-namespace BibliotecaELM.Application.Services;
+namespace BibliotecaELM.Application.Services.Interfaces;
 
-public interface ILivroRepository
+public interface ILivroService
 {
     IReadOnlyList<LivroResponse> GetAll();
-    
     LivroResponse? GetById(Guid id);
-    
     LivroResponse Create(LivroRequest request);
-
     LivroResponse? Update(Guid id, LivroRequest request);
-    
     bool ExistsByNomeLivro(string nomeLivro);
-    
-    bool ExistsById(Guid id);
-    
     bool Delete(Guid id);
 }

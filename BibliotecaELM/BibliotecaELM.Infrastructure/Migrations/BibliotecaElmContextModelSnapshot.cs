@@ -298,8 +298,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
 
                     b.Navigation("Emprestimos");
 
-                    b.Navigation("Endereco")
-                        .IsRequired();
+                    b.Navigation("Endereco");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,9 +1,9 @@
-# 📌 BibliotecaELM - Checkpoint 02
+# 📌 BibliotecaELM - Checkpoint 03
 
 ## 🎯 Sobre o Projeto (Domínio Escolhido)
 Este projeto é uma API em .NET desenvolvida seguindo os princípios de **Clean Architecture**, abordando o domínio de uma **Biblioteca**. O sistema gerencia o serviço clássico de empréstimos (locação de acervo físico) e transações de compras/aquisição de livros em definitivo pelos usuários.
 
-Este projeto iniciou-se no **Checkpoint 01 (CP1)** focado na modelagem do Domínio (MER) e agora evoluiu no **Checkpoint 02 (CP2)** com a inclusão de acesso a dados (**Entity Framework Core**), camada de **Infrastructure**, Mapeamento Fluent API e criação do banco por meio de **Migrations**.
+O projeto foi totalmente evoluído para o **Checkpoint 03 (CP3)**, com a introdução do padrão Repository Genérico, desacoplamento completo através de uma camada de Serviços de Aplicação (Application Services), tratamento global de exceções padronizado com RFC 7807 (Problem Details) e documentação interativa via Swagger.
 
 ## Integrantes da Equipe
 
@@ -44,22 +44,55 @@ Este projeto iniciou-se no **Checkpoint 01 (CP1)** focado na modelagem do Domín
 
 ---
 
-## 🧱 Arquitetura e Estrutura do Projeto (Checkpoin 02)
+## 🧭 Escopo do Checkpoint 03 (Entregas e Melhorias)
 
-Esta entrega foi refatorada para comportar persistência e a lógica em camadas separadas:
-1. **API (`BibliotecaELM.API`)**: Controladores e injeção de dependência (`Program.cs`).
-2. **Application (`BibliotecaELM.Application`)**: Serviços (interfaces de repositório) e DTOs.
-3. **Domain (`BibliotecaELM.Domain`)**: Entidades de domínio originárias do CP1 e classe base `BaseEntity`.
-4. **Infrastructure (`BibliotecaELM.Infrastructure`)**: 
-   - `DbContext` (`BibliotecaElmContext`) persistindo o contexto com **Oracle**.
-   - Mapeamentos das entidades usando **Fluent API** (ex. `IEntityTypeConfiguration<T>`).
-   - Implementações correspondentes aos Repositórios Genéricos / Agregados.
-   - Migrations do Entity Framework.
+### 1. Repositório Genérico (`IRepository<T>` & `Repository<T>`)
+* **Interface `IRepository<T>`** (`BibliotecaELM.Application/Services/Interfaces/IRepository.cs`): Define o contrato de CRUD genérico para as entidades que herdam de `BaseEntity`.
+  * Operações: `GetAll`, `GetById`, `Add`, `Update`, `Delete` e `ExistsById`.
+* **Classe `Repository<T>`** (`BibliotecaELM.Infrastructure/Repositories/Repository.cs`): Implementa o contrato genérico utilizando o Entity Framework Core com o contexto `BibliotecaElmContext`. Aplica `.AsNoTracking()` em consultas de listagem para otimização de performance.
+* **Injeção de Dependência**: Registrado no container com escopo scoped:
+  ```csharp
+  builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+  ```
+
+### 2. Camada de Serviços de Aplicação (Application Services)
+* **Arquitetura de Serviços**: Criamos a camada de `Services` dividida em `Interfaces/` e `Implementations/` para orquestração, regras de negócio e mapeamento DTO:
+  * Interfaces em `BibliotecaELM.Application/Services/Interfaces/`: `IAutorService`, `ILivroService`, `IUsuarioService`, `IEnderecoService`, `ICompraService`, `IEmprestimoService`.
+  * Implementações em `BibliotecaELM.Application/Services/Implementations/`: `AutorService`, `LivroService`, `UsuarioService`, `EnderecoService`, `CompraService`, `EmprestimoService`.
+* **Desacoplamento de DTOs**: Os controllers agora chamam apenas os serviços que mapeiam e tratam DTOs de entrada/saída, enquanto os repositórios focam estritamente no tráfego de entidades de domínio.
+
+### 3. Tratamento Global de Erros (`GlobalExceptionHandler`)
+* **Classe `GlobalExceptionHandler`** (`BibliotecaELM.API/Exceptions/GlobalExceptionHandler.cs`): Implementa `IExceptionHandler` do ASP.NET Core para interceptar exceções não tratadas em toda a aplicação.
+* **Respostas Padronizadas (RFC 7807)**: Retorna um objeto JSON no formato `ProblemDetails` (`application/problem+json`) ocultando detalhes confidenciais em ambientes não de desenvolvimento.
+* **Mapeamento de Exceções**:
+  
+  | Exceção | Código HTTP | Descrição / Título |
+  | :--- | :--- | :--- |
+  | `BusinessRuleValidationException` / `ArgumentException` | `400 Bad Request` | Requisição Inválida / Regra de Negócio |
+  | `ResourceNotFoundException` | `404 Not Found` | Recurso não encontrado |
+  | Outras Exceções não tratadas | `500 InternalServerError` | Erro interno do servidor |
+
+* **Limpeza dos Controllers**: Os blocos `try/catch` foram removidos de todos os endpoints das Controllers, deixando o pipeline limpo e transferindo a responsabilidade de erro para o Handler.
+
+### 4. Swagger Completo e Comentários XML
+* **Swagger/OpenAPI** (`Swashbuckle.AspNetCore`): Configurado com metadados personalizados (Título, Versão, Descrição da API).
+* **Comentários XML**: Habilitados no build do projeto API e expostos na interface gráfica do Swagger. Todos os endpoints de todas as controllers possuem documentação XML enriquecida.
+* **Anotações de Resposta**: Uso das diretivas `[ProducesResponseType]` em todas as rotas para expor de antemão os status codes mapeados (sucessos e erros comuns).
+* **Acesso na Raiz**: O Swagger UI serve diretamente na raiz `/` (ex. `http://localhost:<porta>/`), melhorando a acessibilidade para testes.
+
+---
+
+## 🧱 Arquitetura e Estrutura do Projeto
+
+O projeto segue os princípios de Clean Architecture, organizado nas seguintes camadas:
+1. **Domain (`BibliotecaELM.Domain`)**: Entidades de domínio (Autor, Livro, Usuario, Endereco, Compra, Emprestimo) e classe base `BaseEntity`. Livre de dependências externas.
+2. **Application (`BibliotecaELM.Application`)**: DTOs (`Request` e `Response`) e a camada de Serviços de Aplicação (`Interfaces/` e `Implementations/`), que orquestram a lógica da aplicação, mapeamentos e validações de fluxo.
+3. **Infrastructure (`BibliotecaELM.Infrastructure`)**: Implementação do repositório genérico `Repository<T>`, repositórios específicos focados em banco de dados, contexto de persistência `BibliotecaElmContext` (Oracle) e as Migrations do EF Core.
+4. **API (`BibliotecaELM.API`)**: Ponto de entrada da aplicação, contendo os Controllers, a configuração da injeção de dependência (`Program.cs`) e o tratamento global de erros (`GlobalExceptionHandler`).
 
 ### 💾 Persistência e Banco de Dados
-Para o escopo do **CP2**, utilizamos:
-- **SGBD**: Banco de Dados **Oracle** (`Oracle.EntityFrameworkCore`).
-- **ORM Configurado**: Entity Framework Core 9/10.
+* **SGBD**: Banco de Dados **Oracle** (`Oracle.EntityFrameworkCore`).
+* **ORM Configurado**: Entity Framework Core 10.
 
 #### Como Executar e aplicar as Migrations:
 > Execute os comandos abaixo a partir da raiz do repositorio.
@@ -77,67 +110,64 @@ Para o escopo do **CP2**, utilizamos:
    dotnet ef database update --project BibliotecaELM/BibliotecaELM.Infrastructure --startup-project BibliotecaELM/BibliotecaELM.API
    ```
 
-### 🧾 Estratégia de Migrations (CP2)
-Para manter o historico enxuto e aderente ao critério do CP2 (maximo de duas migrations), o projeto adota uma migration consolidada para o esquema final do MER no checkpoint.
+### 🧾 Estratégia de Migrations
+Para manter o histórico enxuto e aderente, o projeto adota uma migration consolidada para o esquema final do MER no checkpoint.
 
 **Se precisar recriar do zero em ambiente local:**
-
 ```bash
 dotnet ef migrations remove --project BibliotecaELM/BibliotecaELM.Infrastructure --startup-project BibliotecaELM/BibliotecaELM.API
 # repetir enquanto houver migrations pendentes
-dotnet ef migrations add InitialCp2 --project BibliotecaELM/BibliotecaELM.Infrastructure --startup-project BibliotecaELM/BibliotecaELM.API
+dotnet ef migrations add InitialCp3 --project BibliotecaELM/BibliotecaELM.Infrastructure --startup-project BibliotecaELM/BibliotecaELM.API
 dotnet ef database update --project BibliotecaELM/BibliotecaELM.Infrastructure --startup-project BibliotecaELM/BibliotecaELM.API
 ```
 
 ---
 
 ## 📚 Entidades Modeladas
-Todas as entidades listadas abaixo (originadas no CP1) implementam a classe abstrata `BaseEntity` utilizando o identificador único padrão (`Id` do tipo `Guid`).
+Todas as entidades implementam a classe abstrata `BaseEntity` utilizando o identificador único padrão (`Id` do tipo `Guid`).
 
-- **Usuario**: Representa os leitores/clientes da biblioteca.
-- **Endereco**: Representa a localização de residência do usuário.
-- **Livro**: Representa as obras literárias e físicas da biblioteca.
-- **Autor**: Representa os escritores responsáveis pelas obras.
-- **Emprestimo**: Representa o ato transacional (histórico) onde o usuário leva o livro temporariamente com prazos definidos.
-- **Compra**: Representa a transação comercial onde o usuário adquire livros em definitivo.
+* **Usuario**: Representa os leitores/clientes da biblioteca.
+* **Endereco**: Representa a localização de residência do usuário.
+* **Livro**: Representa as obras literárias e físicas da biblioteca.
+* **Autor**: Representa os escritores responsáveis pelas obras.
+* **Emprestimo**: Representa o ato transacional onde o usuário leva o livro temporariamente com prazos definidos.
+* **Compra**: Representa a transação comercial onde o usuário adquire livros em definitivo.
 
 ---
 
 ## 🔗 Resumo dos Relacionamentos
+Mapeados declarativamente com EF Core:
 
-Baseado na modelagem e devidamente mapeados com EF Core no CP2:
-
-- **Usuario (1) ↔ (1) Endereco**
-  - Relacionamento 1:1 com endereço opcional no usuário. O usuário pode existir sem endereço, mas cada endereço pertence a exatamente um usuário (FK `UsuarioId` com índice único em `BD_Addresses`).
-- **Usuario (1) ↔ (N) Emprestimo**
-  - Relacionamento 1:N obrigatório. Um usuário pode ter vários empréstimos e todo empréstimo exige um usuário vinculado (`UsuarioId` obrigatório em `BD_Loans`).
-- **Usuario (1) ↔ (N) Compra**
-  - Relacionamento 1:N obrigatório. Um usuário pode efetuar inúmeras compras e toda compra exige um usuário vinculado (`UsuarioId` obrigatório em `BD_Purchases`).
-  - Regra de negócio: usuário sem endereço não pode realizar compra.
-- **Livro (N) ↔ (N) Emprestimo**
-  - Relacionamento N:N implementado por tabela de junção `BD_LoanBooks`.
-- **Autor (1) ↔ (N) Livro**
-  - Relacionamento 1:N obrigatório. Um autor possui vários livros e todo livro exige um autor (`AutorId` obrigatório em `BD_Books`).
-- **Compra (N) ↔ (N) Livro**
-  - Relacionamento N:N implementado por tabela de junção `BD_PurchaseBooks`.
+* **Usuario (1) ↔ (1) Endereco**
+  * Relacionamento 1:1 com endereço opcional no usuário. O usuário pode existir sem endereço, mas cada endereço pertence a exatamente um usuário (FK `UsuarioId` com índice único em `BD_Addresses`).
+* **Usuario (1) ↔ (N) Emprestimo**
+  * Relacionamento 1:N obrigatório. Um usuário pode ter vários empréstimos e todo empréstimo exige um usuário vinculado (`UsuarioId` obrigatório em `BD_Loans`).
+* **Usuario (1) ↔ (N) Compra**
+  * Relacionamento 1:N obrigatório. Um usuário pode efetuar inúmeras compras e toda compra exige um usuário vinculado (`UsuarioId` obrigatório em `BD_Purchases`).
+  * Regra de negócio: usuário sem endereço não pode realizar compra.
+* **Livro (N) ↔ (N) Emprestimo**
+  * Relacionamento N:N implementado por tabela de junção `BD_LoanBooks`.
+* **Autor (1) ↔ (N) Livro**
+  * Relacionamento 1:N obrigatório. Um autor possui vários livros e todo livro exige um autor (`AutorId` obrigatório em `BD_Books`).
+* **Compra (N) ↔ (N) Livro**
+  * Relacionamento N:N implementado por tabela de junção `BD_PurchaseBooks`.
 
 ## ✅ Regras de Negócio Implementadas
+* Cadastro de usuário permite endereço opcional.
+* No update de usuário, quando `endereco` vier `null`, o endereço atual é mantido sem alteração.
+* Compras são bloqueadas para usuários sem endereço cadastrado.
+* Compras não aceitam `dataCompra` futura.
+* Empréstimos não aceitam `dataEmprestimo` ou `dataDevolucao` futuras.
+* Autor possui validação de faixa para `nascimento` (1500 a 2026).
 
-- Cadastro de usuário permite endereço opcional.
-- No update de usuário, quando `endereco` vier `null`, o endereço atual é mantido sem alteração.
-- Compras são bloqueadas para usuários sem endereço cadastrado.
-- Compras não aceitam `dataCompra` futura.
-- Empréstimos não aceitam `dataEmprestimo` futuras.
-- Autor possui validação de faixa para `nascimento` (1500 a 2026).
+---
 
 ## 🗂️ Evidências de Banco e Migrations
 
-## MER
-
+### MER
 ![MER](docs/mer.png)
 
-## Tabela de histórico de migrations
-
+### Tabela de histórico de migrations
 ![Tabela _EFMigrationsHistory](docs/Tabela%20_EFMigrationHistory.png)
 
 ## Estrutura das tabelas principais

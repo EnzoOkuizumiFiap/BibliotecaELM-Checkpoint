@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BibliotecaELM.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCp2 : Migration
+    public partial class InitialCp3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

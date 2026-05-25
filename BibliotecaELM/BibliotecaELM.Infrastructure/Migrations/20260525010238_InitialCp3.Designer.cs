@@ -12,8 +12,8 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace BibliotecaELM.Infrastructure.Migrations
 {
     [DbContext(typeof(BibliotecaElmContext))]
-    [Migration("20260418152412_InitialCp2")]
-    partial class InitialCp2
+    [Migration("20260525010238_InitialCp3")]
+    partial class InitialCp3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -301,8 +301,7 @@ namespace BibliotecaELM.Infrastructure.Migrations
 
                     b.Navigation("Emprestimos");
 
-                    b.Navigation("Endereco")
-                        .IsRequired();
+                    b.Navigation("Endereco");
                 });
 #pragma warning restore 612, 618
         }

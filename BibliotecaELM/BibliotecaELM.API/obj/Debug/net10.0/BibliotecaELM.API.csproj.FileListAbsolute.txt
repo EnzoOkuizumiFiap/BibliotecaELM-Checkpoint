@@ -41,7 +41,6 @@ C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\Biblioteca
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\BibliotecaELM.API.dll
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\BibliotecaELM.API.pdb
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Humanizer.dll
-C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Microsoft.Build.Framework.dll
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Microsoft.CodeAnalysis.dll
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Microsoft.CodeAnalysis.CSharp.dll
@@ -177,3 +176,8 @@ C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\Biblioteca
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.API.runtimeconfig.json
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.API.dll
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\temp_build_api\BibliotecaELM.API.pdb
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\BibliotecaELM.API.xml
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\obj\Debug\net10.0\BibliotecaELM.API.xml
