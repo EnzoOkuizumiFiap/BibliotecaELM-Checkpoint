@@ -2,7 +2,7 @@ using BibliotecaELM.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BibliotecaELM.API.Exceptions;
+namespace BibliotecaELM.Exceptions;
 
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
@@ -11,7 +11,13 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         Exception exception,
         CancellationToken cancellationToken)
     {
-        logger.LogError(exception, "Ocorreu uma exceção não tratada: {Message}", exception.Message);
+        var traceId = httpContext.TraceIdentifier;
+
+        logger.LogError(
+            exception, 
+            "Exceção não tratada capturada. TraceId: {TraceId} - Mensagem: {Message}", 
+            traceId, 
+            exception.Message);
 
         var (statusCode, title, detail) = exception switch
         {
@@ -54,6 +60,9 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             Detail = detail,
             Instance = httpContext.Request.Path
         };
+
+        // Adiciona o traceId nas extensões do ProblemDetails para rastreabilidade
+        problemDetails.Extensions["traceId"] = traceId;
 
         httpContext.Response.StatusCode = statusCode;
         httpContext.Response.ContentType = "application/problem+json";

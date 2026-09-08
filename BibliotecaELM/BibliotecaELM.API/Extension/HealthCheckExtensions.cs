@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Text.Json;
+using BibliotecaELM.Infrastructure.Persistence;
 
 namespace BibliotecaELM.Extension;
 
@@ -9,8 +10,8 @@ public static class HealthCheckExtensions
     public static IServiceCollection AddApiHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy("API operacional"))
-            .AddDbContextCheck<>("database", tags: new[] { "db" });
+            .AddCheck("self", () => HealthCheckResult.Healthy("API funcional"))
+            .AddDbContextCheck<BibliotecaElmContext>("database", tags: new[] { "db" });
 
         return services;
     }

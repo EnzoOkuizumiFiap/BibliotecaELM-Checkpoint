@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "dgSpecHash": "H7XwBst0LBk=",
-  "success": true,
+  "dgSpecHash": "yywmTaoCvSs=",
+  "success": false,
   "projectFilePath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM/BibliotecaELM/BibliotecaELM.API/BibliotecaELM.API.csproj",
   "expectedPackageFiles": [
     "/home/lulz_user/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
@@ -16,9 +16,10 @@
     "/home/lulz_user/.nuget/packages/microsoft.entityframeworkcore.abstractions/10.0.5/microsoft.entityframeworkcore.abstractions.10.0.5.nupkg.sha512",
     "/home/lulz_user/.nuget/packages/microsoft.entityframeworkcore.analyzers/10.0.5/microsoft.entityframeworkcore.analyzers.10.0.5.nupkg.sha512",
     "/home/lulz_user/.nuget/packages/microsoft.entityframeworkcore.design/10.0.5/microsoft.entityframeworkcore.design.10.0.5.nupkg.sha512",
-    "/home/lulz_user/.nuget/packages/microsoft.entityframeworkcore.relational/10.0.5/microsoft.entityframeworkcore.relational.10.0.5.nupkg.sha512",
+    "/home/lulz_user/.nuget/packages/microsoft.entityframeworkcore.relational/10.0.12/microsoft.entityframeworkcore.relational.10.0.12.nupkg.sha512",
     "/home/lulz_user/.nuget/packages/microsoft.extensions.apidescription.server/10.0.0/microsoft.extensions.apidescription.server.10.0.0.nupkg.sha512",
     "/home/lulz_user/.nuget/packages/microsoft.extensions.dependencymodel/10.0.5/microsoft.extensions.dependencymodel.10.0.5.nupkg.sha512",
+    "/home/lulz_user/.nuget/packages/microsoft.extensions.diagnostics.healthchecks.entityframeworkcore/10.0.12/microsoft.extensions.diagnostics.healthchecks.entityframeworkcore.10.0.12.nupkg.sha512",
     "/home/lulz_user/.nuget/packages/microsoft.openapi/2.4.1/microsoft.openapi.2.4.1.nupkg.sha512",
     "/home/lulz_user/.nuget/packages/microsoft.visualstudio.solutionpersistence/1.0.52/microsoft.visualstudio.solutionpersistence.1.0.52.nupkg.sha512",
     "/home/lulz_user/.nuget/packages/mono.texttemplating/3.0.0/mono.texttemplating.3.0.0.nupkg.sha512",
@@ -51,6 +52,17 @@
       "warningLevel": 1,
       "filePath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM/BibliotecaELM/BibliotecaELM.API/BibliotecaELM.API.csproj",
       "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
+    {
+      "code": "NU1605",
+      "level": "Error",
+      "message": "Warning As Error: Detected package downgrade: Microsoft.EntityFrameworkCore from 10.0.12 to 10.0.5. Reference the package directly from the project to select a different version. \n BibliotecaELM.API -> Microsoft.EntityFrameworkCore.Design 10.0.5 -> Microsoft.EntityFrameworkCore.Relational 10.0.12 -> Microsoft.EntityFrameworkCore (>= 10.0.12) \n BibliotecaELM.API -> BibliotecaELM.Infrastructure -> Microsoft.EntityFrameworkCore (>= 10.0.5)",
+      "projectPath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM/BibliotecaELM/BibliotecaELM.API/BibliotecaELM.API.csproj",
+      "filePath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM/BibliotecaELM/BibliotecaELM.API/BibliotecaELM.API.csproj",
+      "libraryId": "Microsoft.EntityFrameworkCore",
       "targetGraphs": [
         "net10.0"
       ]
