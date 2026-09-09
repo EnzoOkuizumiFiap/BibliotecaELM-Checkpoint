@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using BibliotecaELM.Infrastructure.Persistence;
 
 namespace BibliotecaELM.Extension;
@@ -10,8 +11,11 @@ public static class HealthCheckExtensions
     public static IServiceCollection AddApiHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy("API funcional"))
-            .AddDbContextCheck<BibliotecaElmContext>("database", tags: new[] { "db" });
+            .AddCheck("self", () => HealthCheckResult.Healthy("API operando sem problemas."))
+            .AddDbContextCheck<BibliotecaElmContext>(
+                name: "database",
+                failureStatus: HealthStatus.Unhealthy,
+                tags: new[] { "db", "oracle" });
 
         return services;
     }
@@ -23,8 +27,8 @@ public static class HealthCheckExtensions
             ResponseWriter = async (context, report) =>
             {
                 context.Response.ContentType = "application/json";
-                context.Response.StatusCode = report.Status == HealthStatus.Unhealthy 
-                    ? StatusCodes.Status503ServiceUnavailable 
+                context.Response.StatusCode = report.Status == HealthStatus.Unhealthy
+                    ? StatusCodes.Status503ServiceUnavailable
                     : StatusCodes.Status200OK;
 
                 var isDevelopment = context.RequestServices
@@ -47,7 +51,7 @@ public static class HealthCheckExtensions
                 await context.Response.WriteAsync(JsonSerializer.Serialize(response, new JsonSerializerOptions
                 {
                     WriteIndented = true,
-                    IgnoreNullValues = true
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
                 }));
             }
         });

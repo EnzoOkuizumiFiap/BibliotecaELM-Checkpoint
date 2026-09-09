@@ -1,23 +1,26 @@
+using System.Diagnostics;
 using BibliotecaELM.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaELM.Exceptions;
 
-public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
+public class GlobalExceptionHandler(
+    ILogger<GlobalExceptionHandler> logger,
+    IWebHostEnvironment environment) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,
         CancellationToken cancellationToken)
     {
-        var traceId = httpContext.TraceIdentifier;
+        var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
         logger.LogError(
-            exception, 
-            "Exceção não tratada capturada. TraceId: {TraceId} - Mensagem: {Message}", 
-            traceId, 
-            exception.Message);
+            exception,
+            "Exceção não tratada: {Message} : TraceId {TraceId}",
+            exception.Message,
+            traceId);
 
         var (statusCode, title, detail) = exception switch
         {
@@ -61,8 +64,12 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
             Instance = httpContext.Request.Path
         };
 
-        // Adiciona o traceId nas extensões do ProblemDetails para rastreabilidade
-        problemDetails.Extensions["traceId"] = traceId;
+        // Adiciona o traceId nas extensões do ProblemDetails apenas em Development para rastreabilidade
+        // Em produção, o detalhe fica apenas no log (sem vazar informações sensíveis ao cliente)
+        if (environment.IsDevelopment())
+        {
+            problemDetails.Extensions["traceId"] = traceId;
+        }
 
         httpContext.Response.StatusCode = statusCode;
         httpContext.Response.ContentType = "application/problem+json";

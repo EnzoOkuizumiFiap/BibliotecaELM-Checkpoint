@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "uOXqLEfG3VA=",
+  "dgSpecHash": "pxBfY3Yuo2E=",
   "success": true,
-  "projectFilePath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Application/BibliotecaELM.Application.csproj",
+  "projectFilePath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Application\\BibliotecaELM.Application.csproj",
   "expectedPackageFiles": [
-    "/home/lulz_user/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/10.0.12/microsoft.extensions.dependencyinjection.abstractions.10.0.12.nupkg.sha512",
-    "/home/lulz_user/.nuget/packages/microsoft.extensions.logging.abstractions/10.0.12/microsoft.extensions.logging.abstractions.10.0.12.nupkg.sha512"
+    "C:\\Users\\Enzo\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.12\\microsoft.extensions.dependencyinjection.abstractions.10.0.12.nupkg.sha512",
+    "C:\\Users\\Enzo\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\10.0.12\\microsoft.extensions.logging.abstractions.10.0.12.nupkg.sha512"
   ],
   "logs": []
 }

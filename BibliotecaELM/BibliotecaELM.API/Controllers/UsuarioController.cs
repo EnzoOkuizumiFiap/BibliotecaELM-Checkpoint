@@ -1,6 +1,5 @@
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
-using BibliotecaELM.Application.Services.Implementations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaELM.Controllers;
@@ -14,10 +13,12 @@ namespace BibliotecaELM.Controllers;
 public class UsuarioController : ControllerBase
 {
     private readonly IUsuarioService _usuarioService;
+    private readonly ILogger<UsuarioController> _logger;
 
-    public UsuarioController(IUsuarioService usuarioService)
+    public UsuarioController(IUsuarioService usuarioService, ILogger<UsuarioController> logger)
     {
         _usuarioService = usuarioService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -64,7 +65,14 @@ public class UsuarioController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Create([FromBody] UsuarioRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando criação de usuário : {Email} TraceId {TraceId}", request.Email, traceId);
+
         var usuario = _usuarioService.Create(request);
+
+        _logger.LogInformation("Finalizando criação de usuário : {Email} ({UsuarioId}) TraceId {TraceId}", usuario.Email, usuario.Id, traceId);
+
         return CreatedAtAction(nameof(GetById), new { id = usuario.Id }, usuario);
     }
 
@@ -83,9 +91,18 @@ public class UsuarioController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Update(Guid id, [FromBody] UsuarioRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando atualização de usuário : {UsuarioId} TraceId {TraceId}", id, traceId);
+
         var usuario = _usuarioService.Update(id, request);
         if (usuario is null)
+        {
+            _logger.LogWarning("Usuário não encontrado para atualização : {UsuarioId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando atualização de usuário : {UsuarioId} TraceId {TraceId}", id, traceId);
 
         return Ok(usuario);
     }
@@ -102,8 +119,17 @@ public class UsuarioController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Delete(Guid id)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando exclusão de usuário : {UsuarioId} TraceId {TraceId}", id, traceId);
+
         if (!_usuarioService.Delete(id))
+        {
+            _logger.LogWarning("Usuário não encontrado para exclusão : {UsuarioId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando exclusão de usuário : {UsuarioId} TraceId {TraceId}", id, traceId);
 
         return NoContent();
     }

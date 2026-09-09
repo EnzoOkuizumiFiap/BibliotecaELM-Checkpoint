@@ -1,6 +1,5 @@
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
-using BibliotecaELM.Application.Services.Implementations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaELM.Controllers;
@@ -14,10 +13,12 @@ namespace BibliotecaELM.Controllers;
 public class AutorController : ControllerBase
 {
     private readonly IAutorService _autorService;
+    private readonly ILogger<AutorController> _logger;
 
-    public AutorController(IAutorService autorService)
+    public AutorController(IAutorService autorService, ILogger<AutorController> logger)
     {
         _autorService = autorService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -64,7 +65,14 @@ public class AutorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Create([FromBody] AutorRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando criação de autor : {NomeAutor} TraceId {TraceId}", request.NomeAutor, traceId);
+
         var autor = _autorService.Create(request);
+
+        _logger.LogInformation("Finalizando criação de autor : {NomeAutor} ({AutorId}) TraceId {TraceId}", autor.NomeAutor, autor.Id, traceId);
+
         return CreatedAtAction(nameof(GetById), new { id = autor.Id }, autor);
     }
 
@@ -83,9 +91,18 @@ public class AutorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Update(Guid id, [FromBody] AutorRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando atualização de autor : {AutorId} TraceId {TraceId}", id, traceId);
+
         var autor = _autorService.Update(id, request);
         if (autor is null)
+        {
+            _logger.LogWarning("Autor não encontrado para atualização : {AutorId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando atualização de autor : {AutorId} TraceId {TraceId}", id, traceId);
 
         return Ok(autor);
     }
@@ -102,8 +119,17 @@ public class AutorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Delete(Guid id)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando exclusão de autor : {AutorId} TraceId {TraceId}", id, traceId);
+
         if (!_autorService.Delete(id))
+        {
+            _logger.LogWarning("Autor não encontrado para exclusão : {AutorId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando exclusão de autor : {AutorId} TraceId {TraceId}", id, traceId);
 
         return NoContent();
     }

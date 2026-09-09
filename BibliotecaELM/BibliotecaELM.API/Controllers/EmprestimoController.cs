@@ -1,6 +1,5 @@
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
-using BibliotecaELM.Application.Services.Implementations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaELM.Controllers;
@@ -14,10 +13,12 @@ namespace BibliotecaELM.Controllers;
 public class EmprestimoController : ControllerBase
 {
     private readonly IEmprestimoService _emprestimoService;
+    private readonly ILogger<EmprestimoController> _logger;
 
-    public EmprestimoController(IEmprestimoService emprestimoService)
+    public EmprestimoController(IEmprestimoService emprestimoService, ILogger<EmprestimoController> logger)
     {
         _emprestimoService = emprestimoService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -64,7 +65,14 @@ public class EmprestimoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Create([FromBody] EmprestimoRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando criação de empréstimo : UsuarioId {UsuarioId} TraceId {TraceId}", request.UsuarioId, traceId);
+
         var emprestimo = _emprestimoService.Create(request);
+
+        _logger.LogInformation("Finalizando criação de empréstimo : {EmprestimoId} TraceId {TraceId}", emprestimo.Id, traceId);
+
         return CreatedAtAction(nameof(GetById), new { id = emprestimo.Id }, emprestimo);
     }
 
@@ -83,9 +91,18 @@ public class EmprestimoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Update(Guid id, [FromBody] EmprestimoRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando atualização de empréstimo : {EmprestimoId} TraceId {TraceId}", id, traceId);
+
         var emprestimo = _emprestimoService.Update(id, request);
         if (emprestimo is null)
+        {
+            _logger.LogWarning("Empréstimo não encontrado para atualização : {EmprestimoId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando atualização de empréstimo : {EmprestimoId} TraceId {TraceId}", id, traceId);
 
         return Ok(emprestimo);
     }
@@ -102,8 +119,17 @@ public class EmprestimoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Delete(Guid id)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando exclusão de empréstimo : {EmprestimoId} TraceId {TraceId}", id, traceId);
+
         if (!_emprestimoService.Delete(id))
+        {
+            _logger.LogWarning("Empréstimo não encontrado para exclusão : {EmprestimoId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando exclusão de empréstimo : {EmprestimoId} TraceId {TraceId}", id, traceId);
 
         return NoContent();
     }

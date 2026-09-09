@@ -181,3 +181,4 @@ C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\Biblioteca
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\obj\Debug\net10.0\BibliotecaELM.API.xml
+C:\Users\Enzo\new_backup\FIAP\Advanced Business Development with .NET\BibliotecaELM-Checkpoint\BibliotecaELM\BibliotecaELM.API\bin\Debug\net10.0\Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.dll

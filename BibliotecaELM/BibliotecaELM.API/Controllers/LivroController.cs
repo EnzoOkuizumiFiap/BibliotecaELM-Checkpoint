@@ -1,6 +1,5 @@
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
-using BibliotecaELM.Application.Services.Implementations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaELM.Controllers;
@@ -14,12 +13,14 @@ namespace BibliotecaELM.Controllers;
 public class LivroController : ControllerBase
 {
     private readonly ILivroService _livroService;
-    
-    public LivroController(ILivroService livroService)
+    private readonly ILogger<LivroController> _logger;
+
+    public LivroController(ILivroService livroService, ILogger<LivroController> logger)
     {
         _livroService = livroService;
+        _logger = logger;
     }
-    
+
     /// <summary>
     /// Retorna todos os livros do acervo.
     /// </summary>
@@ -32,7 +33,7 @@ public class LivroController : ControllerBase
         var livros = _livroService.GetAll();
         return Ok(livros);
     }
-    
+
     /// <summary>
     /// Busca um livro específico pelo GUID.
     /// </summary>
@@ -51,7 +52,7 @@ public class LivroController : ControllerBase
 
         return Ok(livro);
     }
-    
+
     /// <summary>
     /// Cadastra um novo livro no acervo da biblioteca.
     /// </summary>
@@ -64,7 +65,14 @@ public class LivroController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Create([FromBody] LivroRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando criação de livro : {NomeLivro} TraceId {TraceId}", request.NomeLivro, traceId);
+
         var livro = _livroService.Create(request);
+
+        _logger.LogInformation("Finalizando criação de livro : {NomeLivro} ({LivroId}) TraceId {TraceId}", livro.NomeLivro, livro.Id, traceId);
+
         return CreatedAtAction(nameof(GetById), new { id = livro.Id }, livro);
     }
 
@@ -83,13 +91,22 @@ public class LivroController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Update(Guid id, [FromBody] LivroRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando atualização de livro : {LivroId} TraceId {TraceId}", id, traceId);
+
         var livro = _livroService.Update(id, request);
         if (livro is null)
+        {
+            _logger.LogWarning("Livro não encontrado para atualização : {LivroId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando atualização de livro : {LivroId} TraceId {TraceId}", id, traceId);
 
         return Ok(livro);
     }
-    
+
     /// <summary>
     /// Exclui um livro do acervo.
     /// </summary>
@@ -102,8 +119,17 @@ public class LivroController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Delete(Guid id)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando exclusão de livro : {LivroId} TraceId {TraceId}", id, traceId);
+
         if (!_livroService.Delete(id))
+        {
+            _logger.LogWarning("Livro não encontrado para exclusão : {LivroId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando exclusão de livro : {LivroId} TraceId {TraceId}", id, traceId);
 
         return NoContent();
     }

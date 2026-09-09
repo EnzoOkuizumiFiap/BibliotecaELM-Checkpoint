@@ -1,6 +1,5 @@
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
-using BibliotecaELM.Application.Services.Implementations;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaELM.Controllers;
@@ -14,10 +13,12 @@ namespace BibliotecaELM.Controllers;
 public class EnderecoController : ControllerBase
 {
     private readonly IEnderecoService _enderecoService;
+    private readonly ILogger<EnderecoController> _logger;
 
-    public EnderecoController(IEnderecoService enderecoService)
+    public EnderecoController(IEnderecoService enderecoService, ILogger<EnderecoController> logger)
     {
         _enderecoService = enderecoService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -65,7 +66,14 @@ public class EnderecoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Create(Guid usuarioId, [FromBody] EnderecoRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando criação de endereço : UsuarioId {UsuarioId} TraceId {TraceId}", usuarioId, traceId);
+
         var endereco = _enderecoService.Create(request, usuarioId);
+
+        _logger.LogInformation("Finalizando criação de endereço : {EnderecoId} TraceId {TraceId}", endereco.Id, traceId);
+
         return CreatedAtAction(nameof(GetById), new { id = endereco.Id }, endereco);
     }
 
@@ -84,9 +92,18 @@ public class EnderecoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Update(Guid id, [FromBody] EnderecoRequest request)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando atualização de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
+
         var endereco = _enderecoService.Update(id, request);
         if (endereco is null)
+        {
+            _logger.LogWarning("Endereço não encontrado para atualização : {EnderecoId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando atualização de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
 
         return Ok(endereco);
     }
@@ -103,8 +120,17 @@ public class EnderecoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult Delete(Guid id)
     {
+        var traceId = HttpContext.TraceIdentifier;
+
+        _logger.LogInformation("Iniciando exclusão de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
+
         if (!_enderecoService.Delete(id))
+        {
+            _logger.LogWarning("Endereço não encontrado para exclusão : {EnderecoId} TraceId {TraceId}", id, traceId);
             return NotFound();
+        }
+
+        _logger.LogInformation("Finalizando exclusão de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
 
         return NoContent();
     }

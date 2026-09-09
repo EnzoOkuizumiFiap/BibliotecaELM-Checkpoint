@@ -1,12 +1,10 @@
-using BibliotecaELM.Exceptions;
 using BibliotecaELM.Application.Services.Implementations;
 using BibliotecaELM.Application.Services.Interfaces;
+using BibliotecaELM.Exceptions;
+using BibliotecaELM.Extension;
 using BibliotecaELM.Infrastructure.Persistence;
 using BibliotecaELM.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using System.Text.Json;
 
 namespace BibliotecaELM;
 
@@ -24,17 +22,8 @@ public class Program
             options.UseOracle(builder.Configuration.GetConnectionString("BibliotecaElmOracle"));
         });
         
-        // Configuração dos Health Checks
-        builder.Services.AddHealthChecks()
-            .AddCheck("self", () => HealthCheckResult.Healthy("API operando sem problemas."))
-            .AddDbContextCheck<BibliotecaElmContext>(
-                name: "database",
-                failureStatus: HealthStatus.Unhealthy,
-                tags: new[] { "db", "oracle" }
-            );
-
-        // Permite acessar o HttpContext (usado para rastrear o TraceId na camada de Application)
-        builder.Services.AddHttpContextAccessor();
+        // Configuração dos Health Checks via extensão modular
+        builder.Services.AddApiHealthChecks(builder.Configuration);
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
@@ -90,37 +79,8 @@ public class Program
 
         app.UseAuthorization();
 
-        app.MapHealthChecks("/health", new HealthCheckOptions
-        {
-            ResponseWriter = async (context, report) =>
-            {
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = report.Status == HealthStatus.Unhealthy
-                    ? StatusCodes.Status503ServiceUnavailable
-                    : StatusCodes.Status200OK;
-
-                var isDev = app.Environment.IsDevelopment();
-
-                var response = new
-                {
-                    status = report.Status.ToString(),
-                    duration = report.TotalDuration.ToString(),
-                    checks = report.Entries.Select(e => new
-                    {
-                        name = e.Key,
-                        status = e.Value.Status.ToString(),
-                        duration = e.Value.Duration.ToString(),
-                        exception = isDev ? e.Value.Exception?.Message : null
-                    })
-                };
-
-                await context.Response.WriteAsync(JsonSerializer.Serialize(response, new JsonSerializerOptions
-                {
-                    WriteIndented = true,
-                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
-                }));
-            }
-        });
+        // Mapeamento modular do endpoint /health
+        app.MapApiHealthChecks();
 
         app.MapControllers();
 

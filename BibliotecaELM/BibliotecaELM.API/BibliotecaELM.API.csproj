@@ -31,8 +31,4 @@
       <ProjectReference Include="..\BibliotecaELM.Infrastructure\BibliotecaELM.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="Controllers\BibliotecaController.cs" />
-    </ItemGroup>
-
 </Project>
