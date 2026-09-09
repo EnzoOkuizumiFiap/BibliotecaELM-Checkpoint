@@ -10,31 +10,34 @@ public class LivroTests
     public void CriarLivro_ComDadosValidos_DeveInstanciarComSucesso()
     {
         // Arrange
-        var titulo = "Clean Code";
-        var isbn = "9780132350884";
-        var anoPublicacao = 2008;
+        var nomeLivro = "Clean Code";
+        var preco = 200;
+        var dataLancamento = "2000-01-01";
+        var autorId = 2;
 
         // Act
-        var livro = new Livro(titulo, isbn, anoPublicacao);
+        var livro = new Livro(nomeLivro, preco, dataLancamento, autorId);
 
         // Assert
         Assert.NotNull(livro);
-        Assert.Equal(titulo, livro.Titulo);
-        Assert.Equal(isbn, livro.Isbn);
-        Assert.Equal(anoPublicacao, livro.AnoPublicacao);
+        Assert.Equal(nomeLivro, livro.nomeLivro);
+        Assert.Equal(preco, livro.preco);
+        Assert.Equal(dataLancamento, livro.dataLancamento);
+        Assert.Equal(autorId, livro.autorId)
     }
 
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData(null)]
-    public void CriarLivro_ComTituloInvalido_DeveLancarDomainException(string tituloInvalido)
+    public void CriarLivro_ComnomeLivroInvalido_DeveLancarDomainException(string nomeLivroInvalido)
     {
         // Arrange
-        var isbn = "9780132350884";
-        var anoPublicacao = 2008;
+        var preco = 200;
+        var dataLancamento = "2000-01-01";
+        var autorId = 2;
 
         // Act & Assert
-        Assert.Throws<DomainException>(() => new Livro(tituloInvalido, isbn, anoPublicacao));
+        Assert.Throws<DomainException>(() => new Livro(nomeLivroInvalido, preco, dataLancamento, autorId));
     }
 }
