@@ -18,22 +18,28 @@ public class LivroAppService : ILivroAppService
 
     public async Task<LivroResponse> CriarLivroAsync(LivroRequest request, string traceId)
     {
-        _logger.LogInformation("Iniciando criação do livro {Titulo} para o Isbn {Isbn}. TraceId: {TraceId}", 
-            request.Titulo, request.Isbn, traceId);
+        _logger.LogInformation("Iniciando criação do livro {NomeLivro} com autor de ID {AutorId}. TraceId: {TraceId}", 
+            request.NomeLivro, request.AutorId, traceId);
 
-        var livro = new Livro(request.Titulo, request.Isbn, request.AnoPublicacao);
+        if (!request.AutorId.HasValue)
+        {
+            _logger.LogWarning("Tentativa de criação de livro falhou: AutorId nulo. TraceId: {TraceId}", traceId);
+            throw new ArgumentException("O ID do autor é obrigatório.");
+        }
 
-        await _repository.AddAsync(livro);
+        var livro = new Livro(request.NomeLivro, request.Preco, request.DataLancamento, request.AutorId.Value);
+
+        _repository.Add(livro);
 
         _logger.LogInformation("Livro {LivroId} criado com sucesso. TraceId: {TraceId}", 
             livro.Id, traceId);
 
-        return new LivroResponse
-        {
-            Id = livro.Id,
-            Titulo = livro.Titulo,
-            Isbn = livro.Isbn,
-            AnoPublicacao = livro.AnoPublicacao
-        };
+        return new LivroResponse(
+            livro.Id,
+            livro.NomeLivro,
+            livro.Preco,
+            livro.DataLancamento,
+            livro.AutorId
+        );
     }
 }

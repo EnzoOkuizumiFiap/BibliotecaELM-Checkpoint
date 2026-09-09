@@ -11,33 +11,37 @@ public class LivroTests
     {
         // Arrange
         var nomeLivro = "Clean Code";
-        var preco = 200;
-        var dataLancamento = "2000-01-01";
-        var autorId = 2;
+        var preco = 200m;
+        var dataLancamento = new DateOnly(2000, 1, 1);
+        var autorId = Guid.NewGuid();
 
         // Act
         var livro = new Livro(nomeLivro, preco, dataLancamento, autorId);
 
         // Assert
         Assert.NotNull(livro);
-        Assert.Equal(nomeLivro, livro.nomeLivro);
-        Assert.Equal(preco, livro.preco);
-        Assert.Equal(dataLancamento, livro.dataLancamento);
-        Assert.Equal(autorId, livro.autorId)
+        Assert.Equal(nomeLivro, livro.NomeLivro);
+        Assert.Equal(preco, livro.Preco);
+        Assert.Equal(dataLancamento, livro.DataLancamento);
+        Assert.Equal(autorId, livro.AutorId);
     }
 
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData(null)]
-    public void CriarLivro_ComnomeLivroInvalido_DeveLancarDomainException(string nomeLivroInvalido)
+    public void CriarLivro_ComNomeLivroInvalido_DeveLancarBusinessRuleValidationException(string? nomeLivroInvalido)
     {
         // Arrange
-        var preco = 200;
-        var dataLancamento = "2000-01-01";
-        var autorId = 2;
+        var preco = 200m;
+        var dataLancamento = new DateOnly(2000, 1, 1);
+        var autorId = Guid.NewGuid();
 
         // Act & Assert
-        Assert.Throws<DomainException>(() => new Livro(nomeLivroInvalido, preco, dataLancamento, autorId));
+        // Espera a exceção exata lançada pela validação de domínio
+        Assert.Throws<BusinessRuleValidationException>(() =>
+        {
+            _ = new Livro(nomeLivroInvalido!, preco, dataLancamento, autorId);
+        });
     }
 }

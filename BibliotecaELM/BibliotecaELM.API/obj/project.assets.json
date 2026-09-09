@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 3,
   "targets": {
     "net10.0": {
       "Humanizer.Core/2.14.1": {
@@ -447,10 +447,10 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
-      "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore/10.0.12": {
+      "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore/10.0.0": {
         "type": "package",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Relational": "10.0.12"
+          "Microsoft.EntityFrameworkCore.Relational": "10.0.0"
         },
         "compile": {
           "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.dll": {
@@ -878,7 +878,7 @@
           "BibliotecaELM.Application": "1.0.0",
           "BibliotecaELM.Domain": "1.0.0",
           "Microsoft.EntityFrameworkCore": "10.0.12",
-          "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "10.0.12",
+          "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "10.0.0",
           "Oracle.EntityFrameworkCore": "10.23.26301"
         },
         "compile": {
@@ -2355,10 +2355,10 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore/10.0.12": {
-      "sha512": "BMG8waDSju79jJGdnOPrFrpqUv9/A+Qbg43WLmqUwMgdN26ozOK5iLXVCdaXgX71TvwEGX3HWCAGy711vGAl2Q==",
+    "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore/10.0.0": {
+      "sha512": "ND74bTLuvcrhpEPQU8QZwOrq08zPPj76Ev/60SX1juVKLSSnbknXNoOzNYMPJn3xvhyDHmqU3Hvb/aYV3uvvhQ==",
       "type": "package",
-      "path": "microsoft.extensions.diagnostics.healthchecks.entityframeworkcore/10.0.12",
+      "path": "microsoft.extensions.diagnostics.healthchecks.entityframeworkcore/10.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2367,7 +2367,7 @@
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.dll",
         "lib/net10.0/Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.xml",
-        "microsoft.extensions.diagnostics.healthchecks.entityframeworkcore.10.0.12.nupkg.sha512",
+        "microsoft.extensions.diagnostics.healthchecks.entityframeworkcore.10.0.0.nupkg.sha512",
         "microsoft.extensions.diagnostics.healthchecks.entityframeworkcore.nuspec"
       ]
     },
@@ -2961,39 +2961,39 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Enzo\\.nuget\\packages\\": {}
+    "/home/lulz_user/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.API\\BibliotecaELM.API.csproj",
+      "projectUniqueName": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.API/BibliotecaELM.API.csproj",
       "projectName": "BibliotecaELM.API",
-      "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.API\\BibliotecaELM.API.csproj",
-      "packagesPath": "C:\\Users\\Enzo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.API\\obj\\",
+      "projectPath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.API/BibliotecaELM.API.csproj",
+      "packagesPath": "/home/lulz_user/.nuget/packages/",
+      "outputPath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.API/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Enzo\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/home/lulz_user/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
+        "/usr/lib/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Application\\BibliotecaELM.Application.csproj": {
-              "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Application\\BibliotecaELM.Application.csproj"
+            "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Application/BibliotecaELM.Application.csproj": {
+              "projectPath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Application/BibliotecaELM.Application.csproj"
             },
-            "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Domain\\BibliotecaELM.Domain.csproj": {
-              "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Domain\\BibliotecaELM.Domain.csproj"
+            "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Domain/BibliotecaELM.Domain.csproj": {
+              "projectPath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Domain/BibliotecaELM.Domain.csproj"
             },
-            "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\Enzo\\new_backup\\FIAP\\Advanced Business Development with .NET\\BibliotecaELM-Checkpoint\\BibliotecaELM\\BibliotecaELM.Infrastructure\\BibliotecaELM.Infrastructure.csproj"
+            "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Infrastructure/BibliotecaELM.Infrastructure.csproj": {
+              "projectPath": "/home/lulz_user/Documents/FIAP2/sem2/DOTNET/BibliotecaELM-Checkpoint/BibliotecaELM/BibliotecaELM.Infrastructure/BibliotecaELM.Infrastructure.csproj"
             }
           }
         }
@@ -3008,11 +3008,10 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.400"
+      "SdkAnalysisLevel": "10.0.100"
     },
     "frameworks": {
       "net10.0": {
-        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Design": {
@@ -3045,7 +3044,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.400/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.111/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
