@@ -1,7 +1,6 @@
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
 using BibliotecaELM.Domain.Entities;
-using BibliotecaELM.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace BibliotecaELM.Application.Services.Implementations;
