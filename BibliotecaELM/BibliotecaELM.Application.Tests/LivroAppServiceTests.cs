@@ -1,6 +1,7 @@
-﻿using BibliotecaELM.Application.Services;
+﻿using BibliotecaELM.Application.DTOs;
+using BibliotecaELM.Application.Services.Implementations;
+using BibliotecaELM.Application.Services.Interfaces;
 using BibliotecaELM.Domain.Entities;
-using BibliotecaELM.Domain.Exceptions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -21,30 +22,35 @@ public class LivroAppServiceTests
     }
 
     [Fact]
-    public async Task CriarLivro_QuandoTituloInvalido_NaoDeveChamarAdicionarNoRepositorio()
+    public async Task CriarLivroAsync_QuandoAutorIdNulo_DeveLancarArgumentExceptionENaoChamarAdd()
     {
-        // Arrange
-        var command = new CriarLivroCommand("", "9780132350884", 2008);
+        var request = new LivroRequest(
+            "Clean Code",
+            150.00m,
+            new DateOnly(2008, 8, 1),
+            null
+        );
         var traceId = "test-trace-id";
 
-        // Act & Assert
-        await Assert.ThrowsAsync<DomainException>(() => _service.CriarLivroAsync(command, traceId));
+        await Assert.ThrowsAsync<ArgumentException>(() => _service.CriarLivroAsync(request, traceId));
 
-        _repositoryMock.Verify(r => r.AddAsync(It.IsAny<Livro>()), Times.Never);
+        _repositoryMock.Verify(r => r.Add(It.IsAny<Livro>()), Times.Never);
     }
 
     [Fact]
-    public async Task CriarLivro_QuandoDadosValidos_DeveChamarAdicionarUmaVez()
+    public async Task CriarLivroAsync_QuandoDadosValidos_DeveChamarAddUmaVez()
     {
-        // Arrange
-        var command = new CriarLivroCommand("Domain-Driven Design", "9780321125217", 2003);
+        var request = new LivroRequest(
+            "Domain-Driven Design",
+            200.00m,
+            new DateOnly(2003, 8, 22),
+            Guid.NewGuid()
+        );
         var traceId = "test-trace-id";
 
-        // Act
-        var result = await _service.CriarLivroAsync(command, traceId);
+        var result = await _service.CriarLivroAsync(request, traceId);
 
-        // Assert
         Assert.NotNull(result);
-        _repositoryMock.Verify(r => r.AddAsync(It.IsAny<Livro>()), Times.Once);
+        _repositoryMock.Verify(r => r.Add(It.IsAny<Livro>()), Times.Once);
     }
 }
