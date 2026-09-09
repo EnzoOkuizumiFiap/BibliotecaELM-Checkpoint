@@ -1,9 +1,9 @@
-# 📌 BibliotecaELM - Checkpoint 03
+# 📌 BibliotecaELM - Checkpoint 04
 
 ## 🎯 Sobre o Projeto (Domínio Escolhido)
 Este projeto é uma API em .NET desenvolvida seguindo os princípios de **Clean Architecture**, abordando o domínio de uma **Biblioteca**. O sistema gerencia o serviço clássico de empréstimos (locação de acervo físico) e transações de compras/aquisição de livros em definitivo pelos usuários.
 
-O projeto foi totalmente evoluído para o **Checkpoint 03 (CP3)**, com a introdução do padrão Repository Genérico, desacoplamento completo através de uma camada de Serviços de Aplicação (Application Services), tratamento global de exceções padronizado com RFC 7807 (Problem Details) e documentação interativa via Swagger.
+O projeto foi totalmente evoluído para o **Checkpoint 04 (CP4)**, tornando ela operável em runtime com health checks (usando ASP .NET Core), adicionando logs com TraceId e adicionando proteção ao Domain usando testes automatizados com xUnit e testando Application com Moq.
 
 ## Integrantes da Equipe
 
