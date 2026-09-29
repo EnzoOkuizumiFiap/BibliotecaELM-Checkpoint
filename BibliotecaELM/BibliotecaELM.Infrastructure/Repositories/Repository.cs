@@ -21,6 +21,32 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         return _dbSet.AsNoTracking().ToList();
     }
 
+    public virtual (IReadOnlyList<T> Items, int TotalItems) GetPaged(
+        int page,
+        int pageSize,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
+    {
+        IQueryable<T> query = _dbSet.AsNoTracking();
+
+        var totalItems = query.Count();
+
+        if (orderBy != null)
+        {
+            query = orderBy(query);
+        }
+        else
+        {
+            query = query.OrderBy(e => e.Id);
+        }
+
+        var items = query
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return (items, totalItems);
+    }
+
     public virtual T? GetById(Guid id)
     {
         return _dbSet.FirstOrDefault(e => e.Id == id);

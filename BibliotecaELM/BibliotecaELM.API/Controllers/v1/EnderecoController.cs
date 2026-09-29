@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -5,22 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace BibliotecaELM.Controllers;
 
 /// <summary>
-/// Controller responsável por gerenciar os Endereços dos Usuários.
+/// Controller responsável por gerenciar os Endereços dos usuários da biblioteca.
+/// Disponível nas versões v1.0 e v2.0 da API.
 /// </summary>
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [Route("api/[controller]")]
 [ApiController]
 [Produces("application/json")]
-public class EnderecoController : ControllerBase
+public class EnderecoController(IEnderecoService enderecoService, ILogger<EnderecoController> logger) : ControllerBase
 {
-    private readonly IEnderecoService _enderecoService;
-    private readonly ILogger<EnderecoController> _logger;
-
-    public EnderecoController(IEnderecoService enderecoService, ILogger<EnderecoController> logger)
-    {
-        _enderecoService = enderecoService;
-        _logger = logger;
-    }
-
     /// <summary>
     /// Retorna todos os endereços cadastrados.
     /// </summary>
@@ -30,23 +26,23 @@ public class EnderecoController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EnderecoResponse>))]
     public IActionResult GetAll()
     {
-        var enderecos = _enderecoService.GetAll();
+        var enderecos = enderecoService.GetAll();
         return Ok(enderecos);
     }
 
     /// <summary>
-    /// Busca um endereço específico pelo GUID.
+    /// Busca um endereço específico pelo seu identificador (GUID).
     /// </summary>
     /// <param name="id">GUID do endereço.</param>
-    /// <returns>Os detalhes do endereço.</returns>
-    /// <response code="200">Endereço encontrado.</response>
-    /// <response code="404">Caso não exista endereço com o GUID fornecido.</response>
+    /// <returns>Os detalhes do endereço correspondente.</returns>
+    /// <response code="200">Retorna o endereço encontrado.</response>
+    /// <response code="404">Caso não exista endereço com o GUID informado.</response>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EnderecoResponse))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetById(Guid id)
     {
-        var endereco = _enderecoService.GetById(id);
+        var endereco = enderecoService.GetById(id);
         if (endereco is null)
             return NotFound();
 
@@ -56,23 +52,23 @@ public class EnderecoController : ControllerBase
     /// <summary>
     /// Cadastra um novo endereço associado a um usuário.
     /// </summary>
-    /// <param name="usuarioId">GUID do usuário dono do endereço.</param>
-    /// <param name="request">Dados do endereço a ser cadastrado.</param>
+    /// <param name="usuarioId">Identificador do usuário proprietário do endereço.</param>
+    /// <param name="request">Dados para cadastro do endereço.</param>
     /// <returns>O endereço cadastrado.</returns>
     /// <response code="201">Endereço cadastrado com sucesso.</response>
-    /// <response code="400">Caso os dados de entrada sejam inválidos ou o usuário já possua endereço cadastrado.</response>
-    [HttpPost("{usuarioId:guid}")]
+    /// <response code="400">Caso os dados sejam inválidos ou o usuário não exista.</response>
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(EnderecoResponse))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult Create(Guid usuarioId, [FromBody] EnderecoRequest request)
     {
         var traceId = HttpContext.TraceIdentifier;
 
-        _logger.LogInformation("Iniciando criação de endereço : UsuarioId {UsuarioId} TraceId {TraceId}", usuarioId, traceId);
+        logger.LogInformation("Iniciando criação de endereço : UsuarioId {UsuarioId} TraceId {TraceId}", usuarioId, traceId);
 
-        var endereco = _enderecoService.Create(request, usuarioId);
+        var endereco = enderecoService.Create(request, usuarioId);
 
-        _logger.LogInformation("Finalizando criação de endereço : {EnderecoId} TraceId {TraceId}", endereco.Id, traceId);
+        logger.LogInformation("Finalizando criação de endereço : {EnderecoId} TraceId {TraceId}", endereco.Id, traceId);
 
         return CreatedAtAction(nameof(GetById), new { id = endereco.Id }, endereco);
     }
@@ -80,12 +76,12 @@ public class EnderecoController : ControllerBase
     /// <summary>
     /// Atualiza os dados de um endereço existente.
     /// </summary>
-    /// <param name="id">GUID do endereço.</param>
+    /// <param name="id">GUID do endereço a ser atualizado.</param>
     /// <param name="request">Novos dados do endereço.</param>
     /// <returns>O endereço atualizado.</returns>
     /// <response code="200">Endereço atualizado com sucesso.</response>
     /// <response code="400">Caso os dados fornecidos sejam inválidos.</response>
-    /// <response code="404">Caso o endereço com o GUID informado não seja encontrado.</response>
+    /// <response code="404">Caso o endereço com o GUID fornecido não seja encontrado.</response>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(EnderecoResponse))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -94,24 +90,24 @@ public class EnderecoController : ControllerBase
     {
         var traceId = HttpContext.TraceIdentifier;
 
-        _logger.LogInformation("Iniciando atualização de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Iniciando atualização de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
 
-        var endereco = _enderecoService.Update(id, request);
+        var endereco = enderecoService.Update(id, request);
         if (endereco is null)
         {
-            _logger.LogWarning("Endereço não encontrado para atualização : {EnderecoId} TraceId {TraceId}", id, traceId);
+            logger.LogWarning("Endereço não encontrado para atualização : {EnderecoId} TraceId {TraceId}", id, traceId);
             return NotFound();
         }
 
-        _logger.LogInformation("Finalizando atualização de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Finalizando atualização de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
 
         return Ok(endereco);
     }
 
     /// <summary>
-    /// Remove um endereço cadastrado.
+    /// Exclui um endereço da base de dados.
     /// </summary>
-    /// <param name="id">GUID do endereço a ser removido.</param>
+    /// <param name="id">GUID do endereço a ser excluído.</param>
     /// <returns>Sem conteúdo (204 NoContent).</returns>
     /// <response code="204">Endereço excluído com sucesso.</response>
     /// <response code="404">Caso o endereço com o GUID informado não seja encontrado.</response>
@@ -122,15 +118,15 @@ public class EnderecoController : ControllerBase
     {
         var traceId = HttpContext.TraceIdentifier;
 
-        _logger.LogInformation("Iniciando exclusão de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Iniciando exclusão de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
 
-        if (!_enderecoService.Delete(id))
+        if (!enderecoService.Delete(id))
         {
-            _logger.LogWarning("Endereço não encontrado para exclusão : {EnderecoId} TraceId {TraceId}", id, traceId);
+            logger.LogWarning("Endereço não encontrado para exclusão : {EnderecoId} TraceId {TraceId}", id, traceId);
             return NotFound();
         }
 
-        _logger.LogInformation("Finalizando exclusão de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Finalizando exclusão de endereço : {EnderecoId} TraceId {TraceId}", id, traceId);
 
         return NoContent();
     }

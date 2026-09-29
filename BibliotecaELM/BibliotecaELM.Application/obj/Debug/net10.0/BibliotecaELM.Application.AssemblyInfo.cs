@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BibliotecaELM.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+92a11bc193f09a3095fcf6a0fe6b436722348b79")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+41bb1fd494927acb9c6148bb83a22b2d696b43c3")]
 [assembly: System.Reflection.AssemblyProductAttribute("BibliotecaELM.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BibliotecaELM.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

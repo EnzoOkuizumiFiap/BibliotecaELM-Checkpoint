@@ -1,0 +1,77 @@
+# Build results
+**/[Oo]bj/
+**/[Bb]in/
+[Ll]og/
+[Ll]ogs/
+.dotnet/
+
+# Assemblies e binários compilados
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.winmd
+*.so
+*.dylib
+
+# User-specific (MSBuild / Mono)
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+# Visual Studio
+.vs/
+*.rsuser
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# NuGet
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Test / coverage
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+*.opencover.xml
+
+# .NET tooling
+*.DotSettings.user
+*.DotSettings
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Secrets / ambiente local
+appsettings.*.local.json
+appsettings.Development.json.user
+secrets.json
+*.pfx
+*.key
+
+# Misc
+*.log
+*.tmp
+*.temp
+~$*

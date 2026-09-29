@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -6,21 +7,16 @@ namespace BibliotecaELM.Controllers;
 
 /// <summary>
 /// Controller responsável por gerenciar as transações de Compras de Livros.
+/// Disponível nas versões v1.0 e v2.0 da API.
 /// </summary>
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [Route("api/[controller]")]
 [ApiController]
 [Produces("application/json")]
-public class CompraController : ControllerBase
+public class CompraController(ICompraService compraService, ILogger<CompraController> logger) : ControllerBase
 {
-    private readonly ICompraService _compraService;
-    private readonly ILogger<CompraController> _logger;
-
-    public CompraController(ICompraService compraService, ILogger<CompraController> logger)
-    {
-        _compraService = compraService;
-        _logger = logger;
-    }
-
     /// <summary>
     /// Retorna todas as compras registradas na biblioteca.
     /// </summary>
@@ -30,7 +26,7 @@ public class CompraController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<CompraResponse>))]
     public IActionResult GetAll()
     {
-        var compras = _compraService.GetAll();
+        var compras = compraService.GetAll();
         return Ok(compras);
     }
 
@@ -46,7 +42,7 @@ public class CompraController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetById(Guid id)
     {
-        var compra = _compraService.GetById(id);
+        var compra = compraService.GetById(id);
         if (compra is null)
             return NotFound();
 
@@ -67,11 +63,11 @@ public class CompraController : ControllerBase
     {
         var traceId = HttpContext.TraceIdentifier;
 
-        _logger.LogInformation("Iniciando criação de compra : UsuarioId {UsuarioId} TraceId {TraceId}", request.UsuarioId, traceId);
+        logger.LogInformation("Iniciando criação de compra : UsuarioId {UsuarioId} TraceId {TraceId}", request.UsuarioId, traceId);
 
-        var compra = _compraService.Create(request);
+        var compra = compraService.Create(request);
 
-        _logger.LogInformation("Finalizando criação de compra : {CompraId} TraceId {TraceId}", compra.Id, traceId);
+        logger.LogInformation("Finalizando criação de compra : {CompraId} TraceId {TraceId}", compra.Id, traceId);
 
         return CreatedAtAction(nameof(GetById), new { id = compra.Id }, compra);
     }
@@ -93,16 +89,16 @@ public class CompraController : ControllerBase
     {
         var traceId = HttpContext.TraceIdentifier;
 
-        _logger.LogInformation("Iniciando atualização de compra : {CompraId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Iniciando atualização de compra : {CompraId} TraceId {TraceId}", id, traceId);
 
-        var compra = _compraService.Update(id, request);
+        var compra = compraService.Update(id, request);
         if (compra is null)
         {
-            _logger.LogWarning("Compra não encontrada para atualização : {CompraId} TraceId {TraceId}", id, traceId);
+            logger.LogWarning("Compra não encontrada para atualização : {CompraId} TraceId {TraceId}", id, traceId);
             return NotFound();
         }
 
-        _logger.LogInformation("Finalizando atualização de compra : {CompraId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Finalizando atualização de compra : {CompraId} TraceId {TraceId}", id, traceId);
 
         return Ok(compra);
     }
@@ -121,15 +117,15 @@ public class CompraController : ControllerBase
     {
         var traceId = HttpContext.TraceIdentifier;
 
-        _logger.LogInformation("Iniciando exclusão de compra : {CompraId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Iniciando exclusão de compra : {CompraId} TraceId {TraceId}", id, traceId);
 
-        if (!_compraService.Delete(id))
+        if (!compraService.Delete(id))
         {
-            _logger.LogWarning("Compra não encontrada para exclusão : {CompraId} TraceId {TraceId}", id, traceId);
+            logger.LogWarning("Compra não encontrada para exclusão : {CompraId} TraceId {TraceId}", id, traceId);
             return NotFound();
         }
 
-        _logger.LogInformation("Finalizando exclusão de compra : {CompraId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Finalizando exclusão de compra : {CompraId} TraceId {TraceId}", id, traceId);
 
         return NoContent();
     }

@@ -19,6 +19,31 @@ public sealed class LivroService(
             .ToList();
     }
 
+    public PagedResponse<LivroResponse> GetPaged(int page, int pageSize)
+    {
+        if (page < 1)
+        {
+            logger?.LogWarning("Paginação inválida: page={Page} deve ser maior ou igual a 1.", page);
+            throw new BusinessRuleValidationException("O parâmetro 'page' deve ser maior ou igual a 1.");
+        }
+
+        if (pageSize < 1 || pageSize > 100)
+        {
+            logger?.LogWarning("Paginação inválida: pageSize={PageSize} deve estar entre 1 e 100.", pageSize);
+            throw new BusinessRuleValidationException("O parâmetro 'pageSize' deve estar entre 1 e 100.");
+        }
+
+        var (items, totalItems) = livroRepository.GetPaged(
+            page,
+            pageSize,
+            query => query.OrderBy(l => l.NomeLivro).ThenBy(l => l.Id)
+        );
+
+        var dtoList = items.Select(LivroResponse.FromDomain).ToList();
+
+        return PagedResponse<LivroResponse>.Create(dtoList, totalItems, page, pageSize);
+    }
+
     public LivroResponse? GetById(Guid id)
     {
         var livro = livroRepository.GetById(id);

@@ -1,12 +1,13 @@
-using BibliotecaELM.Application.Services.Implementations;
-using BibliotecaELM.Application.Services.Interfaces;
-using BibliotecaELM.Exceptions;
-using BibliotecaELM.Extension;
+using System.Reflection;
+using Asp.Versioning;
+using BibliotecaELM.API.Exceptions;
+using BibliotecaELM.API.Extensions;
+using BibliotecaELM.API.Health;
 using BibliotecaELM.Infrastructure.Persistence;
-using BibliotecaELM.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 
-namespace BibliotecaELM;
+namespace BibliotecaELM.API;
 
 public class Program
 {
@@ -14,74 +15,83 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
+        // ─── Banco de Dados ──────────────────────────────────────────────────────────
         builder.Services.AddDbContext<BibliotecaElmContext>(options =>
         {
-            // Conexão com o Oracle
-            options.UseOracle(builder.Configuration.GetConnectionString("BibliotecaElmOracle"));
+            options.UseOracle(
+                builder.Configuration.GetConnectionString("BibliotecaElmOracle"),
+                oracleOptions => oracleOptions.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion19));
         });
-        
-        // Configuração dos Health Checks via extensão modular
-        builder.Services.AddApiHealthChecks(builder.Configuration);
 
+        // ─── Health Checks (CP4) ──────────────────────────────────────────────────────
+        builder.Services.AddHealthChecks()
+            .AddDbContextCheck<BibliotecaElmContext>(name: "database");
+
+        // ─── Injeção de Dependências (Repositories & Application Services) ───────────
+        builder.Services.AddBibliotecaElmRepositories();
+        builder.Services.AddBibliotecaElmApplicationServices();
+
+        // ─── Versionamento de API (CP5) ───────────────────────────────────────────────
+        builder.Services.AddApiVersioningConfiguration();
+
+        // ─── Rate Limiting Nativo (CP5) ───────────────────────────────────────────────
+        builder.Services.AddApiRateLimiting();
+
+        // ─── Controllers & API Explorer ──────────────────────────────────────────────
+        builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
+
+        // ─── Swagger / OpenAPI (CP5) ──────────────────────────────────────────────────
+        builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
         builder.Services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            if (File.Exists(xmlPath))
             {
-                Title = "BibliotecaELM API",
-                Version = "v1",
-                Description = "API REST de gerenciamento de Biblioteca desenvolvida para o Checkpoint 3 (FIAP). Permite o controle de usuários, endereços, autores, livros, compras e empréstimos."
-            });
-
-            var xmlFilename = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            options.IncludeXmlComments(System.IO.Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                options.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+            }
         });
-        
-        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        
-        builder.Services.AddScoped<IAutorRepository, AutorRepository>();
-        builder.Services.AddScoped<ILivroRepository, LivroRepository>();
-        builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-        builder.Services.AddScoped<ICompraRepository, CompraRepository>();
-        builder.Services.AddScoped<IEmprestimoRepository, EmprestimoRepository>();
-        builder.Services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
-        builder.Services.AddScoped<IAutorService, AutorService>();
-        builder.Services.AddScoped<ILivroService, LivroService>();
-        builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-        builder.Services.AddScoped<ICompraService, CompraService>();
-        builder.Services.AddScoped<IEmprestimoService, EmprestimoService>();
-        builder.Services.AddScoped<IEnderecoService, EnderecoService>();
-
+        // ─── Tratamento Global de Exceções & ProblemDetails ──────────────────────────
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         builder.Services.AddProblemDetails();
 
-        builder.Services.AddControllers();
-
         var app = builder.Build();
 
+        // ─── Pipeline HTTP ────────────────────────────────────────────────────────────
+        // 1. Exception Handler — primeiro middleware para capturar qualquer falha subsequente
         app.UseExceptionHandler();
 
-        // Configure the HTTP request pipeline.
+        // 2. Rate Limiter — antes de MapControllers e Swagger
+        app.UseRateLimiter();
+
+        // 3. Swagger em Development (com dropdown dinâmico por versão descoberta)
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            app.UseSwaggerUI(options =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibliotecaELM API v1");
-                c.RoutePrefix = string.Empty; // Serve na raiz (http://localhost:port/)
+                foreach (var description in app.DescribeApiVersions())
+                {
+                    options.SwaggerEndpoint(
+                        $"/swagger/{description.GroupName}/swagger.json",
+                        $"BibliotecaELM API {description.GroupName}");
+                }
+                options.RoutePrefix = string.Empty; // Swagger UI na raiz (http://localhost:<port>/)
             });
         }
 
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
 
-        // Mapeamento modular do endpoint /health
-        app.MapApiHealthChecks();
+        // 4. Endpoint de Health Check — isento do rate limit via DisableRateLimiting()
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = HealthCheckResponseWriter.WriteJsonResponse
+        }).DisableRateLimiting();
 
+        // 5. Mapeamento de Controllers
         app.MapControllers();
 
         app.Run();

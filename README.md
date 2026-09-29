@@ -1,4 +1,4 @@
-# 📌 BibliotecaELM — Checkpoint 04
+# 📌 BibliotecaELM — Checkpoint 05
 
 ## 🎯 Sobre o Projeto (Domínio Escolhido)
 
@@ -12,6 +12,7 @@ O projeto foi evoluído ao longo dos CPs:
 | CP2 | Esquema físico + EF Core + Migrations (Oracle) |
 | CP3 | API REST + Swagger + `IRepository<T>` + `GlobalExceptionHandler` |
 | CP4 | Health Checks + Logs estruturados com `traceId` + Testes xUnit/Moq |
+| CP5 | Versionamento de API (v1/v2) + Paginação (IQueryable) + Rate Limiting (Fixed Window) |
 
 ---
 
@@ -52,54 +53,141 @@ O projeto foi evoluído ao longo dos CPs:
 
 </table>
 
+**SGBD:** Oracle (via `Oracle.EntityFrameworkCore`)
+
 ---
 
-## 🧭 Escopo e Entregas do Checkpoint 04 (CP4)
+## 🧭 Escopo e Entregas do Checkpoint 05 (CP5)
 
-### 1. Health Checks e Operacionalidade em Runtime
-* **Endpoint `/health`**: Implementado na API do ASP.NET Core para verificação contínua de integridade do serviço.
-* **Verificação de Banco de Dados**: Configurado via `AddDbContextCheck<BibliotecaElmContext>()` no `HealthCheckExtensions`, garantindo o status de conexão com o banco Oracle antes de responder `Healthy`.
-* **Resposta Formatada (JSON)**: Resposta customizada que retorna um payload estruturado detalhando o status global e o resultado individual dos componentes verificados (`self`, `database`), duração e exceção condicionada ao ambiente `Development`.
+### 1. Versionamento de API (recurso: `Livro`)
 
-### 2. Observabilidade e Logging com TraceId / Correlation ID
-* **Injeção de `ILogger<T>` nos Controllers e Services**: Controllers capturam nativamente `HttpContext.TraceIdentifier` e registram início e término das requisições com propriedades estruturadas. Os serviços de aplicação utilizam `ILogger<T>` para registrar logs de repositório e avisos de validação de negócio, mantendo a camada Application desacoplada de HTTP.
-* **Logs Estruturados**: Eventos cruciais da aplicação (criação de recursos, atualizações, exclusões e validações falhas) gravam dados estruturados usando parâmetros nomeados (`NomeLivro`, `LivroId`, `AutorId`, `UsuarioId`, `TraceId`).
-* **Correlation ID / TraceId**: Todas as mensagens de log nos controllers e respostas de exceção correlacionam requisições utilizando o `TraceId` extraído de `HttpContext.TraceIdentifier`, garantindo rastreabilidade fim a fim.
-* **Filtro de Erros (`GlobalExceptionHandler`)**: Atualizado para incluir o `TraceId` no payload no formato `ProblemDetails` (`RFC 7807`) em ambiente `Development` e registrar a exceção no log antes do envio ao cliente.
+O recurso `Livro` (`GET /api/livro`) possui **dois contratos simultâneos**:
 
-### 3. Testes Unitários Automatizados (xUnit + Moq)
-A solução possui projetos dedicados para validação automatizada sem dependências externas reais:
+| Versão | Status | Listagem | Rota |
+|--------|--------|----------|------|
+| **v1.0** | ⚠️ Deprecada | Array completo (sem paginação) — compatibilidade com clientes legados | `GET /api/v1/livro` |
+| **v2.0** | ✅ Atual (padrão) | Envelope paginado com metadados | `GET /api/v2/livro` |
 
-* **Domain Tests (`BibliotecaELM.Domain.Tests`) — 38 testes**:
-  * **Testes de Entidades (`LivroTests`, `UsuarioTests`, `CompraTests`, `EmprestimoTests`, `EnderecoTests`)**: Utilizam os atributos `[Fact]` para validação de instanciação válida e `[Theory]` / `[InlineData]` para cenários de borda.
-  * **Isolamento de Domínio**: Validação rigorosa das regras e invariantes de negócio sem mocks e sem dependências de Infrastructure/API.
-* **Application Tests (`BibliotecaELM.Application.Tests`) — 21 testes**:
-  * **Testes de Serviços (`LivroServiceTests`, `AutorServiceTests`, `CompraServiceTests`, `UsuarioServiceTests`, `EnderecoServiceTests`, `LivroAppServiceTests`)**: Utilizam **Moq** para simular as interfaces de repositório (`ILivroRepository`, `IAutorRepository`, `IUsuarioRepository`, `IEnderecoRepository`, `ICompraRepository`).
-  * **Verificação de Regras de Fluxo**: Testam se a aplicação lança exceções para entradas inválidas ou dependências ausentes e asseguram que o repositório **nunca** seja chamado em cenários de falha (`Times.Never`), e chamado **exatamente uma vez** (`Times.Once`) em cenários de sucesso.
+Os dois contratos **compartilham o mesmo serviço de aplicação** (`LivroService`). Nenhuma regra de negócio foi duplicada.
+
+Os demais recursos (`Autor`, `Usuario`, `Compra`, `Emprestimo`, `Endereco`) estão marcados com `[ApiVersion("1.0")]` e `[ApiVersion("2.0")]` e permanecem 100% funcionais em ambas as versões.
+
+### 2. Como Informar a Versão
+
+| Método | Exemplo | Comportamento |
+|--------|---------|---------------|
+| **Query string** | `GET /api/livro?api-version=1.0` | v1 — lista completa |
+| **Header** | `GET /api/livro` + `X-Api-Version: 1.0` | v1 — lista completa |
+| **URL segment** | `GET /api/v1/livro` | v1 — lista completa |
+| **Omissão (padrão)** | `GET /api/livro` (sem versão) | v2 — envelope paginado |
+
+A resposta sempre inclui os headers:
+- `api-supported-versions: 1.0, 2.0`
+- `api-deprecated-versions: 1.0`
+
+### 3. Paginação (apenas na v2)
+
+A listagem v2 aceita os parâmetros:
+
+| Parâmetro | Padrão | Regra |
+|-----------|--------|-------|
+| `page` | `1` | Inteiro ≥ 1. Fora do intervalo → **400** |
+| `pageSize` | `20` | Inteiro entre **1 e 100**. Fora → **400** |
+
+Formato da resposta **200** da v2:
+
+```json
+{
+  "page": 1,
+  "pageSize": 20,
+  "totalItems": 137,
+  "totalPages": 7,
+  "hasPrevious": false,
+  "hasNext": true,
+  "items": [...]
+}
+```
+
+> **Nota:** `page` além do total retorna **200** com `items: []` — não é erro.
+
+A paginação é cortada **no banco de dados** via `IQueryable`: `Count()` + `OrderBy(NomeLivro, Id)` + `Skip()` + `Take()` → `ToList()`. Nunca em memória após `GetAll()`.
+
+### 4. Rate Limiting (Fixed Window)
+
+| Configuração | Valor |
+|-------------|-------|
+| **Política** | Fixed Window |
+| **Endpoint protegido** | `POST /api/livro` (v1 e v2) |
+| **Limite** | **10 requisições por minuto** |
+| **Partição** | Por IP remoto do cliente |
+| **Resposta ao exceder** | **429 Too Many Requests** + `Retry-After: 60` + Problem Details JSON |
+
+`GET /health` está **explicitamente isento** (`.DisableRateLimiting()`) — permanece sempre **200** mesmo após estouro do limite no POST.
+
+Exemplo de resposta **429**:
+
+```json
+{
+  "status": 429,
+  "title": "Taxa de requisições excedida",
+  "detail": "Você atingiu o limite de 10 requisições por minuto. Tente novamente mais tarde.",
+  "instance": "/api/livro"
+}
+```
 
 ---
 
 ## 🧱 Arquitetura e Estrutura do Projeto
 
-O projeto segue os princípios de Clean Architecture, organizado nas seguintes camadas:
+O projeto segue os princípios de Clean Architecture:
 
-1. **Domain (`BibliotecaELM.Domain`)**: Entidades de domínio (Autor, Livro, Usuario, Endereco, Compra, Emprestimo), exceções de negócio (`BusinessRuleValidationException`, `ResourceNotFoundException`, `DomainException`) e classe base `BaseEntity`. Livre de dependências externas.
-2. **Application (`BibliotecaELM.Application`)**: DTOs (`Request` e `Response`), interfaces de repositórios e serviços, e a camada de implementação (`LivroService`, `AutorService`, `UsuarioService`, `EnderecoService`, etc.) contendo validações e logs.
-3. **Infrastructure (`BibliotecaELM.Infrastructure`)**: Implementação do repositório genérico `Repository<T>`, repositórios concretos, contexto de persistência `BibliotecaElmContext` (Oracle) e as Migrations do EF Core.
-4. **API (`BibliotecaELM.API`)**: Ponto de entrada da aplicação com Controllers, endpoints de Health Check (`/health`), pipeline de middlewares, `GlobalExceptionHandler` e documentação Swagger.
-5. **Tests (`BibliotecaELM.Domain.Tests` e `BibliotecaELM.Application.Tests`)**: Suítes de testes unitários com xUnit e Moq.
+1. **Domain (`BibliotecaELM.Domain`)**: Entidades, exceções de domínio (`BusinessRuleValidationException`, `ResourceNotFoundException`), `BaseEntity`. Sem dependências externas.
+2. **Application (`BibliotecaELM.Application`)**: DTOs (`Request`, `Response`, `PagedResponse<T>`), interfaces de repositórios/serviços, implementações dos serviços (validação + logs).
+3. **Infrastructure (`BibliotecaELM.Infrastructure`)**: `Repository<T>` genérico (com `GetPaged` via IQueryable), repositórios concretos, `BibliotecaElmContext` (Oracle), Migrations.
+4. **API (`BibliotecaELM.API`)**: Controllers versionados (V1/V2), `GlobalExceptionHandler`, Swagger por versão, Rate Limiting, Health Checks.
+5. **Tests**: `Domain.Tests` (38 testes) + `Application.Tests` (29 testes, incluindo 8 novos de paginação).
 
 ```
 BibliotecaELM/
-├── BibliotecaELM.Domain/            # Entidades, Exceções de domínio, BaseEntity
-├── BibliotecaELM.Application/       # DTOs, Interfaces de repositório/serviço, Serviços de aplicação
-├── BibliotecaELM.Infrastructure/    # Repository<T>, repositórios concretos, DbContext (Oracle), Migrations
-├── BibliotecaELM.API/               # Controllers, GlobalExceptionHandler, Swagger, Health Checks
-├── BibliotecaELM.Domain.Tests/      # 38 testes xUnit do domínio (sem mock)
-└── BibliotecaELM.Application.Tests/ # 21 testes xUnit da Application (com Moq)
+├── BibliotecaELM.Domain/
+│   ├── Common/BaseEntity.cs
+│   ├── Entities/
+│   └── Exceptions/
+├── BibliotecaELM.Application/
+│   ├── DTOs/
+│   │   ├── PagedResponse.cs               ← Envelope paginado (CP5)
+│   │   ├── PaginationQuery.cs             ← Parâmetros de página/tamanho (CP5)
+│   │   └── ...
+│   ├── Services/
+│   └── Repositories/Interfaces/
+├── BibliotecaELM.Infrastructure/
+│   ├── Persistence/BibliotecaElmContext.cs
+│   └── Repositories/Repository.cs         ← GetPaged via IQueryable (CP5)
+├── BibliotecaELM.API/
+│   ├── Controllers/
+│   │   ├── v1/                            ← Controladores versão 1.0 (CP5)
+│   │   │   ├── AutorController.cs
+│   │   │   ├── CompraController.cs
+│   │   │   ├── EmprestimoController.cs
+│   │   │   ├── EnderecoController.cs
+│   │   │   ├── LivroController.cs         ← v1.0 deprecada (CP5)
+│   │   │   └── UsuarioController.cs
+│   │   └── v2/                            ← Controladores versão 2.0 (CP5)
+│   │       └── LivroV2Controller.cs       ← v2.0 atual paginada (CP5)
+│   ├── Exceptions/
+│   │   └── GlobalExceptionHandler.cs      ← RFC 7807 ProblemDetails
+│   ├── Extensions/
+│   │   ├── BibliotecaElmServiceCollectionExtensions.cs ← DI modular
+│   │   ├── ConfigureSwaggerOptions.cs     ← Swagger dinâmico por versão (CP5)
+│   │   ├── RateLimitingExtensions.cs       ← Fixed Window 10 req/min (CP5)
+│   │   └── VersioningExtensions.cs         ← Versionamento URL/Query/Header (CP5)
+│   ├── Health/
+│   │   └── HealthCheckResponseWriter.cs   ← JSON do /health (CP4/CP5)
+│   ├── Dockerfile
+│   └── Program.cs                         ← Pipeline limpo e padronizado (CP5)
+├── BibliotecaELM.Domain.Tests/             # 38 testes
+└── BibliotecaELM.Application.Tests/        # 39 testes (21 CP4 + 18 CP5)
 ```
-
-**SGBD:** Oracle (via `Oracle.EntityFrameworkCore`)
 
 ---
 
@@ -122,14 +210,58 @@ dotnet run
 
 | Recurso | URL |
 |---------|-----|
-| **Swagger UI** | `http://localhost:<port>/` (raiz — configurado como `RoutePrefix = ""`) |
+| **Swagger UI (v2 — padrão)** | `http://localhost:<port>/` |
+| **Swagger UI (v1 — deprecada)** | Selecionar no dropdown do Swagger |
 | **Health Check** | `http://localhost:<port>/health` |
+| **Listagem v1 (array)** | `http://localhost:<port>/api/v1/livro` |
+| **Listagem v2 (envelope paginado)** | `http://localhost:<port>/api/v2/livro` |
+| **Listagem v2 (padrão, sem versão)** | `http://localhost:<port>/api/livro` |
+
+---
+
+## 🔀 Versionamento — Exemplos de Chamada
+
+```http
+# v2 padrão (omissão de versão → 2.0)
+GET /api/livro
+
+# v1 via URL segment
+GET /api/v1/livro
+
+# v2 via URL segment
+GET /api/v2/livro
+
+# v1 via query string
+GET /api/livro?api-version=1.0
+
+# v1 via header
+GET /api/livro
+X-Api-Version: 1.0
+```
+
+---
+
+## 📄 Paginação — Exemplos de Chamada
+
+```http
+# Página 1 com 20 itens (padrão)
+GET /api/v2/livro
+
+# Página 1 com 5 itens por página
+GET /api/v2/livro?page=1&pageSize=5
+
+# Página 2 com 5 itens por página
+GET /api/v2/livro?page=2&pageSize=5
+
+# Parâmetros inválidos → 400
+GET /api/v2/livro?page=0&pageSize=9999
+```
 
 ---
 
 ## 🏥 Health Checks — `GET /health`
 
-A rota `/health` verifica dois checks registrados via extensão `HealthCheckExtensions`:
+A rota `/health` verifica dois checks e está **isenta de Rate Limit**:
 
 | Check | Descrição |
 |-------|-----------|
@@ -149,38 +281,14 @@ A rota `/health` verifica dois checks registrados via extensão `HealthCheckExte
 }
 ```
 
-### Resposta Unhealthy (HTTP 503)
-
-Para simular falha de banco, altere a connection string para um servidor inválido em `appsettings.json` localmente:
-
-```json
-"BibliotecaElmOracle": "User Id=invalid;Password=invalid;Data Source=//localhost:1521/INVALID"
-```
-
-```json
-{
-  "status": "Unhealthy",
-  "duration": "00:00:05.0012345",
-  "checks": [
-    { "name": "self",     "status": "Healthy",   "duration": "00:00:00.0001000" },
-    { "name": "database", "status": "Unhealthy",  "duration": "00:00:05.0011345" }
-  ]
-}
-```
-
-> **Nota:** O campo `exception` só aparece quando a API está em `ASPNETCORE_ENVIRONMENT=Development`.
-
 ---
 
-## 🗂️ Repositório Genérico (`IRepository<T>`)
+## 🗂️ Repositório Genérico (`IRepository<T>`) — Atualizado CP5
 
 - **Contrato:** `BibliotecaELM.Application/Services/Interfaces/IRepository.cs`
-  - Operações: `GetAll()`, `GetById(Guid)`, `Add(T)`, `Update(T)`, `Delete(T)`, `ExistsById(Guid)`
-  - Restrição: `where T : BaseEntity`
+  - Operações: `GetAll()`, `GetPaged(page, pageSize, orderBy?)`, `GetById(Guid)`, `Add(T)`, `Update(T)`, `Delete(T)`, `ExistsById(Guid)`
 - **Implementação:** `BibliotecaELM.Infrastructure/Repositories/Repository.cs`
-  - Usa `DbContext.Set<T>()` + `AsNoTracking()` nas leituras
-- **Registro na DI:** `services.AddScoped(typeof(IRepository<>), typeof(Repository<>))`
-- Todos os repositórios específicos herdam ou usam `IRepository<T>` (ex.: `ILivroRepository : IRepository<Livro>`)
+  - `GetPaged`: `Count()` + `OrderBy` + `Skip((page-1)*pageSize)` + `Take(pageSize)` + `ToList()` — corte **no banco de dados**
 
 ---
 
@@ -195,39 +303,17 @@ Para simular falha de banco, altere a connection string para um servidor inváli
 | `KeyNotFoundException` | **404** Not Found | Recurso não encontrado |
 | Qualquer outra | **500** Internal Server Error | Erro interno do servidor |
 
-Todas as respostas de erro seguem o padrão **RFC 7807** (`application/problem+json`).  
-Em **Development**, o campo `traceId` é exposto no body do `ProblemDetails`.  
-Em **Production**, o `traceId` fica apenas nos logs (sem vazar detalhes internos).
+Todas as respostas de erro seguem o padrão **RFC 7807** (`application/problem+json`).
+Em **Development**, o campo `traceId` é exposto no body do `ProblemDetails`.
+Em **Production**, o `traceId` fica apenas nos logs.
 
 ---
 
 ## 📊 Observabilidade — Logs Estruturados com TraceId
 
-Seguindo o padrão de arquitetura e observabilidade do projeto de referência (**Recommenda**):
-
-1. **Controllers (Camada API)**: Cada fluxo de escrita captura nativamente `HttpContext.TraceIdentifier` e registra o ciclo de vida da requisição HTTP com parâmetros nomeados:
-   - **`LivroController`**: Log de início e conclusão em `Create`, `Update` e `Delete`.
-   - **`AutorController`**: Log de início e conclusão em `Create`, `Update` e `Delete`.
-   - **`CompraController`**: Log de início e conclusão em `Create`, `Update` e `Delete`.
-   - **`UsuarioController`**: Log de início e conclusão em `Create`, `Update` e `Delete`.
-   - **`EmprestimoController`**: Log de início e conclusão em `Create`, `Update` e `Delete`.
-   - **`EnderecoController`**: Log de início e conclusão em `Create`, `Update` e `Delete`.
-
-2. **GlobalExceptionHandler**: Captura centralizada de exceções em nível `Error`, correlacionando via `Activity.Current?.Id ?? HttpContext.TraceIdentifier`:
-   ```
-   fail: BibliotecaELM.Exceptions.GlobalExceptionHandler[0]
-         Exceção não tratada: Já existe um autor cadastrado com este nome. : TraceId 0HN9ABCD:00000001
-   ```
-
-3. **Application Services**: Recebem `ILogger<T>` para registrar eventos de domínio e avisos de validação de negócio sem poluição de dependências HTTP (`IHttpContextAccessor`), mantendo a camada Application 100% pura.
-
-Exemplo de log emitido pelo `LivroController`:
-```
-info: BibliotecaELM.Controllers.LivroController[0]
-      Iniciando criação de livro : Clean Architecture TraceId 0HN9ABCD:00000001
-info: BibliotecaELM.Controllers.LivroController[0]
-      Finalizando criação de livro : Clean Architecture (e7d23a10-...) TraceId 0HN9ABCD:00000001
-```
+1. **Controllers (Camada API)**: Cada fluxo de escrita captura `HttpContext.TraceIdentifier` e registra início/conclusão com parâmetros nomeados.
+2. **GlobalExceptionHandler**: Captura centralizada de exceções em nível `Error`, correlacionando via `Activity.Current?.Id ?? HttpContext.TraceIdentifier`.
+3. **Application Services**: Recebem `ILogger<T>` para registrar eventos sem dependências HTTP.
 
 ---
 
@@ -242,15 +328,152 @@ dotnet test
 
 ```
 Test Run Successful.
-Total tests: 59
-     Passed: 59
+Total tests: 77
+     Passed: 77
   Total time: ~2 Seconds
 ```
 
-| Projeto | Testes | Cobertura | Tipo |
-|---------|--------|-----------|------|
-| `BibliotecaELM.Domain.Tests` | 38 testes | `Livro`, `Usuario`, `Compra`, `Emprestimo`, `Endereco` | Sem mock — regras reais de domínio (`[Fact]` e `[Theory]`) |
-| `BibliotecaELM.Application.Tests` | 21 testes | `LivroService`, `AutorService`, `CompraService`, `UsuarioService`, `EnderecoService`, `LivroAppService` | Mocks via Moq — validação de `Times.Never` em falha e `Times.Once` em sucesso |
+| Projeto | Testes | Tipo |
+|---------|--------|------|
+| `BibliotecaELM.Domain.Tests` | 38 testes | Sem mock — regras de domínio (`[Fact]` e `[Theory]`) |
+| `BibliotecaELM.Application.Tests` | 39 testes | Moq — `Times.Never` em falha, `Times.Once` em sucesso; inclui testes de paginação e `PaginationQuery` |
+
+---
+
+## 📸 Evidências de Execução e Validação dos Contratos (CP5)
+
+Abaixo estão os exemplos reais de requisição e resposta obtidos na validação da API em tempo real:
+
+### 1. Convivência de Versões (Recurso `Livro`)
+
+Toda resposta da API inclui os cabeçalhos de controle de versão:
+```http
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+api-supported-versions: 1.0, 2.0
+api-deprecated-versions: 1.0
+```
+
+#### A) GET v1.0 — Contrato Legado (Array Puro, Deprecado)
+- **Chamada:** `GET /api/livro?api-version=1.0` (ou `GET /api/v1/livro` ou header `X-Api-Version: 1.0`)
+- **Resposta HTTP 200 (Array simples sem envelope):**
+```json
+[
+  {
+    "id": "96a1fb2f-756c-468a-a5c3-33da40d97033",
+    "nomeLivro": "Clean Code",
+    "preco": 120.00,
+    "dataLancamento": "2008-08-01",
+    "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
+  },
+  {
+    "id": "01ae79e9-ad8f-4e33-9db6-6f6c03d2720b",
+    "nomeLivro": "Clean Architecture",
+    "preco": 150.00,
+    "dataLancamento": "2017-09-17",
+    "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
+  },
+  {
+    "id": "b7589679-786c-4431-b6fe-bedf9b8bf3b5",
+    "nomeLivro": "The Clean Coder",
+    "preco": 110.00,
+    "dataLancamento": "2011-05-13",
+    "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
+  }
+]
+```
+
+#### B) GET v2.0 — Contrato Padrão Atual (Envelope Paginado com Totais)
+- **Chamada:** `GET /api/livro` (omissão cai na v2.0) ou `GET /api/v2/livro`
+- **Resposta HTTP 200 (Envelope PagedResponse):**
+```json
+{
+  "page": 1,
+  "pageSize": 20,
+  "totalItems": 3,
+  "totalPages": 1,
+  "hasPrevious": false,
+  "hasNext": false,
+  "items": [
+    {
+      "id": "96a1fb2f-756c-468a-a5c3-33da40d97033",
+      "nomeLivro": "Clean Code",
+      "preco": 120.00,
+      "dataLancamento": "2008-08-01",
+      "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
+    },
+    {
+      "id": "01ae79e9-ad8f-4e33-9db6-6f6c03d2720b",
+      "nomeLivro": "Clean Architecture",
+      "preco": 150.00,
+      "dataLancamento": "2017-09-17",
+      "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
+    },
+    {
+      "id": "b7589679-786c-4431-b6fe-bedf9b8bf3b5",
+      "nomeLivro": "The Clean Coder",
+      "preco": 110.00,
+      "dataLancamento": "2011-05-13",
+      "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
+    }
+  ]
+}
+```
+
+---
+
+### 2. Paginação na v2.0 (Corte no Banco via IQueryable)
+
+- **Página 1 (`pageSize=2`)** ➔ `GET /api/v2/livro?page=1&pageSize=2`
+  - Retorna itens 1 e 2 com `totalPages: 2`, `hasPrevious: false`, `hasNext: true`.
+- **Página 2 (`pageSize=2`)** ➔ `GET /api/v2/livro?page=2&pageSize=2`
+  - Retorna item 3 com `totalPages: 2`, `hasPrevious: true`, `hasNext: false`. **Sem sobreposição com a página 1**.
+- **Página além do total (`page=99`)** ➔ `GET /api/v2/livro?page=99&pageSize=20`
+  - Retorna HTTP 200 com `"items": []`, `"totalItems": 3`.
+- **Validação de Parâmetros Inválidos (HTTP 400 ProblemDetails):**
+  - `GET /api/v2/livro?page=0&pageSize=20` ➔ HTTP 400: *"O parâmetro 'page' deve ser maior ou igual a 1."*
+  - `GET /api/v2/livro?page=1&pageSize=9999` ➔ HTTP 400: *"O parâmetro 'pageSize' deve estar entre 1 e 100."*
+
+---
+
+### 3. Rate Limiting (Fixed Window) e Isenção do `/health`
+
+- **Estouro de Limite (Rajada no `POST /api/livro`):**
+  Ao ultrapassar 10 requisições por minuto por IP:
+  ```http
+  HTTP/1.1 429 Too Many Requests
+  Content-Type: application/problem+json
+  Retry-After: 60
+
+  {
+    "status": 429,
+    "title": "Too Many Requests",
+    "detail": "Você atingiu o limite de 10 requisições por minuto. Tente novamente mais tarde.",
+    "instance": "/api/livro"
+  }
+  ```
+
+- **Isenção do Probe `/health`:**
+  Imediatamente após receber a resposta 429 acima, o endpoint de integridade continua respondendo com sucesso:
+  ```http
+  GET /health ➔ HTTP 200 OK
+  {
+    "status": "Healthy",
+    "checks": [
+      { "name": "database", "status": "Healthy" }
+    ]
+  }
+  ```
+  Isso comprova a isenção de rate limiting via `.DisableRateLimiting()`.
+
+---
+
+### 4. Swagger UI Dinâmico por Versão
+
+O Swagger organiza a documentação em dois grupos:
+- **v2.0 (padrão):** Contrato contemporâneo com envelope paginado `PagedResponse<LivroResponse>`.
+- **v1.0 (deprecada):** Indicado com a etiqueta `⚠️ [ESTA VERSÃO FOI DEPRECADA. Favor utilizar a v2.0]` e retorno em array direto.
+- Os demais recursos (`Autor`, `Usuario`, `Compra`, `Emprestimo`, `Endereco`) estão presentes e funcionais em ambas as versões.
 
 ---
 
@@ -261,3 +484,4 @@ Total tests: 59
 | CP2 | Migrations + DbContext + Oracle |
 | CP3 | Controllers + DTOs + Swagger + `IRepository<T>` + `GlobalExceptionHandler` + `ProblemDetails` |
 | CP4 | `GET /health` (JSON 200/503) + Logs com `traceId` + `Domain.Tests` (38) + `Application.Tests` (21) |
+| CP5 | Versionamento v1/v2 no recurso `Livro` + Paginação IQueryable + Rate Limit Fixed Window 429 + `/health` isento + 77 Testes 100% Verdes |

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -6,21 +7,16 @@ namespace BibliotecaELM.Controllers;
 
 /// <summary>
 /// Controller responsável por gerenciar as operações de Autores.
+/// Disponível nas versões v1.0 e v2.0 da API.
 /// </summary>
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [Route("api/[controller]")]
 [ApiController]
 [Produces("application/json")]
-public class AutorController : ControllerBase
+public class AutorController(IAutorService autorService, ILogger<AutorController> logger) : ControllerBase
 {
-    private readonly IAutorService _autorService;
-    private readonly ILogger<AutorController> _logger;
-
-    public AutorController(IAutorService autorService, ILogger<AutorController> logger)
-    {
-        _autorService = autorService;
-        _logger = logger;
-    }
-
     /// <summary>
     /// Retorna todos os autores cadastrados.
     /// </summary>
@@ -30,7 +26,7 @@ public class AutorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<AutorResponse>))]
     public IActionResult GetAll()
     {
-        var autores = _autorService.GetAll();
+        var autores = autorService.GetAll();
         return Ok(autores);
     }
 
@@ -46,7 +42,7 @@ public class AutorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetById(Guid id)
     {
-        var autor = _autorService.GetById(id);
+        var autor = autorService.GetById(id);
         if (autor is null)
             return NotFound();
 
@@ -67,11 +63,11 @@ public class AutorController : ControllerBase
     {
         var traceId = HttpContext.TraceIdentifier;
 
-        _logger.LogInformation("Iniciando criação de autor : {NomeAutor} TraceId {TraceId}", request.NomeAutor, traceId);
+        logger.LogInformation("Iniciando criação de autor : {NomeAutor} TraceId {TraceId}", request.NomeAutor, traceId);
 
-        var autor = _autorService.Create(request);
+        var autor = autorService.Create(request);
 
-        _logger.LogInformation("Finalizando criação de autor : {NomeAutor} ({AutorId}) TraceId {TraceId}", autor.NomeAutor, autor.Id, traceId);
+        logger.LogInformation("Finalizando criação de autor : {NomeAutor} ({AutorId}) TraceId {TraceId}", autor.NomeAutor, autor.Id, traceId);
 
         return CreatedAtAction(nameof(GetById), new { id = autor.Id }, autor);
     }
@@ -93,16 +89,16 @@ public class AutorController : ControllerBase
     {
         var traceId = HttpContext.TraceIdentifier;
 
-        _logger.LogInformation("Iniciando atualização de autor : {AutorId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Iniciando atualização de autor : {AutorId} TraceId {TraceId}", id, traceId);
 
-        var autor = _autorService.Update(id, request);
+        var autor = autorService.Update(id, request);
         if (autor is null)
         {
-            _logger.LogWarning("Autor não encontrado para atualização : {AutorId} TraceId {TraceId}", id, traceId);
+            logger.LogWarning("Autor não encontrado para atualização : {AutorId} TraceId {TraceId}", id, traceId);
             return NotFound();
         }
 
-        _logger.LogInformation("Finalizando atualização de autor : {AutorId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Finalizando atualização de autor : {AutorId} TraceId {TraceId}", id, traceId);
 
         return Ok(autor);
     }
@@ -121,19 +117,19 @@ public class AutorController : ControllerBase
     {
         var traceId = HttpContext.TraceIdentifier;
 
-        _logger.LogInformation("Iniciando exclusão de autor : {AutorId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Iniciando exclusão de autor : {AutorId} TraceId {TraceId}", id, traceId);
 
-        if (!_autorService.Delete(id))
+        if (!autorService.Delete(id))
         {
-            _logger.LogWarning("Autor não encontrado para exclusão : {AutorId} TraceId {TraceId}", id, traceId);
+            logger.LogWarning("Autor não encontrado para exclusão : {AutorId} TraceId {TraceId}", id, traceId);
             return NotFound();
         }
 
-        _logger.LogInformation("Finalizando exclusão de autor : {AutorId} TraceId {TraceId}", id, traceId);
+        logger.LogInformation("Finalizando exclusão de autor : {AutorId} TraceId {TraceId}", id, traceId);
 
         return NoContent();
     }
-    
+
     /// <summary>
     /// Verifica a existência de um autor através de seu nome exato (case-insensitive).
     /// </summary>
@@ -146,10 +142,10 @@ public class AutorController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult ExistsByNomeAutor(string nomeAutor)
     {
-        var autorNome = _autorService.ExistsByNomeAutor(nomeAutor);
+        var autorNome = autorService.ExistsByNomeAutor(nomeAutor);
         if (!autorNome)
             return NotFound();
-        
+
         return Ok(autorNome);
     }
 }

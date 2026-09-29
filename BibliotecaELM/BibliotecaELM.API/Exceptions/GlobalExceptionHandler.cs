@@ -3,11 +3,15 @@ using BibliotecaELM.Domain.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BibliotecaELM.Exceptions;
+namespace BibliotecaELM.API.Exceptions;
 
-public class GlobalExceptionHandler(
+/// <summary>
+/// Manipulador global de exceções conforme IExceptionHandler nativo do ASP.NET Core (.NET 8+).
+/// Retorna ProblemDetails formatado em RFC 7807 e preserva o traceId para auditoria.
+/// </summary>
+public sealed class GlobalExceptionHandler(
     ILogger<GlobalExceptionHandler> logger,
-    IWebHostEnvironment environment) : IExceptionHandler
+    IHostEnvironment environment) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -64,8 +68,6 @@ public class GlobalExceptionHandler(
             Instance = httpContext.Request.Path
         };
 
-        // Adiciona o traceId nas extensões do ProblemDetails apenas em Development para rastreabilidade
-        // Em produção, o detalhe fica apenas no log (sem vazar informações sensíveis ao cliente)
         if (environment.IsDevelopment())
         {
             problemDetails.Extensions["traceId"] = traceId;
