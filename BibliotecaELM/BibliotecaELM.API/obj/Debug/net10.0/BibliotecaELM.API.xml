@@ -4,26 +4,26 @@
         <name>BibliotecaELM.API</name>
     </assembly>
     <members>
-        <member name="T:BibliotecaELM.Controllers.AutorController">
+        <member name="T:BibliotecaELM.API.Controllers.v1.AutorController">
             <summary>
             Controller responsável por gerenciar as operações de Autores.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.AutorController.#ctor(BibliotecaELM.Application.Services.Interfaces.IAutorService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.Controllers.AutorController})">
+        <member name="M:BibliotecaELM.API.Controllers.v1.AutorController.#ctor(BibliotecaELM.Application.Services.Interfaces.IAutorService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.API.Controllers.v1.AutorController})">
             <summary>
             Controller responsável por gerenciar as operações de Autores.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.AutorController.GetAll">
+        <member name="M:BibliotecaELM.API.Controllers.v1.AutorController.GetAll">
             <summary>
             Retorna todos os autores cadastrados.
             </summary>
             <returns>Uma lista de autores.</returns>
             <response code="200">Retorna a lista de autores cadastrados com sucesso.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.AutorController.GetById(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.AutorController.GetById(System.Guid)">
             <summary>
             Busca um autor específico pelo identificador único (GUID).
             </summary>
@@ -32,7 +32,7 @@
             <response code="200">Retorna o autor encontrado.</response>
             <response code="404">Caso não exista autor com o GUID fornecido.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.AutorController.Create(BibliotecaELM.Application.DTOs.AutorRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.AutorController.Create(BibliotecaELM.Application.DTOs.AutorRequest)">
             <summary>
             Cadastra um novo autor na base de dados.
             </summary>
@@ -41,7 +41,7 @@
             <response code="201">Autor cadastrado com sucesso.</response>
             <response code="400">Caso os dados fornecidos sejam inválidos ou o nome do autor já esteja em uso.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.AutorController.Update(System.Guid,BibliotecaELM.Application.DTOs.AutorRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.AutorController.Update(System.Guid,BibliotecaELM.Application.DTOs.AutorRequest)">
             <summary>
             Atualiza os dados de um autor existente.
             </summary>
@@ -52,7 +52,7 @@
             <response code="400">Caso os dados fornecidos sejam inválidos ou o nome já esteja em uso por outro autor.</response>
             <response code="404">Caso o autor com o GUID informado não seja encontrado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.AutorController.Delete(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.AutorController.Delete(System.Guid)">
             <summary>
             Remove um autor da base de dados pelo seu GUID.
             </summary>
@@ -61,7 +61,7 @@
             <response code="204">Autor deletado com sucesso.</response>
             <response code="404">Caso o autor com o GUID fornecido não exista.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.AutorController.ExistsByNomeAutor(System.String)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.AutorController.ExistsByNomeAutor(System.String)">
             <summary>
             Verifica a existência de um autor através de seu nome exato (case-insensitive).
             </summary>
@@ -70,26 +70,26 @@
             <response code="200">Autor encontrado.</response>
             <response code="404">Caso não exista autor com o nome informado.</response>
         </member>
-        <member name="T:BibliotecaELM.Controllers.CompraController">
+        <member name="T:BibliotecaELM.API.Controllers.v1.CompraController">
             <summary>
             Controller responsável por gerenciar as transações de Compras de Livros.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.CompraController.#ctor(BibliotecaELM.Application.Services.Interfaces.ICompraService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.Controllers.CompraController})">
+        <member name="M:BibliotecaELM.API.Controllers.v1.CompraController.#ctor(BibliotecaELM.Application.Services.Interfaces.ICompraService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.API.Controllers.v1.CompraController})">
             <summary>
             Controller responsável por gerenciar as transações de Compras de Livros.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.CompraController.GetAll">
+        <member name="M:BibliotecaELM.API.Controllers.v1.CompraController.GetAll">
             <summary>
             Retorna todas as compras registradas na biblioteca.
             </summary>
             <returns>Uma lista de compras realizadas.</returns>
             <response code="200">Retorna a lista de compras com sucesso.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.CompraController.GetById(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.CompraController.GetById(System.Guid)">
             <summary>
             Busca uma compra específica pelo seu identificador (GUID).
             </summary>
@@ -98,7 +98,7 @@
             <response code="200">Retorna a compra encontrada.</response>
             <response code="404">Caso não exista compra com o GUID informado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.CompraController.Create(BibliotecaELM.Application.DTOs.CompraRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.CompraController.Create(BibliotecaELM.Application.DTOs.CompraRequest)">
             <summary>
             Registra uma nova compra de livros na base de dados.
             </summary>
@@ -107,7 +107,7 @@
             <response code="201">Compra registrada com sucesso.</response>
             <response code="400">Caso os dados de entrada sejam inválidos, data futura ou se o usuário não possuir endereço cadastrado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.CompraController.Update(System.Guid,BibliotecaELM.Application.DTOs.CompraRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.CompraController.Update(System.Guid,BibliotecaELM.Application.DTOs.CompraRequest)">
             <summary>
             Atualiza os dados de uma compra existente.
             </summary>
@@ -118,7 +118,7 @@
             <response code="400">Caso as regras de validação falhem.</response>
             <response code="404">Caso a compra com o GUID fornecido não seja encontrada.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.CompraController.Delete(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.CompraController.Delete(System.Guid)">
             <summary>
             Exclui uma compra da base de dados.
             </summary>
@@ -127,26 +127,26 @@
             <response code="204">Compra excluída com sucesso.</response>
             <response code="404">Caso a compra com o GUID informado não seja encontrada.</response>
         </member>
-        <member name="T:BibliotecaELM.Controllers.EmprestimoController">
+        <member name="T:BibliotecaELM.API.Controllers.v1.EmprestimoController">
             <summary>
             Controller responsável por gerenciar as operações de Empréstimos de Livros.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EmprestimoController.#ctor(BibliotecaELM.Application.Services.Interfaces.IEmprestimoService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.Controllers.EmprestimoController})">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EmprestimoController.#ctor(BibliotecaELM.Application.Services.Interfaces.IEmprestimoService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.API.Controllers.v1.EmprestimoController})">
             <summary>
             Controller responsável por gerenciar as operações de Empréstimos de Livros.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EmprestimoController.GetAll">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EmprestimoController.GetAll">
             <summary>
             Retorna todos os empréstimos registrados na biblioteca.
             </summary>
             <returns>Uma lista de empréstimos realizados.</returns>
             <response code="200">Retorna a lista de empréstimos com sucesso.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EmprestimoController.GetById(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EmprestimoController.GetById(System.Guid)">
             <summary>
             Busca um empréstimo específico pelo seu identificador (GUID).
             </summary>
@@ -155,7 +155,7 @@
             <response code="200">Retorna o empréstimo encontrado.</response>
             <response code="404">Caso não exista empréstimo com o GUID informado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EmprestimoController.Create(BibliotecaELM.Application.DTOs.EmprestimoRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EmprestimoController.Create(BibliotecaELM.Application.DTOs.EmprestimoRequest)">
             <summary>
             Registra um novo empréstimo de livros na base de dados.
             </summary>
@@ -164,7 +164,7 @@
             <response code="201">Empréstimo registrado com sucesso.</response>
             <response code="400">Caso os dados fornecidos violem as regras de negócio.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EmprestimoController.Update(System.Guid,BibliotecaELM.Application.DTOs.EmprestimoRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EmprestimoController.Update(System.Guid,BibliotecaELM.Application.DTOs.EmprestimoRequest)">
             <summary>
             Atualiza os dados de um empréstimo existente.
             </summary>
@@ -175,7 +175,7 @@
             <response code="400">Caso as regras de validação falhem.</response>
             <response code="404">Caso o empréstimo com o GUID fornecido não seja encontrado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EmprestimoController.Delete(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EmprestimoController.Delete(System.Guid)">
             <summary>
             Exclui um empréstimo da base de dados.
             </summary>
@@ -184,26 +184,26 @@
             <response code="204">Empréstimo excluído com sucesso.</response>
             <response code="404">Caso o empréstimo com o GUID informado não seja encontrado.</response>
         </member>
-        <member name="T:BibliotecaELM.Controllers.EnderecoController">
+        <member name="T:BibliotecaELM.API.Controllers.v1.EnderecoController">
             <summary>
             Controller responsável por gerenciar os Endereços dos usuários da biblioteca.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EnderecoController.#ctor(BibliotecaELM.Application.Services.Interfaces.IEnderecoService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.Controllers.EnderecoController})">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EnderecoController.#ctor(BibliotecaELM.Application.Services.Interfaces.IEnderecoService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.API.Controllers.v1.EnderecoController})">
             <summary>
             Controller responsável por gerenciar os Endereços dos usuários da biblioteca.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EnderecoController.GetAll">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EnderecoController.GetAll">
             <summary>
             Retorna todos os endereços cadastrados.
             </summary>
             <returns>Uma lista de endereços.</returns>
             <response code="200">Retorna a lista de endereços com sucesso.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EnderecoController.GetById(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EnderecoController.GetById(System.Guid)">
             <summary>
             Busca um endereço específico pelo seu identificador (GUID).
             </summary>
@@ -212,7 +212,7 @@
             <response code="200">Retorna o endereço encontrado.</response>
             <response code="404">Caso não exista endereço com o GUID informado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EnderecoController.Create(System.Guid,BibliotecaELM.Application.DTOs.EnderecoRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EnderecoController.Create(System.Guid,BibliotecaELM.Application.DTOs.EnderecoRequest)">
             <summary>
             Cadastra um novo endereço associado a um usuário.
             </summary>
@@ -222,7 +222,7 @@
             <response code="201">Endereço cadastrado com sucesso.</response>
             <response code="400">Caso os dados sejam inválidos ou o usuário não exista.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EnderecoController.Update(System.Guid,BibliotecaELM.Application.DTOs.EnderecoRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EnderecoController.Update(System.Guid,BibliotecaELM.Application.DTOs.EnderecoRequest)">
             <summary>
             Atualiza os dados de um endereço existente.
             </summary>
@@ -233,7 +233,7 @@
             <response code="400">Caso os dados fornecidos sejam inválidos.</response>
             <response code="404">Caso o endereço com o GUID fornecido não seja encontrado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.EnderecoController.Delete(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.EnderecoController.Delete(System.Guid)">
             <summary>
             Exclui um endereço da base de dados.
             </summary>
@@ -242,19 +242,19 @@
             <response code="204">Endereço excluído com sucesso.</response>
             <response code="404">Caso o endereço com o GUID informado não seja encontrado.</response>
         </member>
-        <member name="T:BibliotecaELM.Controllers.LivroController">
+        <member name="T:BibliotecaELM.API.Controllers.v1.LivroController">
             <summary>
             Controller responsável pelas operações de Livros — Versão 1.0 (DEPRECADA).
             A listagem retorna todos os livros em uma lista completa (sem paginação), preservando o contrato antigo do CP3.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroController.#ctor(BibliotecaELM.Application.Services.Interfaces.ILivroService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.Controllers.LivroController})">
+        <member name="M:BibliotecaELM.API.Controllers.v1.LivroController.#ctor(BibliotecaELM.Application.Services.Interfaces.ILivroService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.API.Controllers.v1.LivroController})">
             <summary>
             Controller responsável pelas operações de Livros — Versão 1.0 (DEPRECADA).
             A listagem retorna todos os livros em uma lista completa (sem paginação), preservando o contrato antigo do CP3.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroController.GetAll">
+        <member name="M:BibliotecaELM.API.Controllers.v1.LivroController.GetAll">
             <summary>
             [v1 - DEPRECADO] Retorna todos os livros do acervo em uma lista completa (sem paginação).
             Favor migrar para a versão v2.0 (/api/livro?api-version=2.0) para obter o envelope paginado.
@@ -262,7 +262,7 @@
             <returns>Lista completa de livros.</returns>
             <response code="200">Retorna a lista de livros com sucesso.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroController.GetById(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.LivroController.GetById(System.Guid)">
             <summary>
             Busca um livro específico pelo GUID.
             </summary>
@@ -271,7 +271,7 @@
             <response code="200">Livro encontrado.</response>
             <response code="404">Livro não encontrado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroController.Create(BibliotecaELM.Application.DTOs.LivroRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.LivroController.Create(BibliotecaELM.Application.DTOs.LivroRequest)">
             <summary>
             Cadastra um novo livro no acervo da biblioteca.
             Taxa limitada pela política Fixed Window (10 requisições por minuto por IP).
@@ -282,7 +282,7 @@
             <response code="400">Dados inválidos ou autor não encontrado.</response>
             <response code="429">Limite de requisições excedido.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroController.Update(System.Guid,BibliotecaELM.Application.DTOs.LivroRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.LivroController.Update(System.Guid,BibliotecaELM.Application.DTOs.LivroRequest)">
             <summary>
             Atualiza os dados de um livro do acervo.
             </summary>
@@ -293,7 +293,7 @@
             <response code="400">Dados inválidos.</response>
             <response code="404">Livro não encontrado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroController.Delete(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.LivroController.Delete(System.Guid)">
             <summary>
             Exclui um livro do acervo pelo identificador.
             </summary>
@@ -302,26 +302,26 @@
             <response code="204">Livro excluído com sucesso.</response>
             <response code="404">Livro não encontrado.</response>
         </member>
-        <member name="T:BibliotecaELM.Controllers.UsuarioController">
+        <member name="T:BibliotecaELM.API.Controllers.v1.UsuarioController">
             <summary>
             Controller responsável por gerenciar os Usuários da biblioteca.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.UsuarioController.#ctor(BibliotecaELM.Application.Services.Interfaces.IUsuarioService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.Controllers.UsuarioController})">
+        <member name="M:BibliotecaELM.API.Controllers.v1.UsuarioController.#ctor(BibliotecaELM.Application.Services.Interfaces.IUsuarioService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.API.Controllers.v1.UsuarioController})">
             <summary>
             Controller responsável por gerenciar os Usuários da biblioteca.
             Disponível nas versões v1.0 e v2.0 da API.
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.UsuarioController.GetAll">
+        <member name="M:BibliotecaELM.API.Controllers.v1.UsuarioController.GetAll">
             <summary>
             Retorna todos os usuários cadastrados.
             </summary>
             <returns>Uma lista de usuários.</returns>
             <response code="200">Retorna a lista de usuários com sucesso.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.UsuarioController.GetById(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.UsuarioController.GetById(System.Guid)">
             <summary>
             Busca um usuário específico pelo seu identificador (GUID).
             </summary>
@@ -330,7 +330,7 @@
             <response code="200">Retorna o usuário encontrado.</response>
             <response code="404">Caso não exista usuário com o GUID informado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.UsuarioController.Create(BibliotecaELM.Application.DTOs.UsuarioRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.UsuarioController.Create(BibliotecaELM.Application.DTOs.UsuarioRequest)">
             <summary>
             Cadastra um novo usuário no sistema.
             </summary>
@@ -339,7 +339,7 @@
             <response code="201">Usuário cadastrado com sucesso.</response>
             <response code="400">Caso os dados sejam inválidos ou o e-mail já esteja em uso.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.UsuarioController.Update(System.Guid,BibliotecaELM.Application.DTOs.UsuarioRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.UsuarioController.Update(System.Guid,BibliotecaELM.Application.DTOs.UsuarioRequest)">
             <summary>
             Atualiza os dados de um usuário existente.
             </summary>
@@ -350,7 +350,7 @@
             <response code="400">Caso os dados fornecidos sejam inválidos.</response>
             <response code="404">Caso o usuário com o GUID fornecido não seja encontrado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.UsuarioController.Delete(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v1.UsuarioController.Delete(System.Guid)">
             <summary>
             Exclui um usuário da base de dados.
             </summary>
@@ -359,21 +359,21 @@
             <response code="204">Usuário excluído com sucesso.</response>
             <response code="404">Caso o usuário com o GUID informado não seja encontrado.</response>
         </member>
-        <member name="T:BibliotecaELM.Controllers.LivroV2Controller">
+        <member name="T:BibliotecaELM.API.Controllers.v2.LivroV2Controller">
             <summary>
             Controller responsável pelas operações de Livros — Versão 2.0 (ATUAL).
             A listagem retorna um envelope paginado com totais e indicadores de navegação.
             Segue o padrão de nomenclatura e design estabelecido na solução Recommenda (RatingV2Controller).
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroV2Controller.#ctor(BibliotecaELM.Application.Services.Interfaces.ILivroService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.Controllers.LivroV2Controller})">
+        <member name="M:BibliotecaELM.API.Controllers.v2.LivroV2Controller.#ctor(BibliotecaELM.Application.Services.Interfaces.ILivroService,Microsoft.Extensions.Logging.ILogger{BibliotecaELM.API.Controllers.v2.LivroV2Controller})">
             <summary>
             Controller responsável pelas operações de Livros — Versão 2.0 (ATUAL).
             A listagem retorna um envelope paginado com totais e indicadores de navegação.
             Segue o padrão de nomenclatura e design estabelecido na solução Recommenda (RatingV2Controller).
             </summary>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroV2Controller.GetAllPaginated(BibliotecaELM.Application.DTOs.PaginationQuery)">
+        <member name="M:BibliotecaELM.API.Controllers.v2.LivroV2Controller.GetAllPaginated(BibliotecaELM.Application.DTOs.PaginationQuery)">
             <summary>
             [v2 - ATUAL] Retorna os livros de forma paginada em um envelope com totais e metadados de navegação.
             Sem versão explícita na requisição, este endpoint é selecionado por padrão (DefaultApiVersion = 2.0).
@@ -383,7 +383,7 @@
             <response code="200">Envelope com os livros paginados retornado com sucesso (items pode ser vazio caso page exceda o total).</response>
             <response code="400">Caso os parâmetros de paginação sejam inválidos (page &lt; 1 ou pageSize fora da faixa de 1–100).</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroV2Controller.GetById(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v2.LivroV2Controller.GetById(System.Guid)">
             <summary>
             Busca um livro específico pelo GUID.
             </summary>
@@ -392,7 +392,7 @@
             <response code="200">Livro encontrado com sucesso.</response>
             <response code="404">Livro não encontrado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroV2Controller.Create(BibliotecaELM.Application.DTOs.LivroRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v2.LivroV2Controller.Create(BibliotecaELM.Application.DTOs.LivroRequest)">
             <summary>
             Cadastra um novo livro no acervo da biblioteca.
             Taxa limitada pela política Fixed Window (10 requisições por minuto por IP).
@@ -403,7 +403,7 @@
             <response code="400">Dados inválidos ou autor não encontrado.</response>
             <response code="429">Limite de requisições excedido.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroV2Controller.Update(System.Guid,BibliotecaELM.Application.DTOs.LivroRequest)">
+        <member name="M:BibliotecaELM.API.Controllers.v2.LivroV2Controller.Update(System.Guid,BibliotecaELM.Application.DTOs.LivroRequest)">
             <summary>
             Atualiza os dados de um livro do acervo.
             </summary>
@@ -414,7 +414,7 @@
             <response code="400">Dados inválidos.</response>
             <response code="404">Livro não encontrado.</response>
         </member>
-        <member name="M:BibliotecaELM.Controllers.LivroV2Controller.Delete(System.Guid)">
+        <member name="M:BibliotecaELM.API.Controllers.v2.LivroV2Controller.Delete(System.Guid)">
             <summary>
             Exclui um livro do acervo pelo identificador.
             </summary>

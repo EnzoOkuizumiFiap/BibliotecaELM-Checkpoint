@@ -34,6 +34,7 @@ public static class BibliotecaElmServiceCollectionExtensions
     {
         services.AddScoped<IAutorService, AutorService>();
         services.AddScoped<ILivroService, LivroService>();
+        services.AddScoped<ILivroAppService, LivroAppService>();
         services.AddScoped<IUsuarioService, UsuarioService>();
         services.AddScoped<ICompraService, CompraService>();
         services.AddScoped<IEmprestimoService, EmprestimoService>();

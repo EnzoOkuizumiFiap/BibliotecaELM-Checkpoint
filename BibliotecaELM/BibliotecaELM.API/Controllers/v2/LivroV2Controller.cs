@@ -5,7 +5,7 @@ using BibliotecaELM.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
-namespace BibliotecaELM.Controllers;
+namespace BibliotecaELM.API.Controllers.v2;
 
 /// <summary>
 /// Controller responsável pelas operações de Livros — Versão 2.0 (ATUAL).

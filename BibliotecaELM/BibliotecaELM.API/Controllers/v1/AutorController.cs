@@ -3,7 +3,7 @@ using BibliotecaELM.Application.DTOs;
 using BibliotecaELM.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BibliotecaELM.Controllers;
+namespace BibliotecaELM.API.Controllers.v1;
 
 /// <summary>
 /// Controller responsável por gerenciar as operações de Autores.

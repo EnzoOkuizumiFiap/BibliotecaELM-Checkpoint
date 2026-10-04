@@ -145,7 +145,7 @@ O projeto segue os princípios de Clean Architecture:
 2. **Application (`BibliotecaELM.Application`)**: DTOs (`Request`, `Response`, `PagedResponse<T>`), interfaces de repositórios/serviços, implementações dos serviços (validação + logs).
 3. **Infrastructure (`BibliotecaELM.Infrastructure`)**: `Repository<T>` genérico (com `GetPaged` via IQueryable), repositórios concretos, `BibliotecaElmContext` (Oracle), Migrations.
 4. **API (`BibliotecaELM.API`)**: Controllers versionados (V1/V2), `GlobalExceptionHandler`, Swagger por versão, Rate Limiting, Health Checks.
-5. **Tests**: `Domain.Tests` (38 testes) + `Application.Tests` (29 testes, incluindo 8 novos de paginação).
+5. **Tests**: `Domain.Tests` (38 testes) + `Application.Tests` (39 testes, incluindo os testes de paginação e validações).
 
 ```
 BibliotecaELM/
@@ -342,11 +342,16 @@ Total tests: 77
 
 ## 📸 Evidências de Execução e Validação dos Contratos (CP5)
 
-Abaixo estão os exemplos reais de requisição e resposta obtidos na validação da API em tempo real:
+Abaixo estão os prints e exemplos reais de requisição e resposta obtidos na validação da API em tempo real:
+
+---
 
 ### 1. Convivência de Versões (Recurso `Livro`)
 
-Toda resposta da API inclui os cabeçalhos de controle de versão:
+Toda resposta da API inclui os cabeçalhos de controle de versão (`api-supported-versions` e `api-deprecated-versions`):
+
+![Headers de Versionamento HTTP](docs/api_version_headers.png)
+
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
@@ -354,126 +359,65 @@ api-supported-versions: 1.0, 2.0
 api-deprecated-versions: 1.0
 ```
 
-#### A) GET v1.0 — Contrato Legado (Array Puro, Deprecado)
+#### A) Swagger UI — Documentação por Versão com v1.0 Deprecada
+O Swagger organiza a documentação em dois grupos com dropdown interativo. A v1.0 é explicitamente sinalizada com aviso de depreciação:
+
+![Swagger UI - Grupos v1.0 e v2.0 com v1 Deprecada](docs/swagger_versoes.png)
+
+#### B) GET v1.0 — Contrato Legado (Array Puro, Deprecado)
 - **Chamada:** `GET /api/livro?api-version=1.0` (ou `GET /api/v1/livro` ou header `X-Api-Version: 1.0`)
 - **Resposta HTTP 200 (Array simples sem envelope):**
-```json
-[
-  {
-    "id": "96a1fb2f-756c-468a-a5c3-33da40d97033",
-    "nomeLivro": "Clean Code",
-    "preco": 120.00,
-    "dataLancamento": "2008-08-01",
-    "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
-  },
-  {
-    "id": "01ae79e9-ad8f-4e33-9db6-6f6c03d2720b",
-    "nomeLivro": "Clean Architecture",
-    "preco": 150.00,
-    "dataLancamento": "2017-09-17",
-    "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
-  },
-  {
-    "id": "b7589679-786c-4431-b6fe-bedf9b8bf3b5",
-    "nomeLivro": "The Clean Coder",
-    "preco": 110.00,
-    "dataLancamento": "2011-05-13",
-    "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
-  }
-]
-```
 
-#### B) GET v2.0 — Contrato Padrão Atual (Envelope Paginado com Totais)
+![GET v1.0 Livro - Contrato Legado em Array](docs/v1_get_livro_response.png)
+
+#### C) GET v2.0 — Contrato Padrão Atual (Envelope Paginado com Totais)
 - **Chamada:** `GET /api/livro` (omissão cai na v2.0) ou `GET /api/v2/livro`
 - **Resposta HTTP 200 (Envelope PagedResponse):**
-```json
-{
-  "page": 1,
-  "pageSize": 20,
-  "totalItems": 3,
-  "totalPages": 1,
-  "hasPrevious": false,
-  "hasNext": false,
-  "items": [
-    {
-      "id": "96a1fb2f-756c-468a-a5c3-33da40d97033",
-      "nomeLivro": "Clean Code",
-      "preco": 120.00,
-      "dataLancamento": "2008-08-01",
-      "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
-    },
-    {
-      "id": "01ae79e9-ad8f-4e33-9db6-6f6c03d2720b",
-      "nomeLivro": "Clean Architecture",
-      "preco": 150.00,
-      "dataLancamento": "2017-09-17",
-      "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
-    },
-    {
-      "id": "b7589679-786c-4431-b6fe-bedf9b8bf3b5",
-      "nomeLivro": "The Clean Coder",
-      "preco": 110.00,
-      "dataLancamento": "2011-05-13",
-      "autorId": "673552c3-249b-43ed-8939-5b7a555c864d"
-    }
-  ]
-}
-```
+
+![GET v2.0 Livro - Envelope Paginado Contemporâneo](docs/v2_get_livro_response.png)
 
 ---
 
 ### 2. Paginação na v2.0 (Corte no Banco via IQueryable)
 
-- **Página 1 (`pageSize=2`)** ➔ `GET /api/v2/livro?page=1&pageSize=2`
-  - Retorna itens 1 e 2 com `totalPages: 2`, `hasPrevious: false`, `hasNext: true`.
-- **Página 2 (`pageSize=2`)** ➔ `GET /api/v2/livro?page=2&pageSize=2`
-  - Retorna item 3 com `totalPages: 2`, `hasPrevious: true`, `hasNext: false`. **Sem sobreposição com a página 1**.
-- **Página além do total (`page=99`)** ➔ `GET /api/v2/livro?page=99&pageSize=20`
-  - Retorna HTTP 200 com `"items": []`, `"totalItems": 3`.
-- **Validação de Parâmetros Inválidos (HTTP 400 ProblemDetails):**
-  - `GET /api/v2/livro?page=0&pageSize=20` ➔ HTTP 400: *"O parâmetro 'page' deve ser maior ou igual a 1."*
-  - `GET /api/v2/livro?page=1&pageSize=9999` ➔ HTTP 400: *"O parâmetro 'pageSize' deve estar entre 1 e 100."*
+#### A) Página 1 (`page=1&pageSize=2`)
+Retorna itens 1 e 2 com `hasPrevious: false` e `hasNext: true`:
+
+![Paginação Página 1](docs/paginacao_pagina1.png)
+
+#### B) Página 2 (`page=2&pageSize=2`)
+Retorna itens 3 e 4 com `hasPrevious: true` e `hasNext: true` — sem sobreposição com a página 1:
+
+![Paginação Página 2](docs/paginacao_pagina2.png)
+
+#### C) Validação de Parâmetros Inválidos (HTTP 400 ProblemDetails)
+`GET /api/v2/livro?page=0&pageSize=20` ou `pageSize=9999` retorna HTTP 400 com payload RFC 7807:
+
+![Validação de Paginação HTTP 400](docs/paginacao_400_page_invalido.png)
 
 ---
 
 ### 3. Rate Limiting (Fixed Window) e Isenção do `/health`
 
-- **Estouro de Limite (Rajada no `POST /api/livro`):**
-  Ao ultrapassar 10 requisições por minuto por IP:
-  ```http
-  HTTP/1.1 429 Too Many Requests
-  Content-Type: application/problem+json
-  Retry-After: 60
+#### A) Estouro de Limite (Rajada no `POST /api/livro`)
+Ao ultrapassar 10 requisições por minuto por IP, a API rejeita com HTTP 429 e cabeçalho `Retry-After: 60`:
 
-  {
-    "status": 429,
-    "title": "Too Many Requests",
-    "detail": "Você atingiu o limite de 10 requisições por minuto. Tente novamente mais tarde.",
-    "instance": "/api/livro"
-  }
-  ```
+![Rate Limiting HTTP 429 Too Many Requests](docs/rate_limit_429.png)
 
-- **Isenção do Probe `/health`:**
-  Imediatamente após receber a resposta 429 acima, o endpoint de integridade continua respondendo com sucesso:
-  ```http
-  GET /health ➔ HTTP 200 OK
-  {
-    "status": "Healthy",
-    "checks": [
-      { "name": "database", "status": "Healthy" }
-    ]
-  }
-  ```
-  Isso comprova a isenção de rate limiting via `.DisableRateLimiting()`.
+#### B) Isenção do Probe `/health`
+Imediatamente após receber o 429, o endpoint de integridade `/health` continua respondendo HTTP 200 OK:
+
+![Health Check HTTP 200 OK após 429](docs/health_apos_429.png)
+
+*Isso comprova a isenção de rate limiting via `.DisableRateLimiting()` no pipeline.*
 
 ---
 
-### 4. Swagger UI Dinâmico por Versão
+### 4. Testes Automatizados (xUnit + Moq)
 
-O Swagger organiza a documentação em dois grupos:
-- **v2.0 (padrão):** Contrato contemporâneo com envelope paginado `PagedResponse<LivroResponse>`.
-- **v1.0 (deprecada):** Indicado com a etiqueta `⚠️ [ESTA VERSÃO FOI DEPRECADA. Favor utilizar a v2.0]` e retorno em array direto.
-- Os demais recursos (`Autor`, `Usuario`, `Compra`, `Emprestimo`, `Endereco`) estão presentes e funcionais em ambas as versões.
+Execução completa dos 77 testes automatizados verdes (38 de Domain + 39 de Application):
+
+![Resultado dos Testes Automatizados dotnet test](docs/dotnet_test_output.png)
 
 ---
 
